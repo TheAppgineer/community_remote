@@ -6,5 +6,6 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-String greet({required String name, dynamic hint}) =>
-    RustLib.instance.api.greet(name: name, hint: hint);
+void incCounter({dynamic hint}) => RustLib.instance.api.incCounter(hint: hint);
+
+int getCounter({dynamic hint}) => RustLib.instance.api.getCounter(hint: hint);
