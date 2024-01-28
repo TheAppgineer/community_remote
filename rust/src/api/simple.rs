@@ -1,9 +1,11 @@
+use flutter_rust_bridge::DartFnFuture;
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
+use crate::backend::roon::{Roon, RoonEvent};
+
 static API: Lazy<Mutex<State>> = Lazy::new(|| Mutex::new(State::new()));
 
-#[derive(Default)]
 #[flutter_rust_bridge::frb(opaque)]
 struct State {
     counter: u32,
@@ -11,7 +13,9 @@ struct State {
 
 impl State {
     fn new() -> Self {
-        Self::default()
+        Self {
+            counter: 0,
+        }
     }
 }
 
@@ -30,7 +34,21 @@ pub fn get_counter() -> u32 {
 }
 
 #[flutter_rust_bridge::frb(init)]
-pub fn init_app() {
+pub async fn init_app() {
     // Default utilities - feel free to customize
     flutter_rust_bridge::setup_default_user_utils();
+    simple_logging::log_to_stderr(log::LevelFilter::Info);
+}
+
+pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) {
+    let mut rx = Roon::new().await;
+
+    tokio::spawn(async move {
+        loop {
+            match rx.recv().await {
+                Some(event) => cb(event).await,
+                None => (),
+            }
+        }
+    });
 }
