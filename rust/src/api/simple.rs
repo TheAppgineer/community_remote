@@ -13,9 +13,7 @@ struct State {
 
 impl State {
     fn new() -> Self {
-        Self {
-            counter: 0,
-        }
+        Self { counter: 0 }
     }
 }
 
@@ -41,13 +39,12 @@ pub async fn init_app() {
 }
 
 pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) {
-    let mut rx = Roon::new().await;
+    let mut rx = Roon::start().await;
 
     tokio::spawn(async move {
         loop {
-            match rx.recv().await {
-                Some(event) => cb(event).await,
-                None => (),
+            if let Some(event) = rx.recv().await {
+                cb(event).await;
             }
         }
     });
