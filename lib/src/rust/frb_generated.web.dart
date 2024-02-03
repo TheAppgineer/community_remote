@@ -32,6 +32,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<(String, Uint8List)> dco_decode_list_record_string_list_prim_u_8_strict(
+      dynamic raw);
+
+  @protected
+  List<(String, String, String?)>
+      dco_decode_list_record_string_string_opt_string(dynamic raw);
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw);
+
+  @protected
+  (String, Uint8List) dco_decode_record_string_list_prim_u_8_strict(
+      dynamic raw);
+
+  @protected
+  (String, String, String?) dco_decode_record_string_string_opt_string(
+      dynamic raw);
+
+  @protected
   RoonEvent dco_decode_roon_event(dynamic raw);
 
   @protected
@@ -54,6 +73,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  List<(String, Uint8List)> sse_decode_list_record_string_list_prim_u_8_strict(
+      SseDeserializer deserializer);
+
+  @protected
+  List<(String, String, String?)>
+      sse_decode_list_record_string_string_opt_string(
+          SseDeserializer deserializer);
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer);
+
+  @protected
+  (String, Uint8List) sse_decode_record_string_list_prim_u_8_strict(
+      SseDeserializer deserializer);
+
+  @protected
+  (String, String, String?) sse_decode_record_string_string_opt_string(
+      SseDeserializer deserializer);
 
   @protected
   RoonEvent sse_decode_roon_event(SseDeserializer deserializer);
@@ -89,6 +128,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_string_list_prim_u_8_strict(
+      List<(String, Uint8List)> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_record_string_string_opt_string(
+      List<(String, String, String?)> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_list_prim_u_8_strict(
+      (String, Uint8List) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_string_opt_string(
+      (String, String, String?) self, SseSerializer serializer);
 
   @protected
   void sse_encode_roon_event(RoonEvent self, SseSerializer serializer);

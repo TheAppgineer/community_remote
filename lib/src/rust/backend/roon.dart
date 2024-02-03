@@ -16,4 +16,10 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.coreLost(
     String field0,
   ) = RoonEvent_CoreLost;
+  const factory RoonEvent.zonesChanged(
+    List<(String, String, String?)> field0,
+  ) = RoonEvent_ZonesChanged;
+  const factory RoonEvent.image(
+    List<(String, Uint8List)> field0,
+  ) = RoonEvent_Image;
 }

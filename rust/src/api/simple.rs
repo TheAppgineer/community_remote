@@ -1,6 +1,7 @@
 use flutter_rust_bridge::DartFnFuture;
 use once_cell::sync::Lazy;
-use std::sync::Mutex;
+use roon_api::image::{Args, Scale, Scaling};
+use tokio::sync::Mutex;
 
 use crate::backend::roon::{Roon, RoonEvent};
 
@@ -9,24 +10,22 @@ static API: Lazy<Mutex<State>> = Lazy::new(|| Mutex::new(State::new()));
 #[flutter_rust_bridge::frb(opaque)]
 struct State {
     counter: u32,
+    roon: Option<Roon>,
 }
 
 impl State {
     fn new() -> Self {
-        Self { counter: 0 }
+        Self {
+            counter: 0,
+            roon: None,
+        }
     }
 }
 
-#[flutter_rust_bridge::frb(sync)]
-pub fn inc_counter() {
-    let mut api = API.lock().unwrap();
+pub async fn inc_counter() -> u32 {
+    let mut api = API.lock().await;
 
     api.counter += 1;
-}
-
-#[flutter_rust_bridge::frb(sync)]
-pub fn get_counter() -> u32 {
-    let api = API.lock().unwrap();
 
     api.counter
 }
@@ -39,7 +38,8 @@ pub async fn init_app() {
 }
 
 pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) {
-    let mut rx = Roon::start().await;
+    let (roon, mut rx) = Roon::start().await;
+    let mut api = API.lock().await;
 
     tokio::spawn(async move {
         loop {
@@ -48,4 +48,24 @@ pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'sta
             }
         }
     });
+
+    api.roon = Some(roon);
+}
+
+pub async fn select_zone(zone_id: String) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.select_zone(&zone_id);
+    }
+}
+
+pub async fn get_image(image_key: String, width: u32, height: u32) {
+    let api = API.lock().await;
+    let scaling = Some(Scaling::new(Scale::Fill, width, height));
+    let args = Args::new(scaling, None);
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.get_image(&image_key, args).await;
+    }
 }

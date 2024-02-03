@@ -65,11 +65,17 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  int getCounter({dynamic hint});
+  Future<void> getImage(
+      {required String imageKey,
+      required int width,
+      required int height,
+      dynamic hint});
 
-  void incCounter({dynamic hint});
+  Future<int> incCounter({dynamic hint});
 
   Future<void> initApp({dynamic hint});
+
+  Future<void> selectZone({required String zoneId, dynamic hint});
 
   Future<void> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint});
@@ -84,37 +90,46 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  int getCounter({dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
+  Future<void> getImage(
+      {required String imageKey,
+      required int width,
+      required int height,
+      dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+        sse_encode_String(imageKey, serializer);
+        sse_encode_u_32(width, serializer);
+        sse_encode_u_32(height, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 5, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_u_32,
+        decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
-      constMeta: kGetCounterConstMeta,
-      argValues: [],
+      constMeta: kGetImageConstMeta,
+      argValues: [imageKey, width, height],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kGetCounterConstMeta => const TaskConstMeta(
-        debugName: "get_counter",
-        argNames: [],
+  TaskConstMeta get kGetImageConstMeta => const TaskConstMeta(
+        debugName: "get_image",
+        argNames: ["imageKey", "width", "height"],
       );
 
   @override
-  void incCounter({dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
+  Future<int> incCounter({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 1, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
+        decodeSuccessData: sse_decode_u_32,
         decodeErrorData: null,
       ),
       constMeta: kIncCounterConstMeta,
@@ -135,7 +150,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 3, port: port_);
+            funcId: 2, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -154,6 +169,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> selectZone({required String zoneId, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(zoneId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 4, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kSelectZoneConstMeta,
+      argValues: [zoneId],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSelectZoneConstMeta => const TaskConstMeta(
+        debugName: "select_zone",
+        argNames: ["zoneId"],
+      );
+
+  @override
   Future<void> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) {
     return handler.executeNormal(NormalTask(
@@ -161,7 +201,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_DartFn_Inputs_roon_event_Output_unit(cb, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 4, port: port_);
+            funcId: 3, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -225,6 +265,59 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<(String, Uint8List)> dco_decode_list_record_string_list_prim_u_8_strict(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_record_string_list_prim_u_8_strict)
+        .toList();
+  }
+
+  @protected
+  List<(String, String, String?)>
+      dco_decode_list_record_string_string_opt_string(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_record_string_string_opt_string)
+        .toList();
+  }
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
+  (String, Uint8List) dco_decode_record_string_list_prim_u_8_strict(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_String(arr[0]),
+      dco_decode_list_prim_u_8_strict(arr[1]),
+    );
+  }
+
+  @protected
+  (String, String, String?) dco_decode_record_string_string_opt_string(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) {
+      throw Exception('Expected 3 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_String(arr[0]),
+      dco_decode_String(arr[1]),
+      dco_decode_opt_String(arr[2]),
+    );
+  }
+
+  @protected
   RoonEvent dco_decode_roon_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
@@ -235,6 +328,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 1:
         return RoonEvent_CoreLost(
           dco_decode_String(raw[1]),
+        );
+      case 2:
+        return RoonEvent_ZonesChanged(
+          dco_decode_list_record_string_string_opt_string(raw[1]),
+        );
+      case 3:
+        return RoonEvent_Image(
+          dco_decode_list_record_string_list_prim_u_8_strict(raw[1]),
         );
       default:
         throw Exception("unreachable");
@@ -287,6 +388,63 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<(String, Uint8List)> sse_decode_list_record_string_list_prim_u_8_strict(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <(String, Uint8List)>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_record_string_list_prim_u_8_strict(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<(String, String, String?)>
+      sse_decode_list_record_string_string_opt_string(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <(String, String, String?)>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_record_string_string_opt_string(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  (String, Uint8List) sse_decode_record_string_list_prim_u_8_strict(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_String(deserializer);
+    var var_field1 = sse_decode_list_prim_u_8_strict(deserializer);
+    return (var_field0, var_field1);
+  }
+
+  @protected
+  (String, String, String?) sse_decode_record_string_string_opt_string(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_String(deserializer);
+    var var_field1 = sse_decode_String(deserializer);
+    var var_field2 = sse_decode_opt_String(deserializer);
+    return (var_field0, var_field1, var_field2);
+  }
+
+  @protected
   RoonEvent sse_decode_roon_event(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -298,6 +456,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 1:
         var var_field0 = sse_decode_String(deserializer);
         return RoonEvent_CoreLost(var_field0);
+      case 2:
+        var var_field0 =
+            sse_decode_list_record_string_string_opt_string(deserializer);
+        return RoonEvent_ZonesChanged(var_field0);
+      case 3:
+        var var_field0 =
+            sse_decode_list_record_string_list_prim_u_8_strict(deserializer);
+        return RoonEvent_Image(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -370,6 +536,53 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_record_string_list_prim_u_8_strict(
+      List<(String, Uint8List)> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_record_string_list_prim_u_8_strict(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_record_string_string_opt_string(
+      List<(String, String, String?)> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_record_string_string_opt_string(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_record_string_list_prim_u_8_strict(
+      (String, Uint8List) self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.$1, serializer);
+    sse_encode_list_prim_u_8_strict(self.$2, serializer);
+  }
+
+  @protected
+  void sse_encode_record_string_string_opt_string(
+      (String, String, String?) self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.$1, serializer);
+    sse_encode_String(self.$2, serializer);
+    sse_encode_opt_String(self.$3, serializer);
+  }
+
+  @protected
   void sse_encode_roon_event(RoonEvent self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     switch (self) {
@@ -379,6 +592,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_CoreLost(field0: final field0):
         sse_encode_i_32(1, serializer);
         sse_encode_String(field0, serializer);
+      case RoonEvent_ZonesChanged(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_list_record_string_string_opt_string(field0, serializer);
+      case RoonEvent_Image(field0: final field0):
+        sse_encode_i_32(3, serializer);
+        sse_encode_list_record_string_list_prim_u_8_strict(field0, serializer);
     }
   }
 

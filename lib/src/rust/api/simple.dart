@@ -7,10 +7,20 @@ import '../backend/roon.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-void incCounter({dynamic hint}) => RustLib.instance.api.incCounter(hint: hint);
-
-int getCounter({dynamic hint}) => RustLib.instance.api.getCounter(hint: hint);
+Future<int> incCounter({dynamic hint}) =>
+    RustLib.instance.api.incCounter(hint: hint);
 
 Future<void> startRoon(
         {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) =>
     RustLib.instance.api.startRoon(cb: cb, hint: hint);
+
+Future<void> selectZone({required String zoneId, dynamic hint}) =>
+    RustLib.instance.api.selectZone(zoneId: zoneId, hint: hint);
+
+Future<void> getImage(
+        {required String imageKey,
+        required int width,
+        required int height,
+        dynamic hint}) =>
+    RustLib.instance.api
+        .getImage(imageKey: imageKey, width: width, height: height, hint: hint);

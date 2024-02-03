@@ -1,8 +1,12 @@
-import 'package:community_remote/src/rust/backend/roon.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
+import 'package:community_remote/src/rust/backend/roon.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
+
+const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
 
 var appState = MyAppState();
 
@@ -22,9 +26,20 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Community Remote',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(0x75, 0x75, 0xf3, 1.0)),
+          colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.light,
+            seedColor: roonAccentColor,
+          ),
           useMaterial3: true,
         ),
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: roonAccentColor,
+          ),
+          useMaterial3: true,
+        ),
+        themeMode: ThemeMode.light,
         home: const MyHomePage(title: 'Community Remote'),
       ),
     );
@@ -33,21 +48,32 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   String serverName = '';
+  dynamic zoneList;
+  var count = 0;
+  Map<String, Uint8List> imageCache = {};
 
   void cb(event) {
     if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
       notifyListeners();
+    } else if (event is RoonEvent_ZonesChanged) {
+      zoneList = event.field0;
+    } else if (event is RoonEvent_Image) {
+      for (var (key, image) in event.field0) {
+        imageCache[key] = image;
+      }
+
+      notifyListeners();
     }
   }
 
-  void incrementCounter() {
-    incCounter();
+  Future<void> incrementCounter() async {
+    count = await incCounter();
     notifyListeners();
   }
 
   int counter() {
-    return getCounter();
+    return count;
   }
 }
 
@@ -75,8 +101,22 @@ class MyHomePage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(flex: 5, child: Browse()),
-                  Expanded(flex: 5, child: Queue()),
+                  Expanded(
+                    flex: 5,
+                    child: Browse(),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      clipBehavior: Clip.none,
+                      fit: StackFit.expand,
+                      children: [
+                        Queue(),
+                        Zones(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -105,9 +145,12 @@ class Browse extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Card(
       margin: EdgeInsets.all(10),
-      child: Text(
-        'You have pushed the ',
-        textAlign: TextAlign.center,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          'You have pushed the ',
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
@@ -122,9 +165,63 @@ class Queue extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Card(
       margin: EdgeInsets.all(10),
-      child: Text(
-        'button this many times:',
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          'button this many times:',
+        ),
       ),
+    );
+  }
+}
+
+class Zones extends StatelessWidget {
+  const Zones({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var zones = appState.zoneList;
+    ListView? listView;
+
+    if (zones != null) {
+      ListTile itemBuilder(context, index) {
+        var imageKey = zones[index].$3;
+        Image? image;
+
+        if (imageKey != null) {
+          var byteList = appState.imageCache[imageKey];
+
+          if (byteList != null) {
+            image = Image.memory(byteList);
+          } else {
+            getImage(imageKey: imageKey, width: 100, height: 100);
+          }
+        }
+
+        return ListTile(
+          trailing: image,
+          title: Text(zones[index].$2),
+          onTap: () {
+            selectZone(zoneId: zones[index].$1);
+          },
+        );
+      }
+
+      listView = ListView.separated(
+        controller: ScrollController(),
+        padding: const EdgeInsets.all(10),
+        itemBuilder: itemBuilder,
+        separatorBuilder: (context, index) => const Divider(),
+        itemCount: zones.length,
+      );
+    }
+
+    return Card(
+      margin: const EdgeInsets.all(10),
+      child: listView,
     );
   }
 }
@@ -140,9 +237,30 @@ class NowPlaying extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.all(10),
-      child: Text(
-        '${appState.counter()}',
-        style: Theme.of(context).textTheme.headlineMedium,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              '${appState.counter()}',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+
+            },
+            icon: const Icon(Icons.speaker_outlined),
+            label: const Text('Zones'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+
+            },
+            icon: const Icon(Icons.volume_up),
+            label: const Text('Volume'),
+          ),
+        ],
       ),
     );
   }
