@@ -5,15 +5,14 @@ use tokio::sync::Mutex;
 
 use crate::backend::roon::{Roon, RoonEvent};
 
-static API: Lazy<Mutex<State>> = Lazy::new(|| Mutex::new(State::new()));
+static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
 
-#[flutter_rust_bridge::frb(opaque)]
-struct State {
+struct InternalState {
     counter: u32,
     roon: Option<Roon>,
 }
 
-impl State {
+impl InternalState {
     fn new() -> Self {
         Self {
             counter: 0,
@@ -41,6 +40,8 @@ pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'sta
     let (roon, mut rx) = Roon::start().await;
     let mut api = API.lock().await;
 
+    api.roon = Some(roon);
+
     tokio::spawn(async move {
         loop {
             if let Some(event) = rx.recv().await {
@@ -48,8 +49,6 @@ pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'sta
             }
         }
     });
-
-    api.roon = Some(roon);
 }
 
 pub async fn select_zone(zone_id: String) {

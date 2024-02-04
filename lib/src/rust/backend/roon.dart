@@ -8,6 +8,13 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'roon.freezed.dart';
 
+enum PlayState {
+  playing,
+  loading,
+  paused,
+  stopped,
+}
+
 @freezed
 sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.coreFound(
@@ -17,9 +24,44 @@ sealed class RoonEvent with _$RoonEvent {
     String field0,
   ) = RoonEvent_CoreLost;
   const factory RoonEvent.zonesChanged(
-    List<(String, String, String?)> field0,
+    List<ZoneSummary> field0,
   ) = RoonEvent_ZonesChanged;
   const factory RoonEvent.image(
     List<(String, Uint8List)> field0,
   ) = RoonEvent_Image;
+}
+
+class ZoneSummary {
+  final String zoneId;
+  final String displayName;
+  final PlayState playState;
+  final String? nowPlaying;
+  final String? imageKey;
+
+  const ZoneSummary({
+    required this.zoneId,
+    required this.displayName,
+    required this.playState,
+    this.nowPlaying,
+    this.imageKey,
+  });
+
+  @override
+  int get hashCode =>
+      zoneId.hashCode ^
+      displayName.hashCode ^
+      playState.hashCode ^
+      nowPlaying.hashCode ^
+      imageKey.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ZoneSummary &&
+          runtimeType == other.runtimeType &&
+          zoneId == other.zoneId &&
+          displayName == other.displayName &&
+          playState == other.playState &&
+          nowPlaying == other.nowPlaying &&
+          imageKey == other.imageKey;
 }

@@ -21,8 +21,7 @@ mixin _$RoonEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
-    required TResult Function(List<(String, String, String?)> field0)
-        zonesChanged,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(List<(String, Uint8List)> field0) image,
   }) =>
       throw _privateConstructorUsedError;
@@ -30,7 +29,7 @@ mixin _$RoonEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
-    TResult? Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(List<(String, Uint8List)> field0)? image,
   }) =>
       throw _privateConstructorUsedError;
@@ -38,7 +37,7 @@ mixin _$RoonEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
-    TResult Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(List<(String, Uint8List)> field0)? image,
     required TResult orElse(),
   }) =>
@@ -154,8 +153,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
-    required TResult Function(List<(String, String, String?)> field0)
-        zonesChanged,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(List<(String, Uint8List)> field0) image,
   }) {
     return coreFound(field0);
@@ -166,7 +164,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
-    TResult? Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(List<(String, Uint8List)> field0)? image,
   }) {
     return coreFound?.call(field0);
@@ -177,7 +175,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
-    TResult Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(List<(String, Uint8List)> field0)? image,
     required TResult orElse(),
   }) {
@@ -303,8 +301,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
-    required TResult Function(List<(String, String, String?)> field0)
-        zonesChanged,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(List<(String, Uint8List)> field0) image,
   }) {
     return coreLost(field0);
@@ -315,7 +312,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
-    TResult? Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(List<(String, Uint8List)> field0)? image,
   }) {
     return coreLost?.call(field0);
@@ -326,7 +323,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
-    TResult Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(List<(String, Uint8List)> field0)? image,
     required TResult orElse(),
   }) {
@@ -392,7 +389,7 @@ abstract class _$$RoonEvent_ZonesChangedImplCopyWith<$Res> {
           $Res Function(_$RoonEvent_ZonesChangedImpl) then) =
       __$$RoonEvent_ZonesChangedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<(String, String, String?)> field0});
+  $Res call({List<ZoneSummary> field0});
 }
 
 /// @nodoc
@@ -413,7 +410,7 @@ class __$$RoonEvent_ZonesChangedImplCopyWithImpl<$Res>
       null == field0
           ? _value._field0
           : field0 // ignore: cast_nullable_to_non_nullable
-              as List<(String, String, String?)>,
+              as List<ZoneSummary>,
     ));
   }
 }
@@ -421,13 +418,12 @@ class __$$RoonEvent_ZonesChangedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
-  const _$RoonEvent_ZonesChangedImpl(
-      final List<(String, String, String?)> field0)
+  const _$RoonEvent_ZonesChangedImpl(final List<ZoneSummary> field0)
       : _field0 = field0;
 
-  final List<(String, String, String?)> _field0;
+  final List<ZoneSummary> _field0;
   @override
-  List<(String, String, String?)> get field0 {
+  List<ZoneSummary> get field0 {
     if (_field0 is EqualUnmodifiableListView) return _field0;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_field0);
@@ -462,8 +458,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
-    required TResult Function(List<(String, String, String?)> field0)
-        zonesChanged,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(List<(String, Uint8List)> field0) image,
   }) {
     return zonesChanged(field0);
@@ -474,7 +469,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
-    TResult? Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(List<(String, Uint8List)> field0)? image,
   }) {
     return zonesChanged?.call(field0);
@@ -485,7 +480,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
-    TResult Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(List<(String, Uint8List)> field0)? image,
     required TResult orElse(),
   }) {
@@ -534,12 +529,11 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
 }
 
 abstract class RoonEvent_ZonesChanged implements RoonEvent {
-  const factory RoonEvent_ZonesChanged(
-          final List<(String, String, String?)> field0) =
+  const factory RoonEvent_ZonesChanged(final List<ZoneSummary> field0) =
       _$RoonEvent_ZonesChangedImpl;
 
   @override
-  List<(String, String, String?)> get field0;
+  List<ZoneSummary> get field0;
   @JsonKey(ignore: true)
   _$$RoonEvent_ZonesChangedImplCopyWith<_$RoonEvent_ZonesChangedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -619,8 +613,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
-    required TResult Function(List<(String, String, String?)> field0)
-        zonesChanged,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(List<(String, Uint8List)> field0) image,
   }) {
     return image(field0);
@@ -631,7 +624,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
-    TResult? Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(List<(String, Uint8List)> field0)? image,
   }) {
     return image?.call(field0);
@@ -642,7 +635,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
-    TResult Function(List<(String, String, String?)> field0)? zonesChanged,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(List<(String, Uint8List)> field0)? image,
     required TResult orElse(),
   }) {

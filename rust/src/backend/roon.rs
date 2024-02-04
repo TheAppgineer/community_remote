@@ -2,7 +2,7 @@ use roon_api::{
     browse::Browse,
     image::{Args, Image},
     info,
-    transport::{Transport, Zone},
+    transport::{State, Transport, Zone},
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
 use serde_json::Value;
@@ -14,13 +14,27 @@ use tokio::sync::{
 
 const CONFIG_PATH: &str = "config.json";
 
-type ZoneSummary = (String, String, Option<String>);
-
 pub enum RoonEvent {
     CoreFound(String),
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
     Image(Vec<(String, Vec<u8>)>),
+}
+
+#[derive(Clone, Debug)]
+pub enum PlayState {
+    Playing,
+    Loading,
+    Paused,
+    Stopped,
+}
+
+pub struct ZoneSummary {
+    pub zone_id: String,
+    pub display_name: String,
+    pub play_state: PlayState,
+    pub now_playing: Option<String>,
+    pub image_key: Option<String>,
 }
 
 pub struct Roon {
@@ -157,19 +171,33 @@ impl RoonHandler {
     }
 
     async fn send_zone_list(&self) {
-        let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.1.cmp(&b.1);
+        let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.display_name.cmp(&b.display_name);
         let mut zones = self
             .zone_map
             .iter()
             .map(|(zone_id, zone)| {
-                if let Some(now_playing) = zone.now_playing.as_ref() {
+                let (image_key, now_playing) = if let Some(now_playing) = zone.now_playing.as_ref()
+                {
                     (
-                        zone_id.to_owned(),
-                        zone.display_name.to_owned(),
                         now_playing.image_key.to_owned(),
+                        Some(now_playing.one_line.line1.to_owned()),
                     )
                 } else {
-                    (zone_id.to_owned(), zone.display_name.to_owned(), None)
+                    (None, None)
+                };
+                let play_state = match &zone.state {
+                    State::Loading => PlayState::Loading,
+                    State::Paused => PlayState::Paused,
+                    State::Playing => PlayState::Playing,
+                    State::Stopped => PlayState::Stopped,
+                };
+
+                ZoneSummary {
+                    zone_id: zone_id.to_owned(),
+                    display_name: zone.display_name.to_owned(),
+                    play_state: play_state.to_owned(),
+                    now_playing,
+                    image_key,
                 }
             })
             .collect::<Vec<_>>();

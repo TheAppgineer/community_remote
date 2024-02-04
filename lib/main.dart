@@ -55,16 +55,14 @@ class MyAppState extends ChangeNotifier {
   void cb(event) {
     if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
-      notifyListeners();
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
     } else if (event is RoonEvent_Image) {
       for (var (key, image) in event.field0) {
         imageCache[key] = image;
       }
-
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> incrementCounter() async {
@@ -90,6 +88,15 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('$title (${appState.serverName})'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.dark_mode),
+            tooltip: 'Dark Mode',
+            onPressed: () {
+
+            },
+          ),
+        ],
       ),
       body: const Center(
         child: Column(
@@ -188,8 +195,10 @@ class Zones extends StatelessWidget {
 
     if (zones != null) {
       ListTile itemBuilder(context, index) {
-        var imageKey = zones[index].$3;
+        var imageKey = zones[index].imageKey;
         Image? image;
+        Icon? playState;
+        Text? metaData;
 
         if (imageKey != null) {
           var byteList = appState.imageCache[imageKey];
@@ -201,11 +210,28 @@ class Zones extends StatelessWidget {
           }
         }
 
+        switch (zones[index].playState) {
+          case PlayState.playing:
+            playState = const Icon(Icons.play_circle_outline);
+            break;
+          case PlayState.paused:
+            playState = const Icon(Icons.pause_circle_outline);
+            break;
+          case PlayState.loading:
+            playState = const Icon(Icons.hourglass_top_outlined);
+            break;
+          case PlayState.stopped:
+            playState = const Icon(Icons.stop_circle_outlined);
+            break;
+        }
+
         return ListTile(
+          leading: playState,
           trailing: image,
-          title: Text(zones[index].$2),
+          title: Text(zones[index].displayName),
+          subtitle: metaData,
           onTap: () {
-            selectZone(zoneId: zones[index].$1);
+            selectZone(zoneId: zones[index].zoneId);
           },
         );
       }

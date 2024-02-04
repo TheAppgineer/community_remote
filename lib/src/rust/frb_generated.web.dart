@@ -29,6 +29,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String dco_decode_String(dynamic raw);
 
   @protected
+  int dco_decode_i_32(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
@@ -36,18 +39,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
-  List<(String, String, String?)>
-      dco_decode_list_record_string_string_opt_string(dynamic raw);
+  List<ZoneSummary> dco_decode_list_zone_summary(dynamic raw);
 
   @protected
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
-  (String, Uint8List) dco_decode_record_string_list_prim_u_8_strict(
-      dynamic raw);
+  PlayState dco_decode_play_state(dynamic raw);
 
   @protected
-  (String, String, String?) dco_decode_record_string_string_opt_string(
+  (String, Uint8List) dco_decode_record_string_list_prim_u_8_strict(
       dynamic raw);
 
   @protected
@@ -66,10 +67,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_usize(dynamic raw);
 
   @protected
+  ZoneSummary dco_decode_zone_summary(dynamic raw);
+
+  @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
@@ -79,19 +86,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  List<(String, String, String?)>
-      sse_decode_list_record_string_string_opt_string(
-          SseDeserializer deserializer);
+  List<ZoneSummary> sse_decode_list_zone_summary(SseDeserializer deserializer);
 
   @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
-  (String, Uint8List) sse_decode_record_string_list_prim_u_8_strict(
-      SseDeserializer deserializer);
+  PlayState sse_decode_play_state(SseDeserializer deserializer);
 
   @protected
-  (String, String, String?) sse_decode_record_string_string_opt_string(
+  (String, Uint8List) sse_decode_record_string_list_prim_u_8_strict(
       SseDeserializer deserializer);
 
   @protected
@@ -110,7 +114,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_usize(SseDeserializer deserializer);
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
+  ZoneSummary sse_decode_zone_summary(SseDeserializer deserializer);
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer);
@@ -126,6 +130,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
 
@@ -134,19 +141,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<(String, Uint8List)> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_record_string_string_opt_string(
-      List<(String, String, String?)> self, SseSerializer serializer);
+  void sse_encode_list_zone_summary(
+      List<ZoneSummary> self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_string_list_prim_u_8_strict(
-      (String, Uint8List) self, SseSerializer serializer);
+  void sse_encode_play_state(PlayState self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_string_string_opt_string(
-      (String, String, String?) self, SseSerializer serializer);
+  void sse_encode_record_string_list_prim_u_8_strict(
+      (String, Uint8List) self, SseSerializer serializer);
 
   @protected
   void sse_encode_roon_event(RoonEvent self, SseSerializer serializer);
@@ -164,7 +170,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_usize(int self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
+  void sse_encode_zone_summary(ZoneSummary self, SseSerializer serializer);
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer);

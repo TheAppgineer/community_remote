@@ -260,6 +260,13 @@ impl SseDecode for String {
     }
 }
 
+impl SseDecode for i32 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_i32::<NativeEndian>().unwrap()
+    }
+}
+
 impl SseDecode for Vec<u8> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -284,13 +291,15 @@ impl SseDecode for Vec<(String, Vec<u8>)> {
     }
 }
 
-impl SseDecode for Vec<(String, String, Option<String>)> {
+impl SseDecode for Vec<crate::backend::roon::ZoneSummary> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<(String, String, Option<String>)>::sse_decode(deserializer));
+            ans_.push(<crate::backend::roon::ZoneSummary>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -307,22 +316,26 @@ impl SseDecode for Option<String> {
     }
 }
 
+impl SseDecode for crate::backend::roon::PlayState {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::backend::roon::PlayState::Playing,
+            1 => crate::backend::roon::PlayState::Loading,
+            2 => crate::backend::roon::PlayState::Paused,
+            3 => crate::backend::roon::PlayState::Stopped,
+            _ => unreachable!("Invalid variant for PlayState: {}", inner),
+        };
+    }
+}
+
 impl SseDecode for (String, Vec<u8>) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_field0 = <String>::sse_decode(deserializer);
         let mut var_field1 = <Vec<u8>>::sse_decode(deserializer);
         return (var_field0, var_field1);
-    }
-}
-
-impl SseDecode for (String, String, Option<String>) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_field0 = <String>::sse_decode(deserializer);
-        let mut var_field1 = <String>::sse_decode(deserializer);
-        let mut var_field2 = <Option<String>>::sse_decode(deserializer);
-        return (var_field0, var_field1, var_field2);
     }
 }
 
@@ -341,7 +354,7 @@ impl SseDecode for crate::backend::roon::RoonEvent {
             }
             2 => {
                 let mut var_field0 =
-                    <Vec<(String, String, Option<String>)>>::sse_decode(deserializer);
+                    <Vec<crate::backend::roon::ZoneSummary>>::sse_decode(deserializer);
                 return crate::backend::roon::RoonEvent::ZonesChanged(var_field0);
             }
             3 => {
@@ -381,10 +394,21 @@ impl SseDecode for usize {
     }
 }
 
-impl SseDecode for i32 {
+impl SseDecode for crate::backend::roon::ZoneSummary {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_i32::<NativeEndian>().unwrap()
+        let mut var_zoneId = <String>::sse_decode(deserializer);
+        let mut var_displayName = <String>::sse_decode(deserializer);
+        let mut var_playState = <crate::backend::roon::PlayState>::sse_decode(deserializer);
+        let mut var_nowPlaying = <Option<String>>::sse_decode(deserializer);
+        let mut var_imageKey = <Option<String>>::sse_decode(deserializer);
+        return crate::backend::roon::ZoneSummary {
+            zone_id: var_zoneId,
+            display_name: var_displayName,
+            play_state: var_playState,
+            now_playing: var_nowPlaying,
+            image_key: var_imageKey,
+        };
     }
 }
 
@@ -428,6 +452,28 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::backend::roon::PlayState {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Playing => 0.into_dart(),
+            Self::Loading => 1.into_dart(),
+            Self::Paused => 2.into_dart(),
+            Self::Stopped => 3.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::backend::roon::PlayState
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::backend::roon::PlayState>
+    for crate::backend::roon::PlayState
+{
+    fn into_into_dart(self) -> crate::backend::roon::PlayState {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::backend::roon::RoonEvent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -457,6 +503,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::backend::roon::RoonEvent>
         self
     }
 }
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::backend::roon::ZoneSummary {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.zone_id.into_into_dart().into_dart(),
+            self.display_name.into_into_dart().into_dart(),
+            self.play_state.into_into_dart().into_dart(),
+            self.now_playing.into_into_dart().into_dart(),
+            self.image_key.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::backend::roon::ZoneSummary
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::backend::roon::ZoneSummary>
+    for crate::backend::roon::ZoneSummary
+{
+    fn into_into_dart(self) -> crate::backend::roon::ZoneSummary {
+        self
+    }
+}
 
 impl SseEncode for flutter_rust_bridge::DartOpaque {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -469,6 +539,13 @@ impl SseEncode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for i32 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_i32::<NativeEndian>(self).unwrap();
     }
 }
 
@@ -492,12 +569,12 @@ impl SseEncode for Vec<(String, Vec<u8>)> {
     }
 }
 
-impl SseEncode for Vec<(String, String, Option<String>)> {
+impl SseEncode for Vec<crate::backend::roon::ZoneSummary> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <(String, String, Option<String>)>::sse_encode(item, serializer);
+            <crate::backend::roon::ZoneSummary>::sse_encode(item, serializer);
         }
     }
 }
@@ -512,20 +589,29 @@ impl SseEncode for Option<String> {
     }
 }
 
+impl SseEncode for crate::backend::roon::PlayState {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::backend::roon::PlayState::Playing => 0,
+                crate::backend::roon::PlayState::Loading => 1,
+                crate::backend::roon::PlayState::Paused => 2,
+                crate::backend::roon::PlayState::Stopped => 3,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for (String, Vec<u8>) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.0, serializer);
         <Vec<u8>>::sse_encode(self.1, serializer);
-    }
-}
-
-impl SseEncode for (String, String, Option<String>) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.0, serializer);
-        <String>::sse_encode(self.1, serializer);
-        <Option<String>>::sse_encode(self.2, serializer);
     }
 }
 
@@ -543,7 +629,7 @@ impl SseEncode for crate::backend::roon::RoonEvent {
             }
             crate::backend::roon::RoonEvent::ZonesChanged(field0) => {
                 <i32>::sse_encode(2, serializer);
-                <Vec<(String, String, Option<String>)>>::sse_encode(field0, serializer);
+                <Vec<crate::backend::roon::ZoneSummary>>::sse_encode(field0, serializer);
             }
             crate::backend::roon::RoonEvent::Image(field0) => {
                 <i32>::sse_encode(3, serializer);
@@ -582,10 +668,14 @@ impl SseEncode for usize {
     }
 }
 
-impl SseEncode for i32 {
+impl SseEncode for crate::backend::roon::ZoneSummary {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_i32::<NativeEndian>(self).unwrap();
+        <String>::sse_encode(self.zone_id, serializer);
+        <String>::sse_encode(self.display_name, serializer);
+        <crate::backend::roon::PlayState>::sse_encode(self.play_state, serializer);
+        <Option<String>>::sse_encode(self.now_playing, serializer);
+        <Option<String>>::sse_encode(self.image_key, serializer);
     }
 }
 
