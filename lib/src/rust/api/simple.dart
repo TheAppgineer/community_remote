@@ -6,6 +6,9 @@
 import '../backend/roon.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
+import 'roon_transport_wrapper.dart';
+part 'simple.freezed.dart';
 
 Future<int> incCounter({dynamic hint}) =>
     RustLib.instance.api.incCounter(hint: hint);
@@ -24,3 +27,22 @@ Future<void> getImage(
         dynamic hint}) =>
     RustLib.instance.api
         .getImage(imageKey: imageKey, width: width, height: height, hint: hint);
+
+@freezed
+sealed class RoonEvent with _$RoonEvent {
+  const factory RoonEvent.coreFound(
+    String field0,
+  ) = RoonEvent_CoreFound;
+  const factory RoonEvent.coreLost(
+    String field0,
+  ) = RoonEvent_CoreLost;
+  const factory RoonEvent.zonesChanged(
+    List<ZoneSummary> field0,
+  ) = RoonEvent_ZonesChanged;
+  const factory RoonEvent.zoneSelected(
+    RoonZone field0,
+  ) = RoonEvent_ZoneSelected;
+  const factory RoonEvent.image(
+    List<(String, Uint8List)> field0,
+  ) = RoonEvent_Image;
+}

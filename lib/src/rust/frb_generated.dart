@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/roon_transport_wrapper.dart';
 import 'api/simple.dart';
 import 'backend/roon.dart';
 import 'dart:async';
@@ -65,6 +66,24 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  String roonZoneDisplayName({required RoonZone that, dynamic hint});
+
+  Future<RoonZone> roonZoneNew(
+      {required RoonApiTransportZone inner, dynamic hint});
+
+  ZoneNowPlaying? roonZoneNowPlaying({required RoonZone that, dynamic hint});
+
+  ZoneState roonZoneState({required RoonZone that, dynamic hint});
+
+  Future<ZoneNowPlaying> zoneNowPlayingNew(
+      {required RoonApiTransportNowPlaying inner, dynamic hint});
+
+  List<String> zoneNowPlayingThreeLine(
+      {required ZoneNowPlaying that, dynamic hint});
+
+  Future<ZoneState> zoneStateFrom(
+      {required RoonApiTransportState inner, dynamic hint});
+
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -79,6 +98,50 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint});
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonZone;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonZone;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RoonZonePtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_ZoneNowPlaying;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_ZoneNowPlaying;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_ZoneNowPlayingPtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonApiTransportNowPlaying;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonApiTransportNowPlaying;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_RoonApiTransportNowPlayingPtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonApiTransportState;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonApiTransportState;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_RoonApiTransportStatePtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonApiTransportZone;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonApiTransportZone;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_RoonApiTransportZonePtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -88,6 +151,191 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
+
+  @override
+  String roonZoneDisplayName({required RoonZone that, dynamic hint}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kRoonZoneDisplayNameConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kRoonZoneDisplayNameConstMeta => const TaskConstMeta(
+        debugName: "RoonZone_display_name",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<RoonZone> roonZoneNew(
+      {required RoonApiTransportZone inner, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+            inner, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 4, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone,
+        decodeErrorData: null,
+      ),
+      constMeta: kRoonZoneNewConstMeta,
+      argValues: [inner],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kRoonZoneNewConstMeta => const TaskConstMeta(
+        debugName: "RoonZone_new",
+        argNames: ["inner"],
+      );
+
+  @override
+  ZoneNowPlaying? roonZoneNowPlaying({required RoonZone that, dynamic hint}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying,
+        decodeErrorData: null,
+      ),
+      constMeta: kRoonZoneNowPlayingConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kRoonZoneNowPlayingConstMeta => const TaskConstMeta(
+        debugName: "RoonZone_now_playing",
+        argNames: ["that"],
+      );
+
+  @override
+  ZoneState roonZoneState({required RoonZone that, dynamic hint}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_zone_state,
+        decodeErrorData: null,
+      ),
+      constMeta: kRoonZoneStateConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kRoonZoneStateConstMeta => const TaskConstMeta(
+        debugName: "RoonZone_state",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<ZoneNowPlaying> zoneNowPlayingNew(
+      {required RoonApiTransportNowPlaying inner, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+            inner, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 2, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying,
+        decodeErrorData: null,
+      ),
+      constMeta: kZoneNowPlayingNewConstMeta,
+      argValues: [inner],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kZoneNowPlayingNewConstMeta => const TaskConstMeta(
+        debugName: "ZoneNowPlaying_new",
+        argNames: ["inner"],
+      );
+
+  @override
+  List<String> zoneNowPlayingThreeLine(
+      {required ZoneNowPlaying that, dynamic hint}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_list_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kZoneNowPlayingThreeLineConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kZoneNowPlayingThreeLineConstMeta => const TaskConstMeta(
+        debugName: "ZoneNowPlaying_three_line",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<ZoneState> zoneStateFrom(
+      {required RoonApiTransportState inner, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+            inner, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 1, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_zone_state,
+        decodeErrorData: null,
+      ),
+      constMeta: kZoneStateFromConstMeta,
+      argValues: [inner],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kZoneStateFromConstMeta => const TaskConstMeta(
+        debugName: "ZoneState_from",
+        argNames: ["inner"],
+      );
 
   @override
   Future<void> getImage(
@@ -102,7 +350,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_u_32(width, serializer);
         sse_encode_u_32(height, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 5, port: port_);
+            funcId: 12, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -126,7 +374,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 1, port: port_);
+            funcId: 8, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_u_32,
@@ -150,7 +398,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 2, port: port_);
+            funcId: 9, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -175,7 +423,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(zoneId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 4, port: port_);
+            funcId: 11, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -201,7 +449,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_DartFn_Inputs_roon_event_Output_unit(cb, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 3, port: port_);
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -239,6 +487,102 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     };
   }
 
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonZone => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonZone => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_ZoneNowPlaying => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_ZoneNowPlaying => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonApiTransportNowPlaying => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonApiTransportNowPlaying => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonApiTransportState => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonApiTransportState => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RoonApiTransportZone => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RoonApiTransportZone => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone;
+
+  @protected
+  RoonZone
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonZone.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ZoneNowPlaying
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ZoneNowPlaying.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonApiTransportNowPlaying
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonApiTransportNowPlaying.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonApiTransportState
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonApiTransportState.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonApiTransportZone
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonApiTransportZone.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonZone
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonZone.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ZoneNowPlaying
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ZoneNowPlaying.dcoDecode(raw as List<dynamic>);
+  }
+
   @protected
   FutureOr<void> Function(RoonEvent)
       dco_decode_DartFn_Inputs_roon_event_Output_unit(dynamic raw) {
@@ -253,15 +597,69 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RoonZone
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonZone.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ZoneNowPlaying
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ZoneNowPlaying.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonApiTransportNowPlaying
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonApiTransportNowPlaying.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonApiTransportState
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonApiTransportState.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RoonApiTransportZone
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RoonApiTransportZone.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
   }
 
   @protected
+  ZoneNowPlaying
+      dco_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as ZoneNowPlaying;
+  }
+
+  @protected
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
   }
 
   @protected
@@ -292,9 +690,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  PlayState dco_decode_play_state(dynamic raw) {
+  ZoneNowPlaying?
+      dco_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return PlayState.values[raw as int];
+    return raw == null
+        ? null
+        : dco_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+            raw);
   }
 
   @protected
@@ -328,6 +731,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_list_zone_summary(raw[1]),
         );
       case 3:
+        return RoonEvent_ZoneSelected(
+          dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+              raw[1]),
+        );
+      case 4:
         return RoonEvent_Image(
           dco_decode_list_record_string_list_prim_u_8_strict(raw[1]),
         );
@@ -361,6 +769,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ZoneState dco_decode_zone_state(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ZoneState.values[raw as int];
+  }
+
+  @protected
   ZoneSummary dco_decode_zone_summary(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -369,10 +783,73 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return ZoneSummary(
       zoneId: dco_decode_String(arr[0]),
       displayName: dco_decode_String(arr[1]),
-      playState: dco_decode_play_state(arr[2]),
+      state: dco_decode_zone_state(arr[2]),
       nowPlaying: dco_decode_opt_String(arr[3]),
       imageKey: dco_decode_opt_String(arr[4]),
     );
+  }
+
+  @protected
+  RoonZone
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonZone.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  ZoneNowPlaying
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ZoneNowPlaying.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonApiTransportNowPlaying
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonApiTransportNowPlaying.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonApiTransportState
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonApiTransportState.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonApiTransportZone
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonApiTransportZone.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonZone
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonZone.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  ZoneNowPlaying
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ZoneNowPlaying.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
@@ -383,6 +860,51 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RoonZone
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonZone.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  ZoneNowPlaying
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ZoneNowPlaying.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonApiTransportNowPlaying
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonApiTransportNowPlaying.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonApiTransportState
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonApiTransportState.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RoonApiTransportZone
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RoonApiTransportZone.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
@@ -390,9 +912,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ZoneNowPlaying
+      sse_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+        deserializer));
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
   }
 
   @protected
@@ -439,10 +982,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  PlayState sse_decode_play_state(SseDeserializer deserializer) {
+  ZoneNowPlaying?
+      sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_i_32(deserializer);
-    return PlayState.values[inner];
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          deserializer));
+    } else {
+      return null;
+    }
   }
 
   @protected
@@ -470,6 +1020,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_list_zone_summary(deserializer);
         return RoonEvent_ZonesChanged(var_field0);
       case 3:
+        var var_field0 =
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+                deserializer);
+        return RoonEvent_ZoneSelected(var_field0);
+      case 4:
         var var_field0 =
             sse_decode_list_record_string_list_prim_u_8_strict(deserializer);
         return RoonEvent_Image(var_field0);
@@ -502,17 +1057,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ZoneState sse_decode_zone_state(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return ZoneState.values[inner];
+  }
+
+  @protected
   ZoneSummary sse_decode_zone_summary(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_zoneId = sse_decode_String(deserializer);
     var var_displayName = sse_decode_String(deserializer);
-    var var_playState = sse_decode_play_state(deserializer);
+    var var_state = sse_decode_zone_state(deserializer);
     var var_nowPlaying = sse_decode_opt_String(deserializer);
     var var_imageKey = sse_decode_opt_String(deserializer);
     return ZoneSummary(
         zoneId: var_zoneId,
         displayName: var_displayName,
-        playState: var_playState,
+        state: var_state,
         nowPlaying: var_nowPlaying,
         imageKey: var_imageKey);
   }
@@ -521,6 +1083,62 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          RoonZone self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          ZoneNowPlaying self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+          RoonApiTransportNowPlaying self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+          RoonApiTransportState self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+          RoonApiTransportZone self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          RoonZone self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: false), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          ZoneNowPlaying self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: false), serializer);
   }
 
   @protected
@@ -541,15 +1159,73 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+          RoonZone self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          ZoneNowPlaying self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
+          RoonApiTransportNowPlaying self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
+          RoonApiTransportState self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
+          RoonApiTransportZone self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
   }
 
   @protected
+  void
+      sse_encode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          ZoneNowPlaying self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+        self, serializer);
+  }
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
   }
 
   @protected
@@ -591,9 +1267,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_play_state(PlayState self, SseSerializer serializer) {
+  void
+      sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          ZoneNowPlaying? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.index, serializer);
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
+          self, serializer);
+    }
   }
 
   @protected
@@ -617,8 +1300,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_ZonesChanged(field0: final field0):
         sse_encode_i_32(2, serializer);
         sse_encode_list_zone_summary(field0, serializer);
-      case RoonEvent_Image(field0: final field0):
+      case RoonEvent_ZoneSelected(field0: final field0):
         sse_encode_i_32(3, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
+            field0, serializer);
+      case RoonEvent_Image(field0: final field0):
+        sse_encode_i_32(4, serializer);
         sse_encode_list_record_string_list_prim_u_8_strict(field0, serializer);
     }
   }
@@ -647,11 +1334,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_zone_state(ZoneState self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_zone_summary(ZoneSummary self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.zoneId, serializer);
     sse_encode_String(self.displayName, serializer);
-    sse_encode_play_state(self.playState, serializer);
+    sse_encode_zone_state(self.state, serializer);
     sse_encode_opt_String(self.nowPlaying, serializer);
     sse_encode_opt_String(self.imageKey, serializer);
   }

@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:community_remote/src/rust/api/roon_transport_wrapper.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
-import 'package:community_remote/src/rust/backend/roon.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
 
 const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
@@ -57,6 +57,8 @@ class MyAppState extends ChangeNotifier {
       serverName = event.field0;
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
+    } else if (event is RoonEvent_ZoneSelected) {
+      print(event.field0.nowPlaying?.threeLine);
     } else if (event is RoonEvent_Image) {
       for (var (key, image) in event.field0) {
         imageCache[key] = image;
@@ -210,19 +212,23 @@ class Zones extends StatelessWidget {
           }
         }
 
-        switch (zones[index].playState) {
-          case PlayState.playing:
+        switch (zones[index].state) {
+          case ZoneState.playing:
             playState = const Icon(Icons.play_circle_outline);
             break;
-          case PlayState.paused:
+          case ZoneState.paused:
             playState = const Icon(Icons.pause_circle_outline);
             break;
-          case PlayState.loading:
+          case ZoneState.loading:
             playState = const Icon(Icons.hourglass_top_outlined);
             break;
-          case PlayState.stopped:
+          case ZoneState.stopped:
             playState = const Icon(Icons.stop_circle_outlined);
             break;
+        }
+
+        if (zones[index].nowPlaying != null) {
+          metaData = Text(zones[index].nowPlaying);
         }
 
         return ListTile(

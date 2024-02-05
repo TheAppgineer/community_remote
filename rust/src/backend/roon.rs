@@ -2,7 +2,7 @@ use roon_api::{
     browse::Browse,
     image::{Args, Image},
     info,
-    transport::{State, Transport, Zone},
+    transport::{Transport, Zone},
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
 use serde_json::Value;
@@ -12,27 +12,15 @@ use tokio::sync::{
     Mutex,
 };
 
+use crate::api::roon_transport_wrapper::{RoonZone, ZoneState};
+use crate::api::simple::RoonEvent;
+
 const CONFIG_PATH: &str = "config.json";
-
-pub enum RoonEvent {
-    CoreFound(String),
-    CoreLost(String),
-    ZonesChanged(Vec<ZoneSummary>),
-    Image(Vec<(String, Vec<u8>)>),
-}
-
-#[derive(Clone, Debug)]
-pub enum PlayState {
-    Playing,
-    Loading,
-    Paused,
-    Stopped,
-}
 
 pub struct ZoneSummary {
     pub zone_id: String,
     pub display_name: String,
-    pub play_state: PlayState,
+    pub state: ZoneState,
     pub now_playing: Option<String>,
     pub image_key: Option<String>,
 }
@@ -97,8 +85,18 @@ impl Roon {
         }
     }
 
-    pub fn select_zone(&self, zone_id: &str) {
+    pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
         log::info!("Selecting zone: {zone_id}");
+        let handler = self.handler.lock().await;
+        let zone = RoonZone::new(handler.zone_map.get(zone_id).cloned()?);
+
+        handler
+            .event_tx
+            .send(RoonEvent::ZoneSelected(zone))
+            .await
+            .unwrap();
+
+        Some(())
     }
 }
 
@@ -185,17 +183,11 @@ impl RoonHandler {
                 } else {
                     (None, None)
                 };
-                let play_state = match &zone.state {
-                    State::Loading => PlayState::Loading,
-                    State::Paused => PlayState::Paused,
-                    State::Playing => PlayState::Playing,
-                    State::Stopped => PlayState::Stopped,
-                };
 
                 ZoneSummary {
                     zone_id: zone_id.to_owned(),
                     display_name: zone.display_name.to_owned(),
-                    play_state: play_state.to_owned(),
+                    state: ZoneState::from(zone.state.to_owned()),
                     now_playing,
                     image_key,
                 }

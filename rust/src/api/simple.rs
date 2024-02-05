@@ -3,9 +3,18 @@ use once_cell::sync::Lazy;
 use roon_api::image::{Args, Scale, Scaling};
 use tokio::sync::Mutex;
 
-use crate::backend::roon::{Roon, RoonEvent};
+use crate::api::roon_transport_wrapper::RoonZone;
+use crate::backend::roon::{Roon, ZoneSummary};
 
 static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
+
+pub enum RoonEvent {
+    CoreFound(String),
+    CoreLost(String),
+    ZonesChanged(Vec<ZoneSummary>),
+    ZoneSelected(RoonZone),
+    Image(Vec<(String, Vec<u8>)>),
+}
 
 struct InternalState {
     counter: u32,
@@ -55,7 +64,7 @@ pub async fn select_zone(zone_id: String) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.select_zone(&zone_id);
+        roon.select_zone(&zone_id).await;
     }
 }
 

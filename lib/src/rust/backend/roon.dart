@@ -3,45 +3,21 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../api/roon_transport_wrapper.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
-part 'roon.freezed.dart';
-
-enum PlayState {
-  playing,
-  loading,
-  paused,
-  stopped,
-}
-
-@freezed
-sealed class RoonEvent with _$RoonEvent {
-  const factory RoonEvent.coreFound(
-    String field0,
-  ) = RoonEvent_CoreFound;
-  const factory RoonEvent.coreLost(
-    String field0,
-  ) = RoonEvent_CoreLost;
-  const factory RoonEvent.zonesChanged(
-    List<ZoneSummary> field0,
-  ) = RoonEvent_ZonesChanged;
-  const factory RoonEvent.image(
-    List<(String, Uint8List)> field0,
-  ) = RoonEvent_Image;
-}
 
 class ZoneSummary {
   final String zoneId;
   final String displayName;
-  final PlayState playState;
+  final ZoneState state;
   final String? nowPlaying;
   final String? imageKey;
 
   const ZoneSummary({
     required this.zoneId,
     required this.displayName,
-    required this.playState,
+    required this.state,
     this.nowPlaying,
     this.imageKey,
   });
@@ -50,7 +26,7 @@ class ZoneSummary {
   int get hashCode =>
       zoneId.hashCode ^
       displayName.hashCode ^
-      playState.hashCode ^
+      state.hashCode ^
       nowPlaying.hashCode ^
       imageKey.hashCode;
 
@@ -61,7 +37,7 @@ class ZoneSummary {
           runtimeType == other.runtimeType &&
           zoneId == other.zoneId &&
           displayName == other.displayName &&
-          playState == other.playState &&
+          state == other.state &&
           nowPlaying == other.nowPlaying &&
           imageKey == other.imageKey;
 }
