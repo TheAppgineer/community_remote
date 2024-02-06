@@ -10,9 +10,6 @@ import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 import 'roon_transport_wrapper.dart';
 part 'simple.freezed.dart';
 
-Future<int> incCounter({dynamic hint}) =>
-    RustLib.instance.api.incCounter(hint: hint);
-
 Future<void> startRoon(
         {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) =>
     RustLib.instance.api.startRoon(cb: cb, hint: hint);

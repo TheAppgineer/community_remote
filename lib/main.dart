@@ -66,15 +66,6 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  Future<void> incrementCounter() async {
-    count = await incCounter();
-    notifyListeners();
-  }
-
-  int counter() {
-    return count;
-  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -136,11 +127,6 @@ class MyHomePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: appState.incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.shuffle),
-      ),
     );
   }
 }
@@ -157,7 +143,7 @@ class Browse extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Text(
-          'You have pushed the ',
+          '',
           textAlign: TextAlign.center,
         ),
       ),
@@ -176,9 +162,7 @@ class Queue extends StatelessWidget {
       margin: EdgeInsets.all(10),
       child: Padding(
         padding: EdgeInsets.all(10),
-        child: Text(
-          'button this many times:',
-        ),
+        child: Text(''),
       ),
     );
   }
@@ -265,8 +249,6 @@ class NowPlaying extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
     return Card(
       margin: const EdgeInsets.all(10),
       child: Row(
@@ -274,7 +256,7 @@ class NowPlaying extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              '${appState.counter()}',
+              '',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),

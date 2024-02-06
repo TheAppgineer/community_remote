@@ -17,25 +17,13 @@ pub enum RoonEvent {
 }
 
 struct InternalState {
-    counter: u32,
     roon: Option<Roon>,
 }
 
 impl InternalState {
     fn new() -> Self {
-        Self {
-            counter: 0,
-            roon: None,
-        }
+        Self { roon: None }
     }
-}
-
-pub async fn inc_counter() -> u32 {
-    let mut api = API.lock().await;
-
-    api.counter += 1;
-
-    api.counter
 }
 
 #[flutter_rust_bridge::frb(init)]
