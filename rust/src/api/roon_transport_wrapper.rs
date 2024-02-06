@@ -26,6 +26,40 @@ impl ZoneNowPlaying {
     }
 
     #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn artist_image_key(&self) -> Option<Vec<String>> {
+        self.0.artist_image_keys.as_ref().cloned()
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn image_key(&self) -> Option<String> {
+        self.0.image_key.as_ref().cloned()
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn length(&self) -> Option<u32> {
+        self.0.length
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn seek_position(&self) -> Option<i64> {
+        self.0.seek_position
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn one_line(&self) -> String {
+        let one_line = &self.0.one_line;
+
+        one_line.line1.to_owned()
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn two_line(&self) -> Vec<String> {
+        let two_line = &self.0.two_line;
+
+        vec![two_line.line1.to_owned(), two_line.line2.to_owned()]
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
     pub fn three_line(&self) -> Vec<String> {
         let three_line = &self.0.three_line;
 

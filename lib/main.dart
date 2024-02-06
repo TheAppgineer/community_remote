@@ -48,7 +48,8 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   String serverName = '';
-  dynamic zoneList;
+  List<ZoneSummary>? zoneList;
+  RoonZone? zone;
   var count = 0;
   Map<String, Uint8List> imageCache = {};
 
@@ -58,7 +59,7 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
     } else if (event is RoonEvent_ZoneSelected) {
-      print(event.field0.nowPlaying?.threeLine);
+      zone = event.field0;
     } else if (event is RoonEvent_Image) {
       for (var (key, image) in event.field0) {
         imageCache[key] = image;
@@ -212,7 +213,7 @@ class Zones extends StatelessWidget {
         }
 
         if (zones[index].nowPlaying != null) {
-          metaData = Text(zones[index].nowPlaying);
+          metaData = Text(zones[index].nowPlaying!);
         }
 
         return ListTile(
@@ -249,16 +250,28 @@ class NowPlaying extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    ListTile child = const ListTile(
+      title: Text('Go find something to play'),
+    );
+
+    if (appState.zone != null && appState.zone!.nowPlaying != null) {
+      ZoneNowPlaying nowPlaying = appState.zone!.nowPlaying!;
+
+      child = ListTile(
+        title: Text(nowPlaying.threeLine[0]),
+        subtitle: Text('${nowPlaying.threeLine[1]}\n${nowPlaying.threeLine[2]}'),
+        isThreeLine: true,
+      );
+    }
+
     return Card(
       margin: const EdgeInsets.all(10),
       child: Row(
         children: [
           Expanded(
             flex: 1,
-            child: Text(
-              '',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            child: child,
           ),
           ElevatedButton.icon(
             onPressed: () {

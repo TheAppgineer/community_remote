@@ -3,7 +3,6 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../backend/roon.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
@@ -42,4 +41,39 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.image(
     List<(String, Uint8List)> field0,
   ) = RoonEvent_Image;
+}
+
+class ZoneSummary {
+  final String zoneId;
+  final String displayName;
+  final ZoneState state;
+  final String? nowPlaying;
+  final String? imageKey;
+
+  const ZoneSummary({
+    required this.zoneId,
+    required this.displayName,
+    required this.state,
+    this.nowPlaying,
+    this.imageKey,
+  });
+
+  @override
+  int get hashCode =>
+      zoneId.hashCode ^
+      displayName.hashCode ^
+      state.hashCode ^
+      nowPlaying.hashCode ^
+      imageKey.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ZoneSummary &&
+          runtimeType == other.runtimeType &&
+          zoneId == other.zoneId &&
+          displayName == other.displayName &&
+          state == other.state &&
+          nowPlaying == other.nowPlaying &&
+          imageKey == other.imageKey;
 }

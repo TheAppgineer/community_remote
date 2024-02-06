@@ -58,11 +58,36 @@ class ZoneNowPlaying extends RustOpaque {
         RustLib.instance.api.rust_arc_decrement_strong_count_ZoneNowPlayingPtr,
   );
 
+  List<String>? get artistImageKey =>
+      RustLib.instance.api.zoneNowPlayingArtistImageKey(
+        that: this,
+      );
+
+  String? get imageKey => RustLib.instance.api.zoneNowPlayingImageKey(
+        that: this,
+      );
+
+  int? get length => RustLib.instance.api.zoneNowPlayingLength(
+        that: this,
+      );
+
   static Future<ZoneNowPlaying> newZoneNowPlaying(
           {required RoonApiTransportNowPlaying inner, dynamic hint}) =>
       RustLib.instance.api.zoneNowPlayingNew(inner: inner, hint: hint);
 
+  String get oneLine => RustLib.instance.api.zoneNowPlayingOneLine(
+        that: this,
+      );
+
+  int? get seekPosition => RustLib.instance.api.zoneNowPlayingSeekPosition(
+        that: this,
+      );
+
   List<String> get threeLine => RustLib.instance.api.zoneNowPlayingThreeLine(
+        that: this,
+      );
+
+  List<String> get twoLine => RustLib.instance.api.zoneNowPlayingTwoLine(
         that: this,
       );
 }

@@ -13,17 +13,9 @@ use tokio::sync::{
 };
 
 use crate::api::roon_transport_wrapper::{RoonZone, ZoneState};
-use crate::api::simple::RoonEvent;
+use crate::api::simple::{RoonEvent, ZoneSummary};
 
 const CONFIG_PATH: &str = "config.json";
-
-pub struct ZoneSummary {
-    pub zone_id: String,
-    pub display_name: String,
-    pub state: ZoneState,
-    pub now_playing: Option<String>,
-    pub image_key: Option<String>,
-}
 
 pub struct Roon {
     handler: Arc<Mutex<RoonHandler>>,

@@ -3,8 +3,8 @@ use once_cell::sync::Lazy;
 use roon_api::image::{Args, Scale, Scaling};
 use tokio::sync::Mutex;
 
-use crate::api::roon_transport_wrapper::RoonZone;
-use crate::backend::roon::{Roon, ZoneSummary};
+use crate::api::roon_transport_wrapper::{RoonZone, ZoneState};
+use crate::backend::roon::Roon;
 
 static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
 
@@ -14,6 +14,14 @@ pub enum RoonEvent {
     ZonesChanged(Vec<ZoneSummary>),
     ZoneSelected(RoonZone),
     Image(Vec<(String, Vec<u8>)>),
+}
+
+pub struct ZoneSummary {
+    pub zone_id: String,
+    pub display_name: String,
+    pub state: ZoneState,
+    pub now_playing: Option<String>,
+    pub image_key: Option<String>,
 }
 
 struct InternalState {
