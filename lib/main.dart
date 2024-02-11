@@ -9,12 +9,18 @@ import 'package:community_remote/src/rust/frb_generated.dart';
 
 const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
 
-var appState = MyAppState();
-
 Future<void> main() async {
+  var appState = MyAppState();
+
   await RustLib.init();
   await startRoon(cb: appState.cb);
-  runApp(const MyApp());
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => appState,
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,38 +28,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => appState,
-      child: MaterialApp(
-        title: 'Community Remote',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            brightness: Brightness.light,
-            seedColor: roonAccentColor,
-          ),
-          useMaterial3: true,
+    var appState = context.watch<MyAppState>();
+
+    return MaterialApp(
+      title: 'Community Remote',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.light,
+          seedColor: roonAccentColor,
         ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            brightness: Brightness.dark,
-            seedColor: roonAccentColor,
-          ),
-          useMaterial3: true,
-        ),
-        themeMode: ThemeMode.light,
-        home: const MyHomePage(title: 'Community Remote'),
+        useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: roonAccentColor,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: appState.themeMode,
+      home: const MyHomePage(title: 'Community Remote'),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
   String serverName = '';
+  ThemeMode themeMode = ThemeMode.light;
   List<ZoneSummary>? zoneList;
   List<BrowseItem>? browseList;
   RoonZone? zone;
   Map<String, Uint8List> imageCache = {};
+
+  setThemeMode(newThemeMode) {
+    themeMode = newThemeMode;
+
+    notifyListeners();
+  }
 
   void cb(event) {
     if (event is RoonEvent_CoreFound) {
@@ -84,19 +96,28 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    final darkModeButton = IconButton(
+      icon: const Icon(Icons.dark_mode_outlined),
+      tooltip: 'Dark Mode',
+      onPressed: () {
+        appState.setThemeMode(ThemeMode.dark);
+      },
+    );
+    final lightModeButton = IconButton(
+      icon: const Icon(Icons.light_mode_outlined),
+      tooltip: 'Light Mode',
+      onPressed: () {
+        appState.setThemeMode(ThemeMode.light);
+      },
+    );
+    var themeModeButton = (appState.themeMode == ThemeMode.dark ? lightModeButton : darkModeButton);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('$title (served by: ${appState.serverName})'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.dark_mode_outlined),
-            tooltip: 'Dark Mode',
-            onPressed: () {
-
-            },
-          ),
+          themeModeButton,
         ],
       ),
       body: const Center(
