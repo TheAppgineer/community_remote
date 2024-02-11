@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:community_remote/src/rust/api/roon_browse_wrapper.dart';
 import 'package:community_remote/src/rust/api/roon_transport_wrapper.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       create: (context) => appState,
       child: MaterialApp(
         title: 'Community Remote',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             brightness: Brightness.light,
@@ -49,8 +51,8 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   String serverName = '';
   List<ZoneSummary>? zoneList;
+  List<BrowseItem>? browseList;
   RoonZone? zone;
-  var count = 0;
   Map<String, Uint8List> imageCache = {};
 
   void cb(event) {
@@ -60,11 +62,16 @@ class MyAppState extends ChangeNotifier {
       zoneList = event.field0;
     } else if (event is RoonEvent_ZoneSelected) {
       zone = event.field0;
-    } else if (event is RoonEvent_Image) {
-      for (var (key, image) in event.field0) {
-        imageCache[key] = image;
+    } else if (event is RoonEvent_BrowseItems) {
+      if ( event.field0.offset == 0) {
+        browseList = event.field0.items;
+      } else {
+        browseList?.addAll(event.field0.items);
       }
+    } else if (event is RoonEvent_Image) {
+      imageCache[event.field0.imageKey] = event.field0.image;
     }
+
     notifyListeners();
   }
 }
@@ -81,10 +88,10 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('$title (${appState.serverName})'),
+        title: Text('$title (served by: ${appState.serverName})'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.dark_mode),
+            icon: const Icon(Icons.dark_mode_outlined),
             tooltip: 'Dark Mode',
             onPressed: () {
 
@@ -139,14 +146,43 @@ class Browse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
-      margin: EdgeInsets.all(10),
+    var appState = context.watch<MyAppState>();
+    var browseList = appState.browseList;
+    ListView? listView;
+
+    if (browseList != null) {
+      ListTile itemBuilder(context, index) {
+        Image? image = getImageFromCache(browseList[index].imageKey, appState.imageCache);
+        Text? subtitle;
+
+        if (browseList[index].subtitle != null) {
+          subtitle = Text(browseList[index].subtitle!);
+        }
+
+        return ListTile(
+          trailing: image,
+          title: Text(browseList[index].title),
+          subtitle: subtitle,
+          onTap: () {
+            selectBrowseItem(itemKey: browseList[index].itemKey);
+          },
+        );
+      }
+
+      listView = ListView.separated(
+        controller: ScrollController(),
+        padding: const EdgeInsets.all(10),
+        itemBuilder: itemBuilder,
+        separatorBuilder: (context, index) => const Divider(),
+        itemCount: browseList.length,
+      );
+    }
+
+    return Card(
+      margin: const EdgeInsets.all(10),
       child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          '',
-          textAlign: TextAlign.center,
-        ),
+        padding: const EdgeInsets.all(10),
+        child: listView,
       ),
     );
   }
@@ -183,19 +219,9 @@ class Zones extends StatelessWidget {
     if (zones != null) {
       ListTile itemBuilder(context, index) {
         var imageKey = zones[index].imageKey;
-        Image? image;
+        Image? image = getImageFromCache(imageKey, appState.imageCache);
         Icon? playState;
         Text? metaData;
-
-        if (imageKey != null) {
-          var byteList = appState.imageCache[imageKey];
-
-          if (byteList != null) {
-            image = Image.memory(byteList);
-          } else {
-            getImage(imageKey: imageKey, width: 100, height: 100);
-          }
-        }
 
         switch (zones[index].state) {
           case ZoneState.playing:
@@ -291,4 +317,20 @@ class NowPlaying extends StatelessWidget {
       ),
     );
   }
+}
+
+Image? getImageFromCache(imageKey, imageCache) {
+  Image? image;
+
+  if (imageKey != null) {
+    var byteList = imageCache[imageKey];
+
+    if (byteList != null) {
+      image = Image.memory(byteList);
+    } else {
+      getImage(imageKey: imageKey, width: 100, height: 100);
+    }
+  }
+
+  return image;
 }

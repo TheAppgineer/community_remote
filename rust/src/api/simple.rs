@@ -6,6 +6,8 @@ use tokio::sync::Mutex;
 use crate::api::roon_transport_wrapper::{RoonZone, ZoneState};
 use crate::backend::roon::Roon;
 
+use super::roon_browse_wrapper::BrowseItem;
+
 static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
 
 pub enum RoonEvent {
@@ -13,7 +15,17 @@ pub enum RoonEvent {
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
     ZoneSelected(RoonZone),
-    Image(Vec<(String, Vec<u8>)>),
+    BrowseItems(BrowseItems),
+    Image(ImageKeyValue),
+}
+
+pub struct BrowseItems {
+    pub offset: usize,
+    pub items: Vec<BrowseItem>,
+}
+pub struct ImageKeyValue {
+    pub image_key: String,
+    pub image: Vec<u8>,
 }
 
 pub struct ZoneSummary {
@@ -71,5 +83,13 @@ pub async fn get_image(image_key: String, width: u32, height: u32) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.get_image(&image_key, args).await;
+    }
+}
+
+pub async fn select_browse_item(item_key: Option<String>) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.select_browse_item(item_key).await;
     }
 }

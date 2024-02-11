@@ -1,5 +1,5 @@
 use roon_api::{
-    browse::Browse,
+    browse::{Action, Browse, BrowseOpts, LoadOpts},
     image::{Args, Image},
     info,
     transport::{Transport, Zone},
@@ -12,8 +12,11 @@ use tokio::sync::{
     Mutex,
 };
 
-use crate::api::roon_transport_wrapper::{RoonZone, ZoneState};
-use crate::api::simple::{RoonEvent, ZoneSummary};
+use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
+use crate::api::{
+    roon_browse_wrapper::BrowseItem,
+    roon_transport_wrapper::{RoonZone, ZoneState},
+};
 
 const CONFIG_PATH: &str = "config.json";
 
@@ -90,6 +93,20 @@ impl Roon {
 
         Some(())
     }
+
+    pub async fn select_browse_item(&self, item_key: Option<String>) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        let browse = handler.browse.as_ref()?;
+        let opts = BrowseOpts {
+            item_key,
+            ..Default::default()
+        };
+
+        browse.browse(&opts).await;
+
+        Some(())
+    }
 }
 
 impl RoonHandler {
@@ -111,6 +128,13 @@ impl RoonHandler {
                 self.image = core.get_image().cloned();
 
                 self.transport.as_ref()?.subscribe_zones().await;
+                self.browse
+                    .as_ref()?
+                    .browse(&BrowseOpts {
+                        pop_all: true,
+                        ..Default::default()
+                    })
+                    .await;
 
                 self.event_tx
                     .send(RoonEvent::CoreFound(core.display_name))
@@ -129,7 +153,7 @@ impl RoonHandler {
         Some(())
     }
 
-    async fn handle_msg_event(&mut self, msg: Option<(Value, Parsed)>) {
+    async fn handle_msg_event(&mut self, msg: Option<(Value, Parsed)>) -> Option<()> {
         if let Some((raw, parsed)) = msg {
             match parsed {
                 Parsed::RoonState => {
@@ -149,15 +173,59 @@ impl RoonHandler {
 
                     self.send_zone_list().await;
                 }
-                Parsed::Jpeg((image_key, image)) => {
+                Parsed::BrowseResult(result, _) => match result.action {
+                    Action::List => {
+                        let offset = result.list?.display_offset.unwrap_or_default();
+                        let opts = LoadOpts {
+                            offset,
+                            set_display_offset: offset,
+                            ..Default::default()
+                        };
+
+                        self.browse.as_ref()?.load(&opts).await;
+                    }
+                    _ => {}
+                },
+                Parsed::LoadResult(result, _) => {
+                    let new_offset = result.offset + result.items.len();
+                    let browse_items = result
+                        .items
+                        .iter()
+                        .map(|inner| BrowseItem::new(inner.to_owned()))
+                        .collect();
+                    let browse_items = BrowseItems {
+                        offset: result.offset,
+                        items: browse_items,
+                    };
+
+                    if new_offset < result.list.count {
+                        // There are more items to load
+                        let opts = LoadOpts {
+                            offset: new_offset,
+                            set_display_offset: new_offset,
+                            ..Default::default()
+                        };
+
+                        self.browse.as_ref()?.load(&opts).await;
+                    }
+
                     self.event_tx
-                        .send(RoonEvent::Image(vec![(image_key, image)]))
+                        .send(RoonEvent::BrowseItems(browse_items))
+                        .await
+                        .unwrap();
+                }
+                Parsed::Jpeg((image_key, image)) | Parsed::Png((image_key, image)) => {
+                    let image_key_value = ImageKeyValue { image_key, image };
+                    self.event_tx
+                        .send(RoonEvent::Image(image_key_value))
                         .await
                         .unwrap();
                 }
                 _ => (),
             }
         }
+
+        Some(())
     }
 
     async fn send_zone_list(&self) {
