@@ -27,6 +27,8 @@ pub struct Roon {
 struct RoonHandler {
     event_tx: Sender<RoonEvent>,
     browse: Option<Browse>,
+    browse_offset: usize,
+    browse_total: usize,
     image: Option<Image>,
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
@@ -72,12 +74,12 @@ impl Roon {
         (roon, rx)
     }
 
-    pub async fn get_image(&self, image_key: &str, args: Args) {
-        let mut handler = self.handler.lock().await;
+    pub async fn get_image(&self, image_key: String, args: Args) -> Option<()> {
+        let handler = self.handler.lock().await;
 
-        if let Some(image) = handler.image.as_mut() {
-            image.get_image(image_key, args).await;
-        }
+        handler.image.as_ref()?.get_image(&image_key, args).await;
+
+        Some(())
     }
 
     pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
@@ -96,7 +98,6 @@ impl Roon {
 
     pub async fn select_browse_item(&self, item_key: Option<String>) -> Option<()> {
         let handler = self.handler.lock().await;
-
         let browse = handler.browse.as_ref()?;
         let opts = BrowseOpts {
             item_key,
@@ -107,6 +108,24 @@ impl Roon {
 
         Some(())
     }
+
+    pub async fn browse_more(&self) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        if handler.browse_offset < handler.browse_total {
+            // There are more items to load
+            let browse = handler.browse.as_ref()?;
+            let opts = LoadOpts {
+                offset: handler.browse_offset,
+                set_display_offset: handler.browse_offset,
+                ..Default::default()
+            };
+
+            browse.load(&opts).await;
+        }
+
+        Some(())
+    }
 }
 
 impl RoonHandler {
@@ -114,6 +133,8 @@ impl RoonHandler {
         Self {
             event_tx,
             browse: None,
+            browse_offset: 0,
+            browse_total: 0,
             image: None,
             transport: None,
             zone_map: HashMap::new(),
@@ -177,6 +198,7 @@ impl RoonHandler {
                     Action::List => {
                         let offset = result.list?.display_offset.unwrap_or_default();
                         let opts = LoadOpts {
+                            count: Some(20),
                             offset,
                             set_display_offset: offset,
                             ..Default::default()
@@ -195,19 +217,12 @@ impl RoonHandler {
                         .collect();
                     let browse_items = BrowseItems {
                         offset: result.offset,
+                        total: result.list.count,
                         items: browse_items,
                     };
 
-                    if new_offset < result.list.count {
-                        // There are more items to load
-                        let opts = LoadOpts {
-                            offset: new_offset,
-                            set_display_offset: new_offset,
-                            ..Default::default()
-                        };
-
-                        self.browse.as_ref()?.load(&opts).await;
-                    }
+                    self.browse_offset = new_offset;
+                    self.browse_total = result.list.count;
 
                     self.event_tx
                         .send(RoonEvent::BrowseItems(browse_items))
@@ -216,6 +231,7 @@ impl RoonHandler {
                 }
                 Parsed::Jpeg((image_key, image)) | Parsed::Png((image_key, image)) => {
                     let image_key_value = ImageKeyValue { image_key, image };
+
                     self.event_tx
                         .send(RoonEvent::Image(image_key_value))
                         .await

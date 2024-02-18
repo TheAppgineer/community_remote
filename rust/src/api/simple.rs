@@ -21,8 +21,10 @@ pub enum RoonEvent {
 
 pub struct BrowseItems {
     pub offset: usize,
+    pub total: usize,
     pub items: Vec<BrowseItem>,
 }
+
 pub struct ImageKeyValue {
     pub image_key: String,
     pub image: Vec<u8>,
@@ -82,7 +84,15 @@ pub async fn get_image(image_key: String, width: u32, height: u32) {
     let args = Args::new(scaling, None);
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.get_image(&image_key, args).await;
+        roon.get_image(image_key, args).await;
+    }
+}
+
+pub async fn browse_next_page() {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.browse_more().await;
     }
 }
 

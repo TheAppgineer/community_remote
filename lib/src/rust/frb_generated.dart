@@ -109,6 +109,8 @@ abstract class RustLibApi extends BaseApi {
   Future<ZoneState> zoneStateFrom(
       {required RoonApiTransportState inner, dynamic hint});
 
+  Future<void> browseNextPage({dynamic hint});
+
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -662,6 +664,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> browseNextPage({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 23, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kBrowseNextPageConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kBrowseNextPageConstMeta => const TaskConstMeta(
+        debugName: "browse_next_page",
+        argNames: [],
+      );
+
+  @override
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -723,7 +749,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_opt_String(itemKey, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 23, port: port_);
+            funcId: 24, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1059,13 +1085,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BrowseItems dco_decode_browse_items(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return BrowseItems(
       offset: dco_decode_usize(arr[0]),
+      total: dco_decode_usize(arr[1]),
       items:
           dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-              arr[1]),
+              arr[2]),
     );
   }
 
@@ -1442,10 +1469,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BrowseItems sse_decode_browse_items(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_offset = sse_decode_usize(deserializer);
+    var var_total = sse_decode_usize(deserializer);
     var var_items =
         sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
             deserializer);
-    return BrowseItems(offset: var_offset, items: var_items);
+    return BrowseItems(offset: var_offset, total: var_total, items: var_items);
   }
 
   @protected
@@ -1854,6 +1882,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_browse_items(BrowseItems self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(self.offset, serializer);
+    sse_encode_usize(self.total, serializer);
     sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
         self.items, serializer);
   }

@@ -58,6 +58,8 @@ class MyAppState extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.light;
   List<ZoneSummary>? zoneList;
   List<BrowseItem>? browseList;
+  int pageSize = 0;
+  int total = 0;
   RoonZone? zone;
   Map<String, Uint8List> imageCache = {};
 
@@ -75,7 +77,9 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneSelected) {
       zone = event.field0;
     } else if (event is RoonEvent_BrowseItems) {
-      if ( event.field0.offset == 0) {
+      if (event.field0.offset == 0) {
+        pageSize = event.field0.items.length;
+        total = event.field0.total;
         browseList = event.field0.items;
       } else {
         browseList?.addAll(event.field0.items);
@@ -115,7 +119,11 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('$title (served by: ${appState.serverName})'),
+        title: ListTile(
+          leading: const Icon(Icons.person_outline),
+          title: Text(title),
+          subtitle: Text('Connected to: ${appState.serverName}'),
+        ),
         actions: [
           themeModeButton,
         ],
@@ -306,6 +314,7 @@ class NowPlaying extends StatelessWidget {
       ZoneNowPlaying nowPlaying = appState.zone!.nowPlaying!;
 
       child = ListTile(
+        leading: getImageFromCache(nowPlaying.imageKey, appState.imageCache),
         title: Text(nowPlaying.threeLine[0]),
         subtitle: Text('${nowPlaying.threeLine[1]}\n${nowPlaying.threeLine[2]}'),
         isThreeLine: true,
@@ -340,7 +349,7 @@ class NowPlaying extends StatelessWidget {
   }
 }
 
-Image? getImageFromCache(imageKey, imageCache) {
+Image? getImageFromCache(String? imageKey, Map<String, Uint8List> imageCache) {
   Image? image;
 
   if (imageKey != null) {

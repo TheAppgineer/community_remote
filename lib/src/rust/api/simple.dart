@@ -25,20 +25,25 @@ Future<void> getImage(
     RustLib.instance.api
         .getImage(imageKey: imageKey, width: width, height: height, hint: hint);
 
+Future<void> browseNextPage({dynamic hint}) =>
+    RustLib.instance.api.browseNextPage(hint: hint);
+
 Future<void> selectBrowseItem({String? itemKey, dynamic hint}) =>
     RustLib.instance.api.selectBrowseItem(itemKey: itemKey, hint: hint);
 
 class BrowseItems {
   final int offset;
+  final int total;
   final List<BrowseItem> items;
 
   const BrowseItems({
     required this.offset,
+    required this.total,
     required this.items,
   });
 
   @override
-  int get hashCode => offset.hashCode ^ items.hashCode;
+  int get hashCode => offset.hashCode ^ total.hashCode ^ items.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -46,6 +51,7 @@ class BrowseItems {
       other is BrowseItems &&
           runtimeType == other.runtimeType &&
           offset == other.offset &&
+          total == other.total &&
           items == other.items;
 }
 
