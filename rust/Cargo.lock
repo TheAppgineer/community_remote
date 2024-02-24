@@ -654,7 +654,7 @@ checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 [[package]]
 name = "roon-api"
 version = "0.2.0"
-source = "git+https://github.com/TheAppgineer/rust-roon-api.git?rev=6b81df3#6b81df379f804f76a911fe4261f678fddbe9383b"
+source = "git+https://github.com/TheAppgineer/rust-roon-api.git?rev=77cf53c#77cf53c01c138b84a5f52394f25e19805a8440dc"
 dependencies = [
  "futures-util",
  "if-addrs",

@@ -650,6 +650,40 @@ fn wire_ZoneState_from_impl(
         },
     )
 }
+fn wire_browse_back_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "browse_back",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::browse_back().await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_browse_next_page_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1079,10 +1113,14 @@ impl SseDecode for String {
 impl SseDecode for crate::api::simple::BrowseItems {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_title = <String>::sse_decode(deserializer);
+        let mut var_level = <u32>::sse_decode(deserializer);
         let mut var_offset = <usize>::sse_decode(deserializer);
         let mut var_total = <usize>::sse_decode(deserializer);
         let mut var_items = <Vec<BrowseItem>>::sse_decode(deserializer);
         return crate::api::simple::BrowseItems {
+            title: var_title,
+            level: var_level,
             offset: var_offset,
             total: var_total,
             items: var_items,
@@ -1335,10 +1373,11 @@ fn pde_ffi_dispatcher_primary_impl(
         15 => wire_RoonZone_new_impl(port, ptr, rust_vec_len, data_len),
         7 => wire_ZoneNowPlaying_new_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_ZoneState_from_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
         23 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
         22 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
         19 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
         21 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
         20 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
@@ -1522,6 +1561,8 @@ impl flutter_rust_bridge::IntoIntoDart<Local_Auto_Owned_RustOpaque_flutter_rust_
 impl flutter_rust_bridge::IntoDart for crate::api::simple::BrowseItems {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
+            self.title.into_into_dart().into_dart(),
+            self.level.into_into_dart().into_dart(),
             self.offset.into_into_dart().into_dart(),
             self.total.into_into_dart().into_dart(),
             self.items.into_into_dart().into_dart(),
@@ -1810,6 +1851,8 @@ impl SseEncode for String {
 impl SseEncode for crate::api::simple::BrowseItems {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.title, serializer);
+        <u32>::sse_encode(self.level, serializer);
         <usize>::sse_encode(self.offset, serializer);
         <usize>::sse_encode(self.total, serializer);
         <Vec<BrowseItem>>::sse_encode(self.items, serializer);

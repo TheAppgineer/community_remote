@@ -20,6 +20,8 @@ pub enum RoonEvent {
 }
 
 pub struct BrowseItems {
+    pub title: String,
+    pub level: u32,
     pub offset: usize,
     pub total: usize,
     pub items: Vec<BrowseItem>,
@@ -93,6 +95,14 @@ pub async fn browse_next_page() {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.browse_more().await;
+    }
+}
+
+pub async fn browse_back() {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.browse_back().await;
     }
 }
 

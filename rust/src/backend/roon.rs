@@ -12,13 +12,14 @@ use tokio::sync::{
     Mutex,
 };
 
-use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 use crate::api::{
     roon_browse_wrapper::BrowseItem,
     roon_transport_wrapper::{RoonZone, ZoneState},
+    simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary},
 };
 
 const CONFIG_PATH: &str = "config.json";
+const BROWSE_PAGE_SIZE: usize = 20;
 
 pub struct Roon {
     handler: Arc<Mutex<RoonHandler>>,
@@ -29,6 +30,7 @@ struct RoonHandler {
     browse: Option<Browse>,
     browse_offset: usize,
     browse_total: usize,
+    browse_level: u32,
     image: Option<Image>,
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
@@ -36,7 +38,7 @@ struct RoonHandler {
 
 impl Roon {
     pub async fn start() -> (Roon, Receiver<RoonEvent>) {
-        let (tx, rx) = channel::<RoonEvent>(4);
+        let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
         let get_roon_state = Box::new(|| RoonApi::load_config(CONFIG_PATH, "roonstate"));
@@ -97,10 +99,14 @@ impl Roon {
     }
 
     pub async fn select_browse_item(&self, item_key: Option<String>) -> Option<()> {
-        let handler = self.handler.lock().await;
+        let mut handler = self.handler.lock().await;
+
+        handler.browse_offset = 0;
+
         let browse = handler.browse.as_ref()?;
         let opts = BrowseOpts {
             item_key,
+            set_display_offset: Some(handler.browse_offset),
             ..Default::default()
         };
 
@@ -110,21 +116,43 @@ impl Roon {
     }
 
     pub async fn browse_more(&self) -> Option<()> {
-        let handler = self.handler.lock().await;
+        let mut handler = self.handler.lock().await;
 
         if handler.browse_offset < handler.browse_total {
             // There are more items to load
             let browse = handler.browse.as_ref()?;
             let opts = LoadOpts {
+                count: Some(BROWSE_PAGE_SIZE),
                 offset: handler.browse_offset,
                 set_display_offset: handler.browse_offset,
                 ..Default::default()
             };
 
             browse.load(&opts).await;
+
+            // Prevent additional loading till response is received
+            handler.browse_offset = handler.browse_total;
         }
 
         Some(())
+    }
+
+    pub async fn browse_back(&self) {
+        let mut handler = self.handler.lock().await;
+
+        if handler.browse_level > 0 {
+            handler.browse_offset = 0;
+
+            if let Some(browse) = handler.browse.as_ref() {
+                let opts = BrowseOpts {
+                    pop_levels: Some(1),
+                    set_display_offset: Some(handler.browse_offset),
+                    ..Default::default()
+                };
+
+                browse.browse(&opts).await;
+            }
+        }
     }
 }
 
@@ -135,6 +163,7 @@ impl RoonHandler {
             browse: None,
             browse_offset: 0,
             browse_total: 0,
+            browse_level: 0,
             image: None,
             transport: None,
             zone_map: HashMap::new(),
@@ -196,7 +225,7 @@ impl RoonHandler {
                 }
                 Parsed::BrowseResult(result, _) => match result.action {
                     Action::List => {
-                        let offset = result.list?.display_offset.unwrap_or_default();
+                        let offset = self.browse_offset;
                         let opts = LoadOpts {
                             count: Some(20),
                             offset,
@@ -204,6 +233,7 @@ impl RoonHandler {
                             ..Default::default()
                         };
 
+                        self.browse_level = result.list.as_ref()?.level;
                         self.browse.as_ref()?.load(&opts).await;
                     }
                     _ => {}
@@ -216,6 +246,8 @@ impl RoonHandler {
                         .map(|inner| BrowseItem::new(inner.to_owned()))
                         .collect();
                     let browse_items = BrowseItems {
+                        title: result.list.title,
+                        level: result.list.level,
                         offset: result.offset,
                         total: result.list.count,
                         items: browse_items,

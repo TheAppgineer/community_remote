@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:community_remote/src/rust/api/roon_browse_wrapper.dart';
 import 'package:community_remote/src/rust/api/roon_transport_wrapper.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
@@ -57,9 +56,7 @@ class MyAppState extends ChangeNotifier {
   String serverName = '';
   ThemeMode themeMode = ThemeMode.light;
   List<ZoneSummary>? zoneList;
-  List<BrowseItem>? browseList;
-  int pageSize = 0;
-  int total = 0;
+  BrowseItems? browse;
   RoonZone? zone;
   Map<String, Uint8List> imageCache = {};
 
@@ -77,12 +74,10 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneSelected) {
       zone = event.field0;
     } else if (event is RoonEvent_BrowseItems) {
-      if (event.field0.offset == 0) {
-        pageSize = event.field0.items.length;
-        total = event.field0.total;
-        browseList = event.field0.items;
+      if (browse == null || event.field0.offset == 0) {
+        browse = event.field0;
       } else {
-        browseList?.addAll(event.field0.items);
+        browse!.items.addAll(event.field0.items);
       }
     } else if (event is RoonEvent_Image) {
       imageCache[event.field0.imageKey] = event.field0.image;
@@ -168,6 +163,27 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+class CustomRoute<T> extends MaterialPageRoute<T> {
+  CustomRoute({ required super.builder, required RouteSettings super.settings });
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 0);
+
+  @override
+  Widget buildTransitions(BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return child;
+  }
+}
+
+class Router {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    return CustomRoute(builder: (_) => const BrowseLevel(), settings: settings);
+  }
+}
+
 class Browse extends StatelessWidget {
   const Browse({
     super.key,
@@ -176,10 +192,65 @@ class Browse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var browseList = appState.browseList;
-    ListView? listView;
 
-    if (browseList != null) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.light,
+          seedColor: roonAccentColor,
+        ),
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: roonAccentColor,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: appState.themeMode,
+      onGenerateRoute: Router.generateRoute,
+      initialRoute: "-",
+    );
+  }
+}
+
+class BrowseLevel extends StatefulWidget {
+  const BrowseLevel({
+    super.key,
+  });
+
+  @override
+  State<BrowseLevel> createState() => _BrowseLevelState();
+}
+
+class _BrowseLevelState extends State<BrowseLevel> {
+  late ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController()..addListener(_loadMore);
+  }
+
+  Future<void> _loadMore() async {
+    if (_controller.position.extentAfter < 300) {
+      await browseNextPage();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    ListView? listView;
+    Text? browseTitle;
+
+    if (appState.browse != null) {
+      var browseList = appState.browse!.items;
+
+      browseTitle = Text(appState.browse!.title);
+
       ListTile itemBuilder(context, index) {
         Image? image = getImageFromCache(browseList[index].imageKey, appState.imageCache);
         Text? subtitle;
@@ -193,13 +264,14 @@ class Browse extends StatelessWidget {
           title: Text(browseList[index].title),
           subtitle: subtitle,
           onTap: () {
+            Navigator.pushNamed(context, appState.browse!.level.toString());
             selectBrowseItem(itemKey: browseList[index].itemKey);
           },
         );
       }
 
       listView = ListView.separated(
-        controller: ScrollController(),
+        controller: _controller,
         padding: const EdgeInsets.all(10),
         itemBuilder: itemBuilder,
         separatorBuilder: (context, index) => const Divider(),
@@ -207,12 +279,25 @@ class Browse extends StatelessWidget {
       );
     }
 
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: listView,
+    return PopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: browseTitle,
+        ),
+        body: Card(
+          margin: const EdgeInsets.all(10),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: listView,
+          ),
+        ) ,
       ),
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          appState.browse = null;
+          browseBack();
+        }
+      },
     );
   }
 }

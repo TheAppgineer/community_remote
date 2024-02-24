@@ -28,28 +28,42 @@ Future<void> getImage(
 Future<void> browseNextPage({dynamic hint}) =>
     RustLib.instance.api.browseNextPage(hint: hint);
 
+Future<void> browseBack({dynamic hint}) =>
+    RustLib.instance.api.browseBack(hint: hint);
+
 Future<void> selectBrowseItem({String? itemKey, dynamic hint}) =>
     RustLib.instance.api.selectBrowseItem(itemKey: itemKey, hint: hint);
 
 class BrowseItems {
+  final String title;
+  final int level;
   final int offset;
   final int total;
   final List<BrowseItem> items;
 
   const BrowseItems({
+    required this.title,
+    required this.level,
     required this.offset,
     required this.total,
     required this.items,
   });
 
   @override
-  int get hashCode => offset.hashCode ^ total.hashCode ^ items.hashCode;
+  int get hashCode =>
+      title.hashCode ^
+      level.hashCode ^
+      offset.hashCode ^
+      total.hashCode ^
+      items.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is BrowseItems &&
           runtimeType == other.runtimeType &&
+          title == other.title &&
+          level == other.level &&
           offset == other.offset &&
           total == other.total &&
           items == other.items;
