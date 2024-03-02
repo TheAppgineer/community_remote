@@ -238,9 +238,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "2.0.0-dev.24"
+version = "2.0.0-dev.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "610e046fae4b0b21210e67b212f3a97ccfd454976e8ef74634d641a2ce9a7075"
+checksum = "d81515a58babb2e2e644c11330cd1c7118c83160700cbba7f157a1c6199c2295"
 dependencies = [
  "allo-isolate",
  "android_logger",
@@ -265,9 +265,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_macros"
-version = "2.0.0-dev.24"
+version = "2.0.0-dev.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa90b2229a73f1aac282856e7870d11c8d1117285c8f6d7142de581497277825"
+checksum = "7aa5e6f2b72d51b3edddef0d45734b734d4c65f4260ac4689b94061582cbbd8e"
 
 [[package]]
 name = "fnv"
@@ -677,6 +677,7 @@ dependencies = [
  "log",
  "once_cell",
  "roon-api",
+ "serde",
  "serde_json",
  "simple-logging",
  "tokio",

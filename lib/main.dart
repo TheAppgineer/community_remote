@@ -7,6 +7,7 @@ import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
 
 const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
+const exploreId = 0;
 
 Future<void> main() async {
   var appState = MyAppState();
@@ -53,12 +54,13 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  String serverName = '';
+  String? serverName;
   ThemeMode themeMode = ThemeMode.light;
   List<ZoneSummary>? zoneList;
-  BrowseItems? browse;
+  BrowseItems? browseItems;
   RoonZone? zone;
   Map<String, Uint8List> imageCache = {};
+  late Settings settings;
 
   setThemeMode(newThemeMode) {
     themeMode = newThemeMode;
@@ -67,17 +69,25 @@ class MyAppState extends ChangeNotifier {
   }
 
   void cb(event) {
-    if (event is RoonEvent_CoreFound) {
+    if (event is RoonEvent_Settings) {
+      settings = event.field0;
+
+      if (serverName != null) {
+        browse(category: settings.view, sessionId: exploreId);
+      }
+    } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
+
+      browse(category: settings.view, sessionId: exploreId);
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
     } else if (event is RoonEvent_ZoneSelected) {
       zone = event.field0;
     } else if (event is RoonEvent_BrowseItems) {
-      if (browse == null || event.field0.offset == 0) {
-        browse = event.field0;
+      if (browseItems == null || event.field0.offset == 0) {
+        browseItems = event.field0;
       } else {
-        browse!.items.addAll(event.field0.items);
+        browseItems!.items.addAll(event.field0.items);
       }
     } else if (event is RoonEvent_Image) {
       imageCache[event.field0.imageKey] = event.field0.image;
@@ -109,17 +119,23 @@ class MyHomePage extends StatelessWidget {
         appState.setThemeMode(ThemeMode.light);
       },
     );
-    var themeModeButton = (appState.themeMode == ThemeMode.dark ? lightModeButton : darkModeButton);
+    IconButton themeModeButton = (appState.themeMode == ThemeMode.dark ? lightModeButton : darkModeButton);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        scrolledUnderElevation: 0,
         title: ListTile(
           leading: const Icon(Icons.person_outline),
           title: Text(title),
           subtitle: Text('Connected to: ${appState.serverName}'),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.search_outlined),
+            tooltip: "Search",
+            onPressed: () {},
+          ),
           themeModeButton,
         ],
       ),
@@ -133,6 +149,7 @@ class MyHomePage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  HamburgerMenu(),
                   Expanded(
                     flex: 5,
                     child: Browse(),
@@ -157,6 +174,93 @@ class MyHomePage extends StatelessWidget {
               child: NowPlaying(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class HamburgerMenu extends StatelessWidget {
+  const HamburgerMenu({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    Icon icon = Icon(appState.settings.expand ? Icons.arrow_circle_left_outlined : Icons.arrow_circle_right_outlined);
+
+    return SingleChildScrollView(
+      child: IntrinsicHeight(
+        child: NavigationRail(
+          extended: appState.settings.expand,
+          minWidth: 72,
+          minExtendedWidth: 192,
+          destinations: [
+            NavigationRailDestination(
+              icon: icon,
+              label: const Text(""),
+            ),
+            const NavigationRailDestination(
+              icon: Divider(indent: 10, endIndent: 10),
+              label: Text("Explore", style: TextStyle(fontSize: 18, color: Colors.black)),
+              disabled: true,
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.playlist_play_outlined),
+              label: Text("Playlists"),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.radio_outlined),
+              label: Text("Live Radio"),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.category_outlined),
+              label: Text("Genres"),
+            ),
+            const NavigationRailDestination(
+              icon: Divider(indent: 10, endIndent: 10),
+              label: Text("Library", style: TextStyle(fontSize: 18, color: Colors.black)),
+              disabled: true,
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.mic_outlined),
+              label: Text("Artists"),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.album_outlined),
+              label: Text("Albums"),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.music_note_outlined),
+              label: Text("Tracks"),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.person_3_outlined),
+              label: Text("Composers"),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.label_outlined),
+              label: Text("Tags"),
+            ),
+            const NavigationRailDestination(
+              icon: Divider(indent: 10, endIndent: 10),
+              label: Text(""),
+              disabled: true,
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.settings_outlined),
+              label: Text("Settings"),
+            ),
+          ],
+          selectedIndex: appState.settings.view,
+          onDestinationSelected: (value) {
+            if (value == 0) {
+              appState.settings.setExpand(expand: !appState.settings.expand);
+            } else {
+              appState.settings.setView(view: value);
+            }
+          },
         ),
       ),
     );
@@ -246,10 +350,10 @@ class _BrowseLevelState extends State<BrowseLevel> {
     ListView? listView;
     Text? browseTitle;
 
-    if (appState.browse != null) {
-      var browseList = appState.browse!.items;
+    if (appState.browseItems != null) {
+      var browseList = appState.browseItems!.items;
 
-      browseTitle = Text(appState.browse!.title);
+      browseTitle = Text(appState.browseItems!.title);
 
       ListTile itemBuilder(context, index) {
         Image? image = getImageFromCache(browseList[index].imageKey, appState.imageCache);
@@ -264,8 +368,8 @@ class _BrowseLevelState extends State<BrowseLevel> {
           title: Text(browseList[index].title),
           subtitle: subtitle,
           onTap: () {
-            Navigator.pushNamed(context, appState.browse!.level.toString());
-            selectBrowseItem(itemKey: browseList[index].itemKey);
+            Navigator.pushNamed(context, appState.browseItems!.level.toString());
+            selectBrowseItem(sessionId: exploreId, itemKey: browseList[index].itemKey);
           },
         );
       }
@@ -282,6 +386,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
     return PopScope(
       child: Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           title: browseTitle,
         ),
         body: Card(
@@ -294,8 +399,8 @@ class _BrowseLevelState extends State<BrowseLevel> {
       ),
       onPopInvoked: (didPop) {
         if (didPop) {
-          appState.browse = null;
-          browseBack();
+          appState.browseItems = null;
+          browseBack(sessionId: exploreId);
         }
       },
     );
