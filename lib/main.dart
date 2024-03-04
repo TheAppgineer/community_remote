@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:community_remote/src/rust/api/roon_transport_wrapper.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
@@ -62,15 +63,21 @@ class MyAppState extends ChangeNotifier {
   Map<String, Uint8List> imageCache = {};
   late Settings settings;
 
-  setThemeMode(newThemeMode) {
-    themeMode = newThemeMode;
-
-    notifyListeners();
-  }
-
   void cb(event) {
     if (event is RoonEvent_Settings) {
       settings = event.field0;
+
+      switch (event.field0.theme) {
+        case ThemeEnum.dark:
+          themeMode = ThemeMode.dark;
+          break;
+        case ThemeEnum.light:
+          themeMode = ThemeMode.light;
+          break;
+        case ThemeEnum.system:
+          themeMode = ThemeMode.system;
+          break;
+      }
 
       if (serverName != null) {
         browse(category: settings.view, sessionId: exploreId);
@@ -79,9 +86,13 @@ class MyAppState extends ChangeNotifier {
       serverName = event.field0;
 
       browse(category: settings.view, sessionId: exploreId);
+
+      if (settings.zoneId != null) {
+        selectZone(zoneId: settings.zoneId!);
+      }
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
-    } else if (event is RoonEvent_ZoneSelected) {
+    } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
     } else if (event is RoonEvent_BrowseItems) {
       if (browseItems == null || event.field0.offset == 0) {
@@ -109,14 +120,14 @@ class MyHomePage extends StatelessWidget {
       icon: const Icon(Icons.dark_mode_outlined),
       tooltip: 'Dark Mode',
       onPressed: () {
-        appState.setThemeMode(ThemeMode.dark);
+        appState.settings.setTheme(theme: ThemeEnum.dark);
       },
     );
     final lightModeButton = IconButton(
       icon: const Icon(Icons.light_mode_outlined),
       tooltip: 'Light Mode',
       onPressed: () {
-        appState.setThemeMode(ThemeMode.light);
+        appState.settings.setTheme(theme: ThemeEnum.light);
       },
     );
     IconButton themeModeButton = (appState.themeMode == ThemeMode.dark ? lightModeButton : darkModeButton);
@@ -128,7 +139,7 @@ class MyHomePage extends StatelessWidget {
         title: ListTile(
           leading: const Icon(Icons.person_outline),
           title: Text(title),
-          subtitle: Text('Connected to: ${appState.serverName}'),
+          subtitle: Text('Served by: ${appState.serverName}'),
         ),
         actions: [
           IconButton(
@@ -203,45 +214,40 @@ class HamburgerMenu extends StatelessWidget {
             ),
             const NavigationRailDestination(
               icon: Divider(indent: 10, endIndent: 10),
-              label: Text("Explore", style: TextStyle(fontSize: 18, color: Colors.black)),
+              label: Text("Library", style: TextStyle(fontSize: 18)),
               disabled: true,
             ),
             const NavigationRailDestination(
-              icon: Icon(Icons.playlist_play_outlined),
-              label: Text("Playlists"),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.radio_outlined),
-              label: Text("Live Radio"),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.category_outlined),
-              label: Text("Genres"),
-            ),
-            const NavigationRailDestination(
-              icon: Divider(indent: 10, endIndent: 10),
-              label: Text("Library", style: TextStyle(fontSize: 18, color: Colors.black)),
-              disabled: true,
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.mic_outlined),
-              label: Text("Artists"),
+              icon: Icon(Symbols.artist_rounded),
+              label: Text("Artists", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.album_outlined),
-              label: Text("Albums"),
+              label: Text("Albums", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.music_note_outlined),
-              label: Text("Tracks"),
+              label: Text("Tracks", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Symbols.genres_rounded),
+              label: Text("Genres", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.person_3_outlined),
-              label: Text("Composers"),
+              label: Text("Composers", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.label_outlined),
-              label: Text("Tags"),
+              label: Text("Tags", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.radio_outlined),
+              label: Text("Live Radio", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            ),
+            const NavigationRailDestination(
+              icon: Icon(Icons.playlist_play_outlined),
+              label: Text("Playlists", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
             const NavigationRailDestination(
               icon: Divider(indent: 10, endIndent: 10),
@@ -250,7 +256,7 @@ class HamburgerMenu extends StatelessWidget {
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.settings_outlined),
-              label: Text("Settings"),
+              label: Text("Settings", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
           ],
           selectedIndex: appState.settings.view,
@@ -348,12 +354,23 @@ class _BrowseLevelState extends State<BrowseLevel> {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     ListView? listView;
-    Text? browseTitle;
+    Widget? browseTitle;
 
     if (appState.browseItems != null) {
       var browseList = appState.browseItems!.items;
+      var subtitle = appState.browseItems!.list.subtitle;
+      var imageKey = appState.browseItems!.list.imageKey;
 
-      browseTitle = Text(appState.browseItems!.title);
+      if (subtitle != null) {
+        browseTitle = ListTile(
+          title: Text(appState.browseItems!.list.title),
+          subtitle: Text(subtitle),
+          trailing: imageKey != null ? getImageFromCache(imageKey, appState.imageCache) : null,
+          contentPadding: const EdgeInsets.fromLTRB(16, 0, 40, 0),
+        );
+      } else {
+        browseTitle = Text(appState.browseItems!.list.title);
+      }
 
       ListTile itemBuilder(context, index) {
         Image? image = getImageFromCache(browseList[index].imageKey, appState.imageCache);
@@ -368,8 +385,8 @@ class _BrowseLevelState extends State<BrowseLevel> {
           title: Text(browseList[index].title),
           subtitle: subtitle,
           onTap: () {
-            Navigator.pushNamed(context, appState.browseItems!.level.toString());
-            selectBrowseItem(sessionId: exploreId, itemKey: browseList[index].itemKey);
+            Navigator.pushNamed(context, appState.browseItems!.list.level.toString());
+            selectBrowseItem(sessionId: exploreId, item: browseList[index]);
           },
         );
       }
@@ -467,7 +484,10 @@ class Zones extends StatelessWidget {
           title: Text(zones[index].displayName),
           subtitle: metaData,
           onTap: () {
-            selectZone(zoneId: zones[index].zoneId);
+            var zoneId = zones[index].zoneId;
+
+            appState.settings.setZoneId(zoneId: zoneId);
+            selectZone(zoneId: zoneId);
           },
         );
       }

@@ -19,7 +19,6 @@
 
 // Section: imports
 
-use crate::api::roon_browse_wrapper::*;
 use crate::api::roon_transport_wrapper::*;
 use crate::api::simple::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
@@ -41,174 +40,6 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire_BrowseItem_image_key_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "BrowseItem_image_key",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse((move || {
-                let api_that = api_that.rust_auto_opaque_decode_ref();
-                Result::<_, ()>::Ok(crate::api::roon_browse_wrapper::BrowseItem::image_key(
-                    &api_that,
-                ))
-            })())
-        },
-    )
-}
-fn wire_BrowseItem_item_key_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "BrowseItem_item_key",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse((move || {
-                let api_that = api_that.rust_auto_opaque_decode_ref();
-                Result::<_, ()>::Ok(crate::api::roon_browse_wrapper::BrowseItem::item_key(
-                    &api_that,
-                ))
-            })())
-        },
-    )
-}
-fn wire_BrowseItem_new_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "BrowseItem_new",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_inner = <roon_api::browse::Item>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse((move || {
-                    Result::<_, ()>::Ok(crate::api::roon_browse_wrapper::BrowseItem::new(api_inner))
-                })())
-            }
-        },
-    )
-}
-fn wire_BrowseItem_subtitle_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "BrowseItem_subtitle",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse((move || {
-                let api_that = api_that.rust_auto_opaque_decode_ref();
-                Result::<_, ()>::Ok(crate::api::roon_browse_wrapper::BrowseItem::subtitle(
-                    &api_that,
-                ))
-            })())
-        },
-    )
-}
-fn wire_BrowseItem_title_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "BrowseItem_title",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            transform_result_sse((move || {
-                let api_that = api_that.rust_auto_opaque_decode_ref();
-                Result::<_, ()>::Ok(crate::api::roon_browse_wrapper::BrowseItem::title(
-                    &api_that,
-                ))
-            })())
-        },
-    )
-}
 fn wire_RoonZone_display_name_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -721,6 +552,44 @@ fn wire_Settings_set_expand_impl(
         },
     )
 }
+fn wire_Settings_set_theme_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Settings_set_theme",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <Settings>::sse_decode(&mut deserializer);
+            let api_theme = <crate::api::simple::ThemeEnum>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::Settings::set_theme(api_that, api_theme).await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_Settings_set_view_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -759,6 +628,76 @@ fn wire_Settings_set_view_impl(
         },
     )
 }
+fn wire_Settings_set_zone_id_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Settings_set_zone_id",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <Settings>::sse_decode(&mut deserializer);
+            let api_zone_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::Settings::set_zone_id(api_that, api_zone_id).await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_Settings_theme_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Settings_theme",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::rust_async::RwLock<Settings>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse((move || {
+                let api_that = api_that.rust_auto_opaque_decode_ref();
+                Result::<_, ()>::Ok(crate::api::simple::Settings::theme(&api_that))
+            })())
+        },
+    )
+}
 fn wire_Settings_view_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -787,6 +726,38 @@ fn wire_Settings_view_impl(
             transform_result_sse((move || {
                 let api_that = api_that.rust_auto_opaque_decode_ref();
                 Result::<_, ()>::Ok(crate::api::simple::Settings::view(&api_that))
+            })())
+        },
+    )
+}
+fn wire_Settings_zone_id_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Settings_zone_id",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::rust_async::RwLock<Settings>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse((move || {
+                let api_that = api_that.rust_auto_opaque_decode_ref();
+                Result::<_, ()>::Ok(crate::api::simple::Settings::zone_id(&api_that))
             })())
         },
     )
@@ -992,14 +963,14 @@ fn wire_select_browse_item_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_session_id = <i32>::sse_decode(&mut deserializer);
-            let api_item_key = <Option<String>>::sse_decode(&mut deserializer);
+            let api_item =
+                <crate::api::roon_browse_mirror::BrowseItem>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse(
                     (move || async move {
                         Result::<_, ()>::Ok(
-                            crate::api::simple::select_browse_item(api_session_id, api_item_key)
-                                .await,
+                            crate::api::simple::select_browse_item(api_session_id, api_item).await,
                         )
                     })()
                     .await,
@@ -1081,6 +1052,55 @@ fn wire_start_roon_impl(
     )
 }
 
+// Section: wrapper_structs
+
+#[derive(Clone)]
+pub struct mirror_BrowseItem(crate::api::roon_browse_mirror::BrowseItem);
+
+#[derive(Clone)]
+pub struct mirror_BrowseItemHint(crate::api::roon_browse_mirror::BrowseItemHint);
+
+#[derive(Clone)]
+pub struct mirror_BrowseList(crate::api::roon_browse_mirror::BrowseList);
+
+#[derive(Clone)]
+pub struct mirror_BrowseListHint(crate::api::roon_browse_mirror::BrowseListHint);
+
+#[derive(Clone)]
+pub struct mirror_InputPrompt(crate::api::roon_browse_mirror::InputPrompt);
+
+// Section: static_checks
+
+#[allow(clippy::unnecessary_literal_unwrap)]
+const _: fn() = || {
+    {
+        let BrowseItem = None::<crate::api::roon_browse_mirror::BrowseItem>.unwrap();
+        let _: String = BrowseItem.title;
+        let _: Option<String> = BrowseItem.subtitle;
+        let _: Option<String> = BrowseItem.image_key;
+        let _: Option<String> = BrowseItem.item_key;
+        let _: Option<crate::api::roon_browse_mirror::BrowseItemHint> = BrowseItem.hint;
+        let _: Option<crate::api::roon_browse_mirror::InputPrompt> = BrowseItem.input_prompt;
+    }
+    {
+        let BrowseList = None::<crate::api::roon_browse_mirror::BrowseList>.unwrap();
+        let _: String = BrowseList.title;
+        let _: usize = BrowseList.count;
+        let _: u32 = BrowseList.level;
+        let _: Option<String> = BrowseList.subtitle;
+        let _: Option<String> = BrowseList.image_key;
+        let _: Option<usize> = BrowseList.display_offset;
+        let _: Option<crate::api::roon_browse_mirror::BrowseListHint> = BrowseList.hint;
+    }
+    {
+        let InputPrompt = None::<crate::api::roon_browse_mirror::InputPrompt>.unwrap();
+        let _: String = InputPrompt.prompt;
+        let _: String = InputPrompt.action;
+        let _: Option<String> = InputPrompt.value;
+        let _: Option<bool> = InputPrompt.is_password;
+    }
+};
+
 // Section: related_funcs
 
 fn decode_DartFn_Inputs_roon_event_Output_unit(
@@ -1107,9 +1127,6 @@ fn decode_DartFn_Inputs_roon_event_Output_unit(
     }
 }
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
-    flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>
-);
-flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::rust_async::RwLock<RoonZone>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
@@ -1117,9 +1134,6 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::rust_async::RwLock<ZoneNowPlaying>
-);
-flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
-    flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api::browse::Item>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api::transport::NowPlaying>
@@ -1132,16 +1146,6 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
 );
 
 // Section: dart2rust
-
-impl SseDecode for BrowseItem {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <RustOpaqueMoi<
-            flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>,
-        >>::sse_decode(deserializer);
-        return inner.rust_auto_opaque_decode_owned();
-    }
-}
 
 impl SseDecode for RoonZone {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1168,16 +1172,6 @@ impl SseDecode for ZoneNowPlaying {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <RustOpaqueMoi<
             flutter_rust_bridge::for_generated::rust_async::RwLock<ZoneNowPlaying>,
-        >>::sse_decode(deserializer);
-        return inner.rust_auto_opaque_decode_owned();
-    }
-}
-
-impl SseDecode for roon_api::browse::Item {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <RustOpaqueMoi<
-            flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api::browse::Item>,
         >>::sse_decode(deserializer);
         return inner.rust_auto_opaque_decode_owned();
     }
@@ -1221,16 +1215,6 @@ impl SseDecode for flutter_rust_bridge::DartOpaque {
     }
 }
 
-impl SseDecode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <usize>::sse_decode(deserializer);
-        return decode_rust_opaque_moi(inner);
-    }
-}
-
 impl SseDecode for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<RoonZone>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1249,18 +1233,6 @@ impl SseDecode for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async:
 
 impl SseDecode
     for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<ZoneNowPlaying>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <usize>::sse_decode(deserializer);
-        return decode_rust_opaque_moi(inner);
-    }
-}
-
-impl SseDecode
-    for RustOpaqueMoi<
-        flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api::browse::Item>,
-    >
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1320,20 +1292,89 @@ impl SseDecode for bool {
     }
 }
 
-impl SseDecode for crate::api::simple::BrowseItems {
+impl SseDecode for crate::api::roon_browse_mirror::BrowseItem {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_title = <String>::sse_decode(deserializer);
-        let mut var_level = <u32>::sse_decode(deserializer);
-        let mut var_offset = <usize>::sse_decode(deserializer);
-        let mut var_total = <usize>::sse_decode(deserializer);
-        let mut var_items = <Vec<BrowseItem>>::sse_decode(deserializer);
-        return crate::api::simple::BrowseItems {
+        let mut var_subtitle = <Option<String>>::sse_decode(deserializer);
+        let mut var_imageKey = <Option<String>>::sse_decode(deserializer);
+        let mut var_itemKey = <Option<String>>::sse_decode(deserializer);
+        let mut var_hint =
+            <Option<crate::api::roon_browse_mirror::BrowseItemHint>>::sse_decode(deserializer);
+        let mut var_inputPrompt =
+            <Option<crate::api::roon_browse_mirror::InputPrompt>>::sse_decode(deserializer);
+        return crate::api::roon_browse_mirror::BrowseItem {
             title: var_title,
-            level: var_level,
+            subtitle: var_subtitle,
+            image_key: var_imageKey,
+            item_key: var_itemKey,
+            hint: var_hint,
+            input_prompt: var_inputPrompt,
+        };
+    }
+}
+
+impl SseDecode for crate::api::roon_browse_mirror::BrowseItemHint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::roon_browse_mirror::BrowseItemHint::None,
+            1 => crate::api::roon_browse_mirror::BrowseItemHint::Action,
+            2 => crate::api::roon_browse_mirror::BrowseItemHint::ActionList,
+            3 => crate::api::roon_browse_mirror::BrowseItemHint::List,
+            4 => crate::api::roon_browse_mirror::BrowseItemHint::Header,
+            _ => unreachable!("Invalid variant for BrowseItemHint: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::simple::BrowseItems {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_list = <crate::api::roon_browse_mirror::BrowseList>::sse_decode(deserializer);
+        let mut var_offset = <usize>::sse_decode(deserializer);
+        let mut var_items =
+            <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_decode(deserializer);
+        return crate::api::simple::BrowseItems {
+            list: var_list,
             offset: var_offset,
-            total: var_total,
             items: var_items,
+        };
+    }
+}
+
+impl SseDecode for crate::api::roon_browse_mirror::BrowseList {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_title = <String>::sse_decode(deserializer);
+        let mut var_count = <usize>::sse_decode(deserializer);
+        let mut var_level = <u32>::sse_decode(deserializer);
+        let mut var_subtitle = <Option<String>>::sse_decode(deserializer);
+        let mut var_imageKey = <Option<String>>::sse_decode(deserializer);
+        let mut var_displayOffset = <Option<usize>>::sse_decode(deserializer);
+        let mut var_hint =
+            <Option<crate::api::roon_browse_mirror::BrowseListHint>>::sse_decode(deserializer);
+        return crate::api::roon_browse_mirror::BrowseList {
+            title: var_title,
+            count: var_count,
+            level: var_level,
+            subtitle: var_subtitle,
+            image_key: var_imageKey,
+            display_offset: var_displayOffset,
+            hint: var_hint,
+        };
+    }
+}
+
+impl SseDecode for crate::api::roon_browse_mirror::BrowseListHint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::roon_browse_mirror::BrowseListHint::None,
+            1 => crate::api::roon_browse_mirror::BrowseListHint::ActionList,
+            _ => unreachable!("Invalid variant for BrowseListHint: {}", inner),
         };
     }
 }
@@ -1364,15 +1405,19 @@ impl SseDecode for crate::api::simple::ImageKeyValue {
     }
 }
 
-impl SseDecode for Vec<BrowseItem> {
+impl SseDecode for crate::api::roon_browse_mirror::InputPrompt {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut len_ = <i32>::sse_decode(deserializer);
-        let mut ans_ = vec![];
-        for idx_ in 0..len_ {
-            ans_.push(<BrowseItem>::sse_decode(deserializer));
-        }
-        return ans_;
+        let mut var_prompt = <String>::sse_decode(deserializer);
+        let mut var_action = <String>::sse_decode(deserializer);
+        let mut var_value = <Option<String>>::sse_decode(deserializer);
+        let mut var_isPassword = <Option<bool>>::sse_decode(deserializer);
+        return crate::api::roon_browse_mirror::InputPrompt {
+            prompt: var_prompt,
+            action: var_action,
+            value: var_value,
+            is_password: var_isPassword,
+        };
     }
 }
 
@@ -1383,6 +1428,20 @@ impl SseDecode for Vec<String> {
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
             ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::roon_browse_mirror::BrowseItem> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::roon_browse_mirror::BrowseItem>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -1434,6 +1493,43 @@ impl SseDecode for Option<ZoneNowPlaying> {
     }
 }
 
+impl SseDecode for Option<bool> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<bool>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::api::roon_browse_mirror::BrowseItemHint> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::api::roon_browse_mirror::BrowseItemHint>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::api::roon_browse_mirror::BrowseListHint> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::api::roon_browse_mirror::BrowseListHint>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<i64> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1445,11 +1541,35 @@ impl SseDecode for Option<i64> {
     }
 }
 
+impl SseDecode for Option<crate::api::roon_browse_mirror::InputPrompt> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::roon_browse_mirror::InputPrompt>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<u32>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<usize> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<usize>::sse_decode(deserializer));
         } else {
             return None;
         }
@@ -1487,7 +1607,7 @@ impl SseDecode for crate::api::simple::RoonEvent {
             }
             3 => {
                 let mut var_field0 = <RoonZone>::sse_decode(deserializer);
-                return crate::api::simple::RoonEvent::ZoneSelected(var_field0);
+                return crate::api::simple::RoonEvent::ZoneChanged(var_field0);
             }
             4 => {
                 let mut var_field0 = <crate::api::simple::BrowseItems>::sse_decode(deserializer);
@@ -1505,6 +1625,19 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 unimplemented!("");
             }
         }
+    }
+}
+
+impl SseDecode for crate::api::simple::ThemeEnum {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::simple::ThemeEnum::Dark,
+            1 => crate::api::simple::ThemeEnum::Light,
+            2 => crate::api::simple::ThemeEnum::System,
+            _ => unreachable!("Invalid variant for ThemeEnum: {}", inner),
+        };
     }
 }
 
@@ -1576,20 +1709,21 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire_BrowseItem_new_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire_RoonZone_new_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire_ZoneNowPlaying_new_impl(port, ptr, rust_vec_len, data_len),
-        6 => wire_ZoneState_from_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire_Settings_set_expand_impl(port, ptr, rust_vec_len, data_len),
-        29 => wire_Settings_set_view_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire_browse_impl(port, ptr, rust_vec_len, data_len),
-        25 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        26 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire_RoonZone_new_impl(port, ptr, rust_vec_len, data_len),
+        2 => wire_ZoneNowPlaying_new_impl(port, ptr, rust_vec_len, data_len),
+        1 => wire_ZoneState_from_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire_Settings_set_expand_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire_Settings_set_theme_impl(port, ptr, rust_vec_len, data_len),
+        26 => wire_Settings_set_view_impl(port, ptr, rust_vec_len, data_len),
+        28 => wire_Settings_set_zone_id_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire_browse_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1602,56 +1736,26 @@ fn pde_ffi_dispatcher_sync_impl(
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        4 => wire_BrowseItem_image_key_impl(ptr, rust_vec_len, data_len),
-        5 => wire_BrowseItem_item_key_impl(ptr, rust_vec_len, data_len),
-        3 => wire_BrowseItem_subtitle_impl(ptr, rust_vec_len, data_len),
-        2 => wire_BrowseItem_title_impl(ptr, rust_vec_len, data_len),
-        16 => wire_RoonZone_display_name_impl(ptr, rust_vec_len, data_len),
-        18 => wire_RoonZone_now_playing_impl(ptr, rust_vec_len, data_len),
-        17 => wire_RoonZone_state_impl(ptr, rust_vec_len, data_len),
-        8 => wire_ZoneNowPlaying_artist_image_key_impl(ptr, rust_vec_len, data_len),
-        9 => wire_ZoneNowPlaying_image_key_impl(ptr, rust_vec_len, data_len),
-        10 => wire_ZoneNowPlaying_length_impl(ptr, rust_vec_len, data_len),
-        12 => wire_ZoneNowPlaying_one_line_impl(ptr, rust_vec_len, data_len),
-        11 => wire_ZoneNowPlaying_seek_position_impl(ptr, rust_vec_len, data_len),
-        14 => wire_ZoneNowPlaying_three_line_impl(ptr, rust_vec_len, data_len),
-        13 => wire_ZoneNowPlaying_two_line_impl(ptr, rust_vec_len, data_len),
-        28 => wire_Settings_expand_impl(ptr, rust_vec_len, data_len),
-        30 => wire_Settings_view_impl(ptr, rust_vec_len, data_len),
+        11 => wire_RoonZone_display_name_impl(ptr, rust_vec_len, data_len),
+        13 => wire_RoonZone_now_playing_impl(ptr, rust_vec_len, data_len),
+        12 => wire_RoonZone_state_impl(ptr, rust_vec_len, data_len),
+        3 => wire_ZoneNowPlaying_artist_image_key_impl(ptr, rust_vec_len, data_len),
+        4 => wire_ZoneNowPlaying_image_key_impl(ptr, rust_vec_len, data_len),
+        5 => wire_ZoneNowPlaying_length_impl(ptr, rust_vec_len, data_len),
+        7 => wire_ZoneNowPlaying_one_line_impl(ptr, rust_vec_len, data_len),
+        6 => wire_ZoneNowPlaying_seek_position_impl(ptr, rust_vec_len, data_len),
+        9 => wire_ZoneNowPlaying_three_line_impl(ptr, rust_vec_len, data_len),
+        8 => wire_ZoneNowPlaying_two_line_impl(ptr, rust_vec_len, data_len),
+        23 => wire_Settings_expand_impl(ptr, rust_vec_len, data_len),
+        25 => wire_Settings_theme_impl(ptr, rust_vec_len, data_len),
+        27 => wire_Settings_view_impl(ptr, rust_vec_len, data_len),
+        29 => wire_Settings_zone_id_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
 
 // Section: rust2dart
 
-pub struct Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-    BrowseItem,
-);
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem
-{
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
-            .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem
-{
-}
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem,
-    > for BrowseItem
-{
-    fn into_into_dart(
-        self,
-    ) -> Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem
-    {
-        Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(self)
-    }
-}
 pub struct Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
     RoonZone,
 );
@@ -1736,21 +1840,6 @@ impl
         )
     }
 }
-pub struct Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-    roon_api::browse::Item,
-);
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem {
-                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-                    flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0).into_dart()
-                }
-            }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem {}
-impl flutter_rust_bridge::IntoIntoDart<Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem> for roon_api :: browse :: Item {
-            fn into_into_dart(self) -> Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem {
-                Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(self)
-            }
-        }
 pub struct Local_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
     roon_api::transport::NowPlaying,
 );
@@ -1797,13 +1886,53 @@ impl flutter_rust_bridge::IntoIntoDart<Local_Auto_Owned_RustOpaque_flutter_rust_
             }
         }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_BrowseItem {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.title.into_into_dart().into_dart(),
+            self.0.subtitle.into_into_dart().into_dart(),
+            self.0.image_key.into_into_dart().into_dart(),
+            self.0.item_key.into_into_dart().into_dart(),
+            self.0.hint.into_into_dart().into_dart(),
+            self.0.input_prompt.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_BrowseItem {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_BrowseItem>
+    for crate::api::roon_browse_mirror::BrowseItem
+{
+    fn into_into_dart(self) -> mirror_BrowseItem {
+        mirror_BrowseItem(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_BrowseItemHint {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::api::roon_browse_mirror::BrowseItemHint::None => 0.into_dart(),
+            crate::api::roon_browse_mirror::BrowseItemHint::Action => 1.into_dart(),
+            crate::api::roon_browse_mirror::BrowseItemHint::ActionList => 2.into_dart(),
+            crate::api::roon_browse_mirror::BrowseItemHint::List => 3.into_dart(),
+            crate::api::roon_browse_mirror::BrowseItemHint::Header => 4.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_BrowseItemHint {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_BrowseItemHint>
+    for crate::api::roon_browse_mirror::BrowseItemHint
+{
+    fn into_into_dart(self) -> mirror_BrowseItemHint {
+        mirror_BrowseItemHint(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::simple::BrowseItems {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.title.into_into_dart().into_dart(),
-            self.level.into_into_dart().into_dart(),
+            self.list.into_into_dart().into_dart(),
             self.offset.into_into_dart().into_dart(),
-            self.total.into_into_dart().into_dart(),
             self.items.into_into_dart().into_dart(),
         ]
         .into_dart()
@@ -1818,6 +1947,46 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::BrowseItems>
 {
     fn into_into_dart(self) -> crate::api::simple::BrowseItems {
         self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_BrowseList {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.title.into_into_dart().into_dart(),
+            self.0.count.into_into_dart().into_dart(),
+            self.0.level.into_into_dart().into_dart(),
+            self.0.subtitle.into_into_dart().into_dart(),
+            self.0.image_key.into_into_dart().into_dart(),
+            self.0.display_offset.into_into_dart().into_dart(),
+            self.0.hint.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_BrowseList {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_BrowseList>
+    for crate::api::roon_browse_mirror::BrowseList
+{
+    fn into_into_dart(self) -> mirror_BrowseList {
+        mirror_BrowseList(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_BrowseListHint {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::api::roon_browse_mirror::BrowseListHint::None => 0.into_dart(),
+            crate::api::roon_browse_mirror::BrowseListHint::ActionList => 1.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_BrowseListHint {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_BrowseListHint>
+    for crate::api::roon_browse_mirror::BrowseListHint
+{
+    fn into_into_dart(self) -> mirror_BrowseListHint {
+        mirror_BrowseListHint(self)
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -1842,6 +2011,26 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::ImageKeyValue>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_InputPrompt {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.prompt.into_into_dart().into_dart(),
+            self.0.action.into_into_dart().into_dart(),
+            self.0.value.into_into_dart().into_dart(),
+            self.0.is_password.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_InputPrompt {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_InputPrompt>
+    for crate::api::roon_browse_mirror::InputPrompt
+{
+    fn into_into_dart(self) -> mirror_InputPrompt {
+        mirror_InputPrompt(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -1854,7 +2043,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::ZonesChanged(field0) => {
                 [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::ZoneSelected(field0) => {
+            crate::api::simple::RoonEvent::ZoneChanged(field0) => {
                 [3.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             crate::api::simple::RoonEvent::BrowseItems(field0) => {
@@ -1874,6 +2063,24 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::RoonEvent>
     for crate::api::simple::RoonEvent
 {
     fn into_into_dart(self) -> crate::api::simple::RoonEvent {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::simple::ThemeEnum {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Dark => 0.into_dart(),
+            Self::Light => 1.into_dart(),
+            Self::System => 2.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::simple::ThemeEnum {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::ThemeEnum>
+    for crate::api::simple::ThemeEnum
+{
+    fn into_into_dart(self) -> crate::api::simple::ThemeEnum {
         self
     }
 }
@@ -1924,13 +2131,6 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::ZoneSummary>
     }
 }
 
-impl SseEncode for BrowseItem {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
-    }
-}
-
 impl SseEncode for RoonZone {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1949,18 +2149,6 @@ impl SseEncode for ZoneNowPlaying {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<ZoneNowPlaying>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
-    }
-}
-
-impl SseEncode for roon_api::browse::Item {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <RustOpaqueMoi<
-            flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api::browse::Item>,
-        >>::sse_encode(
-            flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self),
-            serializer,
-        );
     }
 }
 
@@ -2007,17 +2195,6 @@ impl SseEncode for flutter_rust_bridge::DartOpaque {
     }
 }
 
-impl SseEncode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        let (ptr, size) = self.sse_encode_raw();
-        <usize>::sse_encode(ptr, serializer);
-        <i32>::sse_encode(size, serializer);
-    }
-}
-
 impl SseEncode for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<RoonZone>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2038,19 +2215,6 @@ impl SseEncode for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async:
 
 impl SseEncode
     for RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<ZoneNowPlaying>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        let (ptr, size) = self.sse_encode_raw();
-        <usize>::sse_encode(ptr, serializer);
-        <i32>::sse_encode(size, serializer);
-    }
-}
-
-impl SseEncode
-    for RustOpaqueMoi<
-        flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api::browse::Item>,
-    >
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2113,14 +2277,75 @@ impl SseEncode for bool {
     }
 }
 
-impl SseEncode for crate::api::simple::BrowseItems {
+impl SseEncode for crate::api::roon_browse_mirror::BrowseItem {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.title, serializer);
-        <u32>::sse_encode(self.level, serializer);
+        <Option<String>>::sse_encode(self.subtitle, serializer);
+        <Option<String>>::sse_encode(self.image_key, serializer);
+        <Option<String>>::sse_encode(self.item_key, serializer);
+        <Option<crate::api::roon_browse_mirror::BrowseItemHint>>::sse_encode(self.hint, serializer);
+        <Option<crate::api::roon_browse_mirror::InputPrompt>>::sse_encode(
+            self.input_prompt,
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::roon_browse_mirror::BrowseItemHint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::roon_browse_mirror::BrowseItemHint::None => 0,
+                crate::api::roon_browse_mirror::BrowseItemHint::Action => 1,
+                crate::api::roon_browse_mirror::BrowseItemHint::ActionList => 2,
+                crate::api::roon_browse_mirror::BrowseItemHint::List => 3,
+                crate::api::roon_browse_mirror::BrowseItemHint::Header => 4,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::simple::BrowseItems {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::roon_browse_mirror::BrowseList>::sse_encode(self.list, serializer);
         <usize>::sse_encode(self.offset, serializer);
-        <usize>::sse_encode(self.total, serializer);
-        <Vec<BrowseItem>>::sse_encode(self.items, serializer);
+        <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_encode(self.items, serializer);
+    }
+}
+
+impl SseEncode for crate::api::roon_browse_mirror::BrowseList {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.title, serializer);
+        <usize>::sse_encode(self.count, serializer);
+        <u32>::sse_encode(self.level, serializer);
+        <Option<String>>::sse_encode(self.subtitle, serializer);
+        <Option<String>>::sse_encode(self.image_key, serializer);
+        <Option<usize>>::sse_encode(self.display_offset, serializer);
+        <Option<crate::api::roon_browse_mirror::BrowseListHint>>::sse_encode(self.hint, serializer);
+    }
+}
+
+impl SseEncode for crate::api::roon_browse_mirror::BrowseListHint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::roon_browse_mirror::BrowseListHint::None => 0,
+                crate::api::roon_browse_mirror::BrowseListHint::ActionList => 1,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -2146,13 +2371,13 @@ impl SseEncode for crate::api::simple::ImageKeyValue {
     }
 }
 
-impl SseEncode for Vec<BrowseItem> {
+impl SseEncode for crate::api::roon_browse_mirror::InputPrompt {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(self.len() as _, serializer);
-        for item in self {
-            <BrowseItem>::sse_encode(item, serializer);
-        }
+        <String>::sse_encode(self.prompt, serializer);
+        <String>::sse_encode(self.action, serializer);
+        <Option<String>>::sse_encode(self.value, serializer);
+        <Option<bool>>::sse_encode(self.is_password, serializer);
     }
 }
 
@@ -2162,6 +2387,16 @@ impl SseEncode for Vec<String> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::roon_browse_mirror::BrowseItem> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::roon_browse_mirror::BrowseItem>::sse_encode(item, serializer);
         }
     }
 }
@@ -2206,6 +2441,36 @@ impl SseEncode for Option<ZoneNowPlaying> {
     }
 }
 
+impl SseEncode for Option<bool> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <bool>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::api::roon_browse_mirror::BrowseItemHint> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::roon_browse_mirror::BrowseItemHint>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::api::roon_browse_mirror::BrowseListHint> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::roon_browse_mirror::BrowseListHint>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<i64> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2216,12 +2481,32 @@ impl SseEncode for Option<i64> {
     }
 }
 
+impl SseEncode for Option<crate::api::roon_browse_mirror::InputPrompt> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::roon_browse_mirror::InputPrompt>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <u32>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<usize> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <usize>::sse_encode(value, serializer);
         }
     }
 }
@@ -2252,7 +2537,7 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(2, serializer);
                 <Vec<crate::api::simple::ZoneSummary>>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::ZoneSelected(field0) => {
+            crate::api::simple::RoonEvent::ZoneChanged(field0) => {
                 <i32>::sse_encode(3, serializer);
                 <RoonZone>::sse_encode(field0, serializer);
             }
@@ -2269,6 +2554,23 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <Settings>::sse_encode(field0, serializer);
             }
         }
+    }
+}
+
+impl SseEncode for crate::api::simple::ThemeEnum {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::simple::ThemeEnum::Dark => 0,
+                crate::api::simple::ThemeEnum::Light => 1,
+                crate::api::simple::ThemeEnum::System => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 

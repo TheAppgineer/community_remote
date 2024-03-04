@@ -6,12 +6,11 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
-import 'roon_browse_wrapper.dart';
+import 'roon_browse_mirror.dart';
 import 'roon_transport_wrapper.dart';
 part 'simple.freezed.dart';
 
 // The type `InternalState` is not used by any `pub` functions, thus it is ignored.
-// The type `ThemeEnum` is not used by any `pub` functions, thus it is ignored.
 
 Future<void> startRoon(
         {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) =>
@@ -40,9 +39,9 @@ Future<void> browseBack({required int sessionId, dynamic hint}) =>
     RustLib.instance.api.browseBack(sessionId: sessionId, hint: hint);
 
 Future<void> selectBrowseItem(
-        {required int sessionId, String? itemKey, dynamic hint}) =>
+        {required int sessionId, required BrowseItem item, dynamic hint}) =>
     RustLib.instance.api
-        .selectBrowseItem(sessionId: sessionId, itemKey: itemKey, hint: hint);
+        .selectBrowseItem(sessionId: sessionId, item: item, hint: hint);
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<Settings>>
 @sealed
@@ -71,49 +70,58 @@ class Settings extends RustOpaque {
         expand: expand,
       );
 
+  Future<void> setTheme({required ThemeEnum theme, dynamic hint}) =>
+      RustLib.instance.api.settingsSetTheme(
+        that: this,
+        theme: theme,
+      );
+
   Future<void> setView({required int view, dynamic hint}) =>
       RustLib.instance.api.settingsSetView(
         that: this,
         view: view,
       );
 
+  Future<void> setZoneId({required String zoneId, dynamic hint}) =>
+      RustLib.instance.api.settingsSetZoneId(
+        that: this,
+        zoneId: zoneId,
+      );
+
+  ThemeEnum get theme => RustLib.instance.api.settingsTheme(
+        that: this,
+      );
+
   int get view => RustLib.instance.api.settingsView(
+        that: this,
+      );
+
+  String? get zoneId => RustLib.instance.api.settingsZoneId(
         that: this,
       );
 }
 
 class BrowseItems {
-  final String title;
-  final int level;
+  final BrowseList list;
   final int offset;
-  final int total;
   final List<BrowseItem> items;
 
   const BrowseItems({
-    required this.title,
-    required this.level,
+    required this.list,
     required this.offset,
-    required this.total,
     required this.items,
   });
 
   @override
-  int get hashCode =>
-      title.hashCode ^
-      level.hashCode ^
-      offset.hashCode ^
-      total.hashCode ^
-      items.hashCode;
+  int get hashCode => list.hashCode ^ offset.hashCode ^ items.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is BrowseItems &&
           runtimeType == other.runtimeType &&
-          title == other.title &&
-          level == other.level &&
+          list == other.list &&
           offset == other.offset &&
-          total == other.total &&
           items == other.items;
 }
 
@@ -149,9 +157,9 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.zonesChanged(
     List<ZoneSummary> field0,
   ) = RoonEvent_ZonesChanged;
-  const factory RoonEvent.zoneSelected(
+  const factory RoonEvent.zoneChanged(
     RoonZone field0,
-  ) = RoonEvent_ZoneSelected;
+  ) = RoonEvent_ZoneChanged;
   const factory RoonEvent.browseItems(
     BrowseItems field0,
   ) = RoonEvent_BrowseItems;
@@ -161,6 +169,12 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.settings(
     Settings field0,
   ) = RoonEvent_Settings;
+}
+
+enum ThemeEnum {
+  dark,
+  light,
+  system,
 }
 
 class ZoneSummary {

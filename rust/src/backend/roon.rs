@@ -1,5 +1,5 @@
 use roon_api::{
-    browse::{Action, Browse, BrowseOpts, LoadOpts},
+    browse::{Browse, BrowseAction, BrowseItem, BrowseItemHint, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
     info,
     transport::{Transport, Zone},
@@ -14,7 +14,6 @@ use tokio::sync::{
 };
 
 use crate::api::{
-    roon_browse_wrapper::BrowseItem,
     roon_transport_wrapper::{RoonZone, ZoneState},
     simple::{BrowseItems, ImageKeyValue, RoonEvent, Settings, ZoneSummary},
 };
@@ -36,7 +35,9 @@ struct RoonHandler {
     image: Option<Image>,
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
+    zone_id: Option<String>,
     browse_path: HashMap<String, Vec<&'static str>>,
+    browse_category: i32,
 }
 
 impl Roon {
@@ -92,13 +93,13 @@ impl Roon {
     }
 
     pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
-        log::info!("Selecting zone: {zone_id}");
-        let handler = self.handler.lock().await;
+        let mut handler = self.handler.lock().await;
         let zone = RoonZone::new(handler.zone_map.get(zone_id).cloned()?);
 
+        handler.zone_id = Some(zone_id.to_owned());
         handler
             .event_tx
-            .send(RoonEvent::ZoneSelected(zone))
+            .send(RoonEvent::ZoneChanged(zone))
             .await
             .unwrap();
 
@@ -107,55 +108,57 @@ impl Roon {
 
     pub async fn browse_category(&self, category: i32, session_id: i32) -> Option<()> {
         let mut handler = self.handler.lock().await;
-        let category_paths = HashMap::from([
-            (2, vec!["Playlists"]),
-            (3, vec!["My Live Radio"]),
-            (4, vec!["Genres"]),
-            (6, vec!["Artists", "Library"]),
-            (7, vec!["Albums", "Library"]),
-            (8, vec!["Tracks", "Library"]),
-            (9, vec!["Composers", "Library"]),
-            (10, vec!["Tags", "Library"]),
-            (12, vec!["Settings"]),
-        ]);
-        let multi_session_key = Some(session_id.to_string());
-        let opts = BrowseOpts {
-            multi_session_key,
-            pop_all: true,
-            set_display_offset: Some(0),
-            ..Default::default()
-        };
 
-        handler.browse_offset = 0;
+        if category != handler.browse_category {
+            let category_paths = HashMap::from([
+                (2, vec!["Artists", "Library"]),
+                (3, vec!["Albums", "Library"]),
+                (4, vec!["Tracks", "Library"]),
+                (5, vec!["Genres"]),
+                (6, vec!["Composers", "Library"]),
+                (7, vec!["Tags", "Library"]),
+                (8, vec!["My Live Radio"]),
+                (9, vec!["Playlists"]),
+                (11, vec!["Settings"]),
+            ]);
+            let multi_session_key = Some(session_id.to_string());
+            let opts = BrowseOpts {
+                multi_session_key,
+                pop_all: true,
+                set_display_offset: Some(0),
+                ..Default::default()
+            };
 
-        if let Some(path) = category_paths.get(&category) {
-            handler
-                .browse_path
-                .insert(session_id.to_string(), path.clone());
+            handler.browse_offset = 0;
+
+            if let Some(path) = category_paths.get(&category) {
+                handler
+                    .browse_path
+                    .insert(session_id.to_string(), path.clone());
+            }
+
+            handler.browse.as_ref()?.browse(&opts).await;
+            handler.browse_category = category;
         }
-
-        handler.browse.as_ref()?.browse(&opts).await;
 
         Some(())
     }
 
-    pub async fn select_browse_item(
-        &self,
-        session_id: i32,
-        item_key: Option<String>,
-    ) -> Option<()> {
-        let mut handler = self.handler.lock().await;
-
-        handler.browse_offset = 0;
-
+    pub async fn select_browse_item(&self, session_id: i32, item: BrowseItem) -> Option<()> {
         let multi_session_key = Some(session_id.to_string());
-        let opts = BrowseOpts {
-            item_key,
+        let mut handler = self.handler.lock().await;
+        let mut opts = BrowseOpts {
+            item_key: item.item_key,
             multi_session_key,
             set_display_offset: Some(0),
             ..Default::default()
         };
 
+        if item.hint == Some(BrowseItemHint::Action) {
+            opts.zone_or_output_id = handler.zone_id.to_owned();
+        }
+
+        handler.browse_offset = 0;
         handler.browse.as_ref()?.browse(&opts).await;
 
         Some(())
@@ -232,7 +235,9 @@ impl RoonHandler {
             image: None,
             transport: None,
             zone_map: HashMap::new(),
+            zone_id: None,
             browse_path: HashMap::new(),
+            browse_category: 0,
         }
     }
 
@@ -269,11 +274,23 @@ impl RoonHandler {
                     RoonApi::save_config(CONFIG_PATH, "roonstate", raw).unwrap();
                 }
                 Parsed::Zones(zones) => {
+                    let mut curr_zone = None;
+
                     for zone in zones {
+                        if Some(&zone.zone_id) == self.zone_id.as_ref() {
+                            curr_zone = Some(RoonZone::new(zone.to_owned()));
+                        }
                         self.zone_map.insert(zone.zone_id.to_owned(), zone);
                     }
 
                     self.send_zone_list().await;
+
+                    if curr_zone.is_some() {
+                        self.event_tx
+                            .send(RoonEvent::ZoneChanged(curr_zone?))
+                            .await
+                            .unwrap();
+                    }
                 }
                 Parsed::ZonesRemoved(zone_ids) => {
                     for zone_id in &zone_ids {
@@ -283,7 +300,7 @@ impl RoonHandler {
                     self.send_zone_list().await;
                 }
                 Parsed::BrowseResult(result, multi_session_key) => match result.action {
-                    Action::List => {
+                    BrowseAction::List => {
                         let offset = self.browse_offset;
                         let opts = LoadOpts {
                             count: Some(20),
@@ -327,22 +344,16 @@ impl RoonHandler {
                     }
 
                     let new_offset = result.offset + result.items.len();
-                    let browse_items = result
-                        .items
-                        .iter()
-                        .map(|inner| BrowseItem::new(inner.to_owned()))
-                        .collect();
-                    let browse_items = BrowseItems {
-                        title: result.list.title,
-                        level: result.list.level,
-                        offset: result.offset,
-                        total: result.list.count,
-                        items: browse_items,
-                    };
 
                     self.browse_id = multi_session_key;
                     self.browse_offset = new_offset;
                     self.browse_total = result.list.count;
+
+                    let browse_items = BrowseItems {
+                        list: result.list,
+                        offset: result.offset,
+                        items: result.items,
+                    };
 
                     self.event_tx
                         .send(RoonEvent::BrowseItems(browse_items))

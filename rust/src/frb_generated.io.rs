@@ -4,7 +4,6 @@
 // Section: imports
 
 use super::*;
-use crate::api::roon_browse_wrapper::*;
 use crate::api::roon_transport_wrapper::*;
 use crate::api::simple::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
@@ -14,20 +13,6 @@ use flutter_rust_bridge::{Handler, IntoIntoDart};
 // Section: boilerplate
 
 flutter_rust_bridge::frb_generated_boilerplate_io!();
-
-#[no_mangle]
-pub extern "C" fn frbgen_community_remote_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-    ptr: *const std::ffi::c_void,
-) {
-    MoiArc::<flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>>::increment_strong_count(ptr as _);
-}
-
-#[no_mangle]
-pub extern "C" fn frbgen_community_remote_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-    ptr: *const std::ffi::c_void,
-) {
-    MoiArc::<flutter_rust_bridge::for_generated::rust_async::RwLock<BrowseItem>>::decrement_strong_count(ptr as _);
-}
 
 #[no_mangle]
 pub extern "C" fn frbgen_community_remote_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
@@ -69,20 +54,6 @@ pub extern "C" fn frbgen_community_remote_rust_arc_decrement_strong_count_RustOp
     ptr: *const std::ffi::c_void,
 ) {
     MoiArc::<flutter_rust_bridge::for_generated::rust_async::RwLock<ZoneNowPlaying>>::decrement_strong_count(ptr as _);
-}
-
-#[no_mangle]
-pub extern "C" fn frbgen_community_remote_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-    ptr: *const std::ffi::c_void,
-) {
-    MoiArc::<flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api :: browse :: Item>>::increment_strong_count(ptr as _);
-}
-
-#[no_mangle]
-pub extern "C" fn frbgen_community_remote_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-    ptr: *const std::ffi::c_void,
-) {
-    MoiArc::<flutter_rust_bridge::for_generated::rust_async::RwLock<roon_api :: browse :: Item>>::decrement_strong_count(ptr as _);
 }
 
 #[no_mangle]

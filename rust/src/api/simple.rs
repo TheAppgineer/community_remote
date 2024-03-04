@@ -1,11 +1,11 @@
 use flutter_rust_bridge::DartFnFuture;
 use once_cell::sync::Lazy;
+use roon_api::browse::{BrowseItem, BrowseList};
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 
 use crate::backend::roon::Roon;
 
-use super::roon_browse_wrapper::BrowseItem;
 use super::roon_transport_wrapper::{RoonZone, ZoneState};
 
 static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
@@ -14,17 +14,15 @@ pub enum RoonEvent {
     CoreFound(String),
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
-    ZoneSelected(RoonZone),
+    ZoneChanged(RoonZone),
     BrowseItems(BrowseItems),
     Image(ImageKeyValue),
     Settings(Settings),
 }
 
 pub struct BrowseItems {
-    pub title: String,
-    pub level: u32,
+    pub list: BrowseList,
     pub offset: usize,
-    pub total: usize,
     pub items: Vec<BrowseItem>,
 }
 
@@ -42,7 +40,8 @@ pub struct ZoneSummary {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
-enum ThemeEnum {
+#[serde(rename_all = "snake_case")]
+pub enum ThemeEnum {
     Dark,
     #[default]
     Light,
@@ -84,6 +83,20 @@ impl Settings {
         self.expand
     }
 
+    pub async fn set_theme(mut self, theme: ThemeEnum) {
+        self.theme = theme;
+        let api = API.lock().await;
+
+        if let Some(roon) = api.roon.as_ref() {
+            roon.save(self).await;
+        }
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn theme(&self) -> ThemeEnum {
+        self.theme.to_owned()
+    }
+
     pub async fn set_view(mut self, view: i32) {
         self.view = view;
         let api = API.lock().await;
@@ -96,6 +109,20 @@ impl Settings {
     #[flutter_rust_bridge::frb(sync, getter)]
     pub fn view(&self) -> i32 {
         self.view.to_owned()
+    }
+
+    pub async fn set_zone_id(mut self, zone_id: String) {
+        self.zone_id = Some(zone_id);
+        let api = API.lock().await;
+
+        if let Some(roon) = api.roon.as_ref() {
+            roon.save(self).await;
+        }
+    }
+
+    #[flutter_rust_bridge::frb(sync, getter)]
+    pub fn zone_id(&self) -> Option<String> {
+        self.zone_id.to_owned()
     }
 }
 
@@ -173,10 +200,10 @@ pub async fn browse_back(session_id: i32) {
     }
 }
 
-pub async fn select_browse_item(session_id: i32, item_key: Option<String>) {
+pub async fn select_browse_item(session_id: i32, item: BrowseItem) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.select_browse_item(session_id, item_key).await;
+        roon.select_browse_item(session_id, item).await;
     }
 }

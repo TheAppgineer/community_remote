@@ -3,7 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/roon_browse_wrapper.dart';
+import 'api/roon_browse_mirror.dart';
 import 'api/roon_transport_wrapper.dart';
 import 'api/simple.dart';
 import 'dart:async';
@@ -66,17 +66,6 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  String? browseItemImageKey({required BrowseItem that, dynamic hint});
-
-  String? browseItemItemKey({required BrowseItem that, dynamic hint});
-
-  Future<BrowseItem> browseItemNew(
-      {required RoonApiBrowseItem inner, dynamic hint});
-
-  String? browseItemSubtitle({required BrowseItem that, dynamic hint});
-
-  String browseItemTitle({required BrowseItem that, dynamic hint});
-
   String roonZoneDisplayName({required RoonZone that, dynamic hint});
 
   Future<RoonZone> roonZoneNew(
@@ -114,10 +103,20 @@ abstract class RustLibApi extends BaseApi {
   Future<void> settingsSetExpand(
       {required Settings that, required bool expand, dynamic hint});
 
+  Future<void> settingsSetTheme(
+      {required Settings that, required ThemeEnum theme, dynamic hint});
+
   Future<void> settingsSetView(
       {required Settings that, required int view, dynamic hint});
 
+  Future<void> settingsSetZoneId(
+      {required Settings that, required String zoneId, dynamic hint});
+
+  ThemeEnum settingsTheme({required Settings that, dynamic hint});
+
   int settingsView({required Settings that, dynamic hint});
+
+  String? settingsZoneId({required Settings that, dynamic hint});
 
   Future<void> browse(
       {required int category, required int sessionId, dynamic hint});
@@ -135,20 +134,12 @@ abstract class RustLibApi extends BaseApi {
   Future<void> initApp({dynamic hint});
 
   Future<void> selectBrowseItem(
-      {required int sessionId, String? itemKey, dynamic hint});
+      {required int sessionId, required BrowseItem item, dynamic hint});
 
   Future<void> selectZone({required String zoneId, dynamic hint});
 
   Future<void> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint});
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_BrowseItem;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_BrowseItem;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_BrowseItemPtr;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_RoonZone;
@@ -174,15 +165,6 @@ abstract class RustLibApi extends BaseApi {
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ZoneNowPlayingPtr;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_RoonApiBrowseItem;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_RoonApiBrowseItem;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_RoonApiBrowseItemPtr;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_RoonApiTransportNowPlaying;
@@ -221,141 +203,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  String? browseItemImageKey({required BrowseItem that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kBrowseItemImageKeyConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kBrowseItemImageKeyConstMeta => const TaskConstMeta(
-        debugName: "BrowseItem_image_key",
-        argNames: ["that"],
-      );
-
-  @override
-  String? browseItemItemKey({required BrowseItem that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kBrowseItemItemKeyConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kBrowseItemItemKeyConstMeta => const TaskConstMeta(
-        debugName: "BrowseItem_item_key",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<BrowseItem> browseItemNew(
-      {required RoonApiBrowseItem inner, dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-            inner, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 1, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem,
-        decodeErrorData: null,
-      ),
-      constMeta: kBrowseItemNewConstMeta,
-      argValues: [inner],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kBrowseItemNewConstMeta => const TaskConstMeta(
-        debugName: "BrowseItem_new",
-        argNames: ["inner"],
-      );
-
-  @override
-  String? browseItemSubtitle({required BrowseItem that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kBrowseItemSubtitleConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kBrowseItemSubtitleConstMeta => const TaskConstMeta(
-        debugName: "BrowseItem_subtitle",
-        argNames: ["that"],
-      );
-
-  @override
-  String browseItemTitle({required BrowseItem that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kBrowseItemTitleConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kBrowseItemTitleConstMeta => const TaskConstMeta(
-        debugName: "BrowseItem_title",
-        argNames: ["that"],
-      );
-
-  @override
   String roonZoneDisplayName({required RoonZone that, dynamic hint}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -382,7 +236,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
             inner, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 15, port: port_);
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -408,7 +262,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -434,7 +288,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_zone_state,
@@ -460,7 +314,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_list_String,
@@ -486,7 +340,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_String,
@@ -511,7 +365,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_u_32,
@@ -538,7 +392,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
             inner, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 7, port: port_);
+            funcId: 2, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -564,7 +418,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -590,7 +444,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_64,
@@ -616,7 +470,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_String,
@@ -642,7 +496,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_String,
@@ -669,7 +523,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
             inner, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 6, port: port_);
+            funcId: 1, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_zone_state,
@@ -694,7 +548,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -722,7 +576,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_bool(expand, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 27, port: port_);
+            funcId: 22, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -741,6 +595,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> settingsSetTheme(
+      {required Settings that, required ThemeEnum theme, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
+            that, serializer);
+        sse_encode_theme_enum(theme, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 24, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kSettingsSetThemeConstMeta,
+      argValues: [that, theme],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSettingsSetThemeConstMeta => const TaskConstMeta(
+        debugName: "Settings_set_theme",
+        argNames: ["that", "theme"],
+      );
+
+  @override
   Future<void> settingsSetView(
       {required Settings that, required int view, dynamic hint}) {
     return handler.executeNormal(NormalTask(
@@ -750,7 +632,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_i_32(view, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 29, port: port_);
+            funcId: 26, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -769,13 +651,66 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> settingsSetZoneId(
+      {required Settings that, required String zoneId, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
+            that, serializer);
+        sse_encode_String(zoneId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 28, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kSettingsSetZoneIdConstMeta,
+      argValues: [that, zoneId],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSettingsSetZoneIdConstMeta => const TaskConstMeta(
+        debugName: "Settings_set_zone_id",
+        argNames: ["that", "zoneId"],
+      );
+
+  @override
+  ThemeEnum settingsTheme({required Settings that, dynamic hint}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_theme_enum,
+        decodeErrorData: null,
+      ),
+      constMeta: kSettingsThemeConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSettingsThemeConstMeta => const TaskConstMeta(
+        debugName: "Settings_theme",
+        argNames: ["that"],
+      );
+
+  @override
   int settingsView({required Settings that, dynamic hint}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_32,
@@ -794,6 +729,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  String? settingsZoneId({required Settings that, dynamic hint}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_opt_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kSettingsZoneIdConstMeta,
+      argValues: [that],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSettingsZoneIdConstMeta => const TaskConstMeta(
+        debugName: "Settings_zone_id",
+        argNames: ["that"],
+      );
+
+  @override
   Future<void> browse(
       {required int category, required int sessionId, dynamic hint}) {
     return handler.executeNormal(NormalTask(
@@ -802,7 +762,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_i_32(category, serializer);
         sse_encode_i_32(sessionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 23, port: port_);
+            funcId: 18, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -827,7 +787,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(sessionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 25, port: port_);
+            funcId: 20, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -851,7 +811,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 24, port: port_);
+            funcId: 19, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -882,7 +842,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_u_32(width, serializer);
         sse_encode_u_32(height, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 22, port: port_);
+            funcId: 17, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -906,7 +866,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 19, port: port_);
+            funcId: 14, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -926,21 +886,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<void> selectBrowseItem(
-      {required int sessionId, String? itemKey, dynamic hint}) {
+      {required int sessionId, required BrowseItem item, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(sessionId, serializer);
-        sse_encode_opt_String(itemKey, serializer);
+        sse_encode_box_autoadd_browse_item(item, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 26, port: port_);
+            funcId: 21, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
       constMeta: kSelectBrowseItemConstMeta,
-      argValues: [sessionId, itemKey],
+      argValues: [sessionId, item],
       apiImpl: this,
       hint: hint,
     ));
@@ -948,7 +908,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kSelectBrowseItemConstMeta => const TaskConstMeta(
         debugName: "select_browse_item",
-        argNames: ["sessionId", "itemKey"],
+        argNames: ["sessionId", "item"],
       );
 
   @override
@@ -958,7 +918,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(zoneId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 21, port: port_);
+            funcId: 16, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -984,7 +944,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_DartFn_Inputs_roon_event_Output_unit(cb, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 20, port: port_);
+            funcId: 15, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1023,14 +983,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_BrowseItem => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_BrowseItem => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem;
-
-  RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_RoonZone => wire
           .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone;
 
@@ -1053,14 +1005,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RustArcDecrementStrongCountFnType
       get rust_arc_decrement_strong_count_ZoneNowPlaying => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying;
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_RoonApiBrowseItem => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_RoonApiBrowseItem => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_RoonApiTransportNowPlaying => wire
@@ -1087,14 +1031,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone;
 
   @protected
-  BrowseItem
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BrowseItem.dcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   RoonZone
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           dynamic raw) {
@@ -1119,14 +1055,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RoonApiBrowseItem
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return RoonApiBrowseItem.dcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   RoonApiTransportNowPlaying
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
           dynamic raw) {
@@ -1148,14 +1076,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return RoonApiTransportZone.dcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  BrowseItem
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BrowseItem.dcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1196,14 +1116,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BrowseItem
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return BrowseItem.dcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   RoonZone
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           dynamic raw) {
@@ -1225,14 +1137,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ZoneNowPlaying.dcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  RoonApiBrowseItem
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return RoonApiBrowseItem.dcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1280,9 +1184,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool dco_decode_box_autoadd_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
+  }
+
+  @protected
+  BrowseItem dco_decode_box_autoadd_browse_item(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_browse_item(raw);
+  }
+
+  @protected
+  BrowseItemHint dco_decode_box_autoadd_browse_item_hint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_browse_item_hint(raw);
+  }
+
+  @protected
   BrowseItems dco_decode_box_autoadd_browse_items(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_browse_items(raw);
+  }
+
+  @protected
+  BrowseListHint dco_decode_box_autoadd_browse_list_hint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_browse_list_hint(raw);
   }
 
   @protected
@@ -1298,26 +1226,79 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InputPrompt dco_decode_box_autoadd_input_prompt(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_input_prompt(raw);
+  }
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
   }
 
   @protected
+  int dco_decode_box_autoadd_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_usize(raw);
+  }
+
+  @protected
+  BrowseItem dco_decode_browse_item(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return BrowseItem(
+      title: dco_decode_String(arr[0]),
+      subtitle: dco_decode_opt_String(arr[1]),
+      imageKey: dco_decode_opt_String(arr[2]),
+      itemKey: dco_decode_opt_String(arr[3]),
+      hint: dco_decode_opt_box_autoadd_browse_item_hint(arr[4]),
+      inputPrompt: dco_decode_opt_box_autoadd_input_prompt(arr[5]),
+    );
+  }
+
+  @protected
+  BrowseItemHint dco_decode_browse_item_hint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return BrowseItemHint.values[raw as int];
+  }
+
+  @protected
   BrowseItems dco_decode_browse_items(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 5)
-      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return BrowseItems(
-      title: dco_decode_String(arr[0]),
-      level: dco_decode_u_32(arr[1]),
-      offset: dco_decode_usize(arr[2]),
-      total: dco_decode_usize(arr[3]),
-      items:
-          dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-              arr[4]),
+      list: dco_decode_browse_list(arr[0]),
+      offset: dco_decode_usize(arr[1]),
+      items: dco_decode_list_browse_item(arr[2]),
     );
+  }
+
+  @protected
+  BrowseList dco_decode_browse_list(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return BrowseList(
+      title: dco_decode_String(arr[0]),
+      count: dco_decode_usize(arr[1]),
+      level: dco_decode_u_32(arr[2]),
+      subtitle: dco_decode_opt_String(arr[3]),
+      imageKey: dco_decode_opt_String(arr[4]),
+      displayOffset: dco_decode_opt_box_autoadd_usize(arr[5]),
+      hint: dco_decode_opt_box_autoadd_browse_list_hint(arr[6]),
+    );
+  }
+
+  @protected
+  BrowseListHint dco_decode_browse_list_hint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return BrowseListHint.values[raw as int];
   }
 
   @protected
@@ -1345,20 +1326,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<BrowseItem>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw) {
+  InputPrompt dco_decode_input_prompt(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>)
-        .map(
-            dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem)
-        .toList();
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return InputPrompt(
+      prompt: dco_decode_String(arr[0]),
+      action: dco_decode_String(arr[1]),
+      value: dco_decode_opt_String(arr[2]),
+      isPassword: dco_decode_opt_box_autoadd_bool(arr[3]),
+    );
   }
 
   @protected
   List<String> dco_decode_list_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<BrowseItem> dco_decode_list_browse_item(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_browse_item).toList();
   }
 
   @protected
@@ -1391,15 +1381,45 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool? dco_decode_opt_box_autoadd_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_bool(raw);
+  }
+
+  @protected
+  BrowseItemHint? dco_decode_opt_box_autoadd_browse_item_hint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_browse_item_hint(raw);
+  }
+
+  @protected
+  BrowseListHint? dco_decode_opt_box_autoadd_browse_list_hint(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_browse_list_hint(raw);
+  }
+
+  @protected
   int? dco_decode_opt_box_autoadd_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_i_64(raw);
   }
 
   @protected
+  InputPrompt? dco_decode_opt_box_autoadd_input_prompt(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_input_prompt(raw);
+  }
+
+  @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_u_32(raw);
+  }
+
+  @protected
+  int? dco_decode_opt_box_autoadd_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_usize(raw);
   }
 
   @protected
@@ -1425,7 +1445,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_list_zone_summary(raw[1]),
         );
       case 3:
-        return RoonEvent_ZoneSelected(
+        return RoonEvent_ZoneChanged(
           dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
               raw[1]),
         );
@@ -1445,6 +1465,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       default:
         throw Exception("unreachable");
     }
+  }
+
+  @protected
+  ThemeEnum dco_decode_theme_enum(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ThemeEnum.values[raw as int];
   }
 
   @protected
@@ -1493,15 +1519,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BrowseItem
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BrowseItem.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   RoonZone
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           SseDeserializer deserializer) {
@@ -1529,15 +1546,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RoonApiBrowseItem
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return RoonApiBrowseItem.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   RoonApiTransportNowPlaying
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
           SseDeserializer deserializer) {
@@ -1561,15 +1569,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return RoonApiTransportZone.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  BrowseItem
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BrowseItem.sseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -1608,15 +1607,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  BrowseItem
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return BrowseItem.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   RoonZone
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           SseDeserializer deserializer) {
@@ -1640,15 +1630,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return ZoneNowPlaying.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  RoonApiBrowseItem
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return RoonApiBrowseItem.sseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -1702,10 +1683,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool sse_decode_box_autoadd_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_bool(deserializer));
+  }
+
+  @protected
+  BrowseItem sse_decode_box_autoadd_browse_item(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_browse_item(deserializer));
+  }
+
+  @protected
+  BrowseItemHint sse_decode_box_autoadd_browse_item_hint(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_browse_item_hint(deserializer));
+  }
+
+  @protected
   BrowseItems sse_decode_box_autoadd_browse_items(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_browse_items(deserializer));
+  }
+
+  @protected
+  BrowseListHint sse_decode_box_autoadd_browse_list_hint(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_browse_list_hint(deserializer));
   }
 
   @protected
@@ -1722,27 +1729,83 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InputPrompt sse_decode_box_autoadd_input_prompt(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_input_prompt(deserializer));
+  }
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_u_32(deserializer));
   }
 
   @protected
-  BrowseItems sse_decode_browse_items(SseDeserializer deserializer) {
+  int sse_decode_box_autoadd_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_usize(deserializer));
+  }
+
+  @protected
+  BrowseItem sse_decode_browse_item(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_title = sse_decode_String(deserializer);
-    var var_level = sse_decode_u_32(deserializer);
-    var var_offset = sse_decode_usize(deserializer);
-    var var_total = sse_decode_usize(deserializer);
-    var var_items =
-        sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-            deserializer);
-    return BrowseItems(
+    var var_subtitle = sse_decode_opt_String(deserializer);
+    var var_imageKey = sse_decode_opt_String(deserializer);
+    var var_itemKey = sse_decode_opt_String(deserializer);
+    var var_hint = sse_decode_opt_box_autoadd_browse_item_hint(deserializer);
+    var var_inputPrompt = sse_decode_opt_box_autoadd_input_prompt(deserializer);
+    return BrowseItem(
         title: var_title,
+        subtitle: var_subtitle,
+        imageKey: var_imageKey,
+        itemKey: var_itemKey,
+        hint: var_hint,
+        inputPrompt: var_inputPrompt);
+  }
+
+  @protected
+  BrowseItemHint sse_decode_browse_item_hint(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return BrowseItemHint.values[inner];
+  }
+
+  @protected
+  BrowseItems sse_decode_browse_items(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_list = sse_decode_browse_list(deserializer);
+    var var_offset = sse_decode_usize(deserializer);
+    var var_items = sse_decode_list_browse_item(deserializer);
+    return BrowseItems(list: var_list, offset: var_offset, items: var_items);
+  }
+
+  @protected
+  BrowseList sse_decode_browse_list(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_title = sse_decode_String(deserializer);
+    var var_count = sse_decode_usize(deserializer);
+    var var_level = sse_decode_u_32(deserializer);
+    var var_subtitle = sse_decode_opt_String(deserializer);
+    var var_imageKey = sse_decode_opt_String(deserializer);
+    var var_displayOffset = sse_decode_opt_box_autoadd_usize(deserializer);
+    var var_hint = sse_decode_opt_box_autoadd_browse_list_hint(deserializer);
+    return BrowseList(
+        title: var_title,
+        count: var_count,
         level: var_level,
-        offset: var_offset,
-        total: var_total,
-        items: var_items);
+        subtitle: var_subtitle,
+        imageKey: var_imageKey,
+        displayOffset: var_displayOffset,
+        hint: var_hint);
+  }
+
+  @protected
+  BrowseListHint sse_decode_browse_list_hint(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return BrowseListHint.values[inner];
   }
 
   @protected
@@ -1766,19 +1829,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  List<BrowseItem>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer) {
+  InputPrompt sse_decode_input_prompt(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <BrowseItem>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(
-          sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-              deserializer));
-    }
-    return ans_;
+    var var_prompt = sse_decode_String(deserializer);
+    var var_action = sse_decode_String(deserializer);
+    var var_value = sse_decode_opt_String(deserializer);
+    var var_isPassword = sse_decode_opt_box_autoadd_bool(deserializer);
+    return InputPrompt(
+        prompt: var_prompt,
+        action: var_action,
+        value: var_value,
+        isPassword: var_isPassword);
   }
 
   @protected
@@ -1789,6 +1850,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <String>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<BrowseItem> sse_decode_list_browse_item(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <BrowseItem>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_browse_item(deserializer));
     }
     return ans_;
   }
@@ -1838,6 +1911,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_bool(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  BrowseItemHint? sse_decode_opt_box_autoadd_browse_item_hint(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_browse_item_hint(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  BrowseListHint? sse_decode_opt_box_autoadd_browse_list_hint(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_browse_list_hint(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   int? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -1849,11 +1957,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InputPrompt? sse_decode_opt_box_autoadd_input_prompt(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_input_prompt(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_u_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  int? sse_decode_opt_box_autoadd_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_usize(deserializer));
     } else {
       return null;
     }
@@ -1889,7 +2020,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 =
             sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
                 deserializer);
-        return RoonEvent_ZoneSelected(var_field0);
+        return RoonEvent_ZoneChanged(var_field0);
       case 4:
         var var_field0 = sse_decode_box_autoadd_browse_items(deserializer);
         return RoonEvent_BrowseItems(var_field0);
@@ -1904,6 +2035,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       default:
         throw UnimplementedError('');
     }
+  }
+
+  @protected
+  ThemeEnum sse_decode_theme_enum(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return ThemeEnum.values[inner];
   }
 
   @protected
@@ -1954,14 +2092,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          BrowseItem self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           RoonZone self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1980,14 +2110,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
           ZoneNowPlaying self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          RoonApiBrowseItem self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(self.sseEncode(move: true), serializer);
   }
@@ -2014,14 +2136,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           RoonApiTransportZone self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(self.sseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          BrowseItem self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: false), serializer);
   }
 
   @protected
@@ -2067,14 +2181,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          BrowseItem self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: null), serializer);
-  }
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           RoonZone self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -2093,14 +2199,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
           ZoneNowPlaying self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: null), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          RoonApiBrowseItem self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(self.sseEncode(move: null), serializer);
   }
@@ -2151,10 +2249,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_bool(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_browse_item(
+      BrowseItem self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_browse_item(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_browse_item_hint(
+      BrowseItemHint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_browse_item_hint(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_browse_items(
       BrowseItems self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_browse_items(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_browse_list_hint(
+      BrowseListHint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_browse_list_hint(self, serializer);
   }
 
   @protected
@@ -2171,20 +2296,67 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_input_prompt(
+      InputPrompt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_input_prompt(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_32(self, serializer);
   }
 
   @protected
-  void sse_encode_browse_items(BrowseItems self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_usize(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self, serializer);
+  }
+
+  @protected
+  void sse_encode_browse_item(BrowseItem self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.title, serializer);
-    sse_encode_u_32(self.level, serializer);
+    sse_encode_opt_String(self.subtitle, serializer);
+    sse_encode_opt_String(self.imageKey, serializer);
+    sse_encode_opt_String(self.itemKey, serializer);
+    sse_encode_opt_box_autoadd_browse_item_hint(self.hint, serializer);
+    sse_encode_opt_box_autoadd_input_prompt(self.inputPrompt, serializer);
+  }
+
+  @protected
+  void sse_encode_browse_item_hint(
+      BrowseItemHint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_browse_items(BrowseItems self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_browse_list(self.list, serializer);
     sse_encode_usize(self.offset, serializer);
-    sse_encode_usize(self.total, serializer);
-    sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-        self.items, serializer);
+    sse_encode_list_browse_item(self.items, serializer);
+  }
+
+  @protected
+  void sse_encode_browse_list(BrowseList self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.title, serializer);
+    sse_encode_usize(self.count, serializer);
+    sse_encode_u_32(self.level, serializer);
+    sse_encode_opt_String(self.subtitle, serializer);
+    sse_encode_opt_String(self.imageKey, serializer);
+    sse_encode_opt_box_autoadd_usize(self.displayOffset, serializer);
+    sse_encode_opt_box_autoadd_browse_list_hint(self.hint, serializer);
+  }
+
+  @protected
+  void sse_encode_browse_list_hint(
+      BrowseListHint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -2208,15 +2380,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          List<BrowseItem> self, SseSerializer serializer) {
+  void sse_encode_input_prompt(InputPrompt self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          item, serializer);
-    }
+    sse_encode_String(self.prompt, serializer);
+    sse_encode_String(self.action, serializer);
+    sse_encode_opt_String(self.value, serializer);
+    sse_encode_opt_box_autoadd_bool(self.isPassword, serializer);
   }
 
   @protected
@@ -2225,6 +2394,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_browse_item(
+      List<BrowseItem> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_browse_item(item, serializer);
     }
   }
 
@@ -2270,6 +2449,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_bool(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_browse_item_hint(
+      BrowseItemHint? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_browse_item_hint(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_browse_list_hint(
+      BrowseListHint? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_browse_list_hint(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_box_autoadd_i_64(int? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -2280,12 +2491,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_input_prompt(
+      InputPrompt? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_input_prompt(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_u_32(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_usize(int? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_usize(self, serializer);
     }
   }
 
@@ -2313,7 +2545,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_ZonesChanged(field0: final field0):
         sse_encode_i_32(2, serializer);
         sse_encode_list_zone_summary(field0, serializer);
-      case RoonEvent_ZoneSelected(field0: final field0):
+      case RoonEvent_ZoneChanged(field0: final field0):
         sse_encode_i_32(3, serializer);
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
             field0, serializer);
@@ -2328,6 +2560,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
             field0, serializer);
     }
+  }
+
+  @protected
+  void sse_encode_theme_enum(ThemeEnum self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected

@@ -3,7 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/roon_browse_wrapper.dart';
+import 'api/roon_browse_mirror.dart';
 import 'api/roon_transport_wrapper.dart';
 import 'api/simple.dart';
 import 'dart:async';
@@ -19,9 +19,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_BrowseItemPtr =>
-      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem;
-
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RoonZonePtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone;
 
@@ -31,10 +28,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_ZoneNowPlayingPtr => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_RoonApiBrowseItemPtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_RoonApiTransportNowPlayingPtr => wire
@@ -47,11 +40,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_RoonApiTransportZonePtr => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone;
-
-  @protected
-  BrowseItem
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw);
 
   @protected
   RoonZone
@@ -69,11 +57,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  RoonApiBrowseItem
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          dynamic raw);
-
-  @protected
   RoonApiTransportNowPlaying
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
           dynamic raw);
@@ -86,11 +69,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   RoonApiTransportZone
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          dynamic raw);
-
-  @protected
-  BrowseItem
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
           dynamic raw);
 
   @protected
@@ -116,11 +94,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object dco_decode_DartOpaque(dynamic raw);
 
   @protected
-  BrowseItem
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw);
-
-  @protected
   RoonZone
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           dynamic raw);
@@ -133,11 +106,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ZoneNowPlaying
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic raw);
-
-  @protected
-  RoonApiBrowseItem
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
           dynamic raw);
 
   @protected
@@ -167,7 +135,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  bool dco_decode_box_autoadd_bool(dynamic raw);
+
+  @protected
+  BrowseItem dco_decode_box_autoadd_browse_item(dynamic raw);
+
+  @protected
+  BrowseItemHint dco_decode_box_autoadd_browse_item_hint(dynamic raw);
+
+  @protected
   BrowseItems dco_decode_box_autoadd_browse_items(dynamic raw);
+
+  @protected
+  BrowseListHint dco_decode_box_autoadd_browse_list_hint(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_i_64(dynamic raw);
@@ -176,10 +156,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ImageKeyValue dco_decode_box_autoadd_image_key_value(dynamic raw);
 
   @protected
+  InputPrompt dco_decode_box_autoadd_input_prompt(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
+  int dco_decode_box_autoadd_usize(dynamic raw);
+
+  @protected
+  BrowseItem dco_decode_browse_item(dynamic raw);
+
+  @protected
+  BrowseItemHint dco_decode_browse_item_hint(dynamic raw);
+
+  @protected
   BrowseItems dco_decode_browse_items(dynamic raw);
+
+  @protected
+  BrowseList dco_decode_browse_list(dynamic raw);
+
+  @protected
+  BrowseListHint dco_decode_browse_list_hint(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -191,12 +189,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ImageKeyValue dco_decode_image_key_value(dynamic raw);
 
   @protected
-  List<BrowseItem>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic raw);
+  InputPrompt dco_decode_input_prompt(dynamic raw);
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<BrowseItem> dco_decode_list_browse_item(dynamic raw);
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
@@ -213,16 +212,34 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
+
+  @protected
+  BrowseItemHint? dco_decode_opt_box_autoadd_browse_item_hint(dynamic raw);
+
+  @protected
+  BrowseListHint? dco_decode_opt_box_autoadd_browse_list_hint(dynamic raw);
+
+  @protected
   int? dco_decode_opt_box_autoadd_i_64(dynamic raw);
 
   @protected
+  InputPrompt? dco_decode_opt_box_autoadd_input_prompt(dynamic raw);
+
+  @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+  @protected
+  int? dco_decode_opt_box_autoadd_usize(dynamic raw);
 
   @protected
   List<String>? dco_decode_opt_list_String(dynamic raw);
 
   @protected
   RoonEvent dco_decode_roon_event(dynamic raw);
+
+  @protected
+  ThemeEnum dco_decode_theme_enum(dynamic raw);
 
   @protected
   int dco_decode_u_32(dynamic raw);
@@ -243,11 +260,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ZoneSummary dco_decode_zone_summary(dynamic raw);
 
   @protected
-  BrowseItem
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer);
-
-  @protected
   RoonZone
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           SseDeserializer deserializer);
@@ -263,11 +275,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  RoonApiBrowseItem
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          SseDeserializer deserializer);
-
-  @protected
   RoonApiTransportNowPlaying
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
           SseDeserializer deserializer);
@@ -280,11 +287,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   RoonApiTransportZone
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          SseDeserializer deserializer);
-
-  @protected
-  BrowseItem
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
           SseDeserializer deserializer);
 
   @protected
@@ -306,11 +308,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
 
   @protected
-  BrowseItem
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer);
-
-  @protected
   RoonZone
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           SseDeserializer deserializer);
@@ -323,11 +320,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   ZoneNowPlaying
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiBrowseItem
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
           SseDeserializer deserializer);
 
   @protected
@@ -357,7 +349,21 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  BrowseItem sse_decode_box_autoadd_browse_item(SseDeserializer deserializer);
+
+  @protected
+  BrowseItemHint sse_decode_box_autoadd_browse_item_hint(
+      SseDeserializer deserializer);
+
+  @protected
   BrowseItems sse_decode_box_autoadd_browse_items(SseDeserializer deserializer);
+
+  @protected
+  BrowseListHint sse_decode_box_autoadd_browse_list_hint(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
@@ -367,10 +373,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  InputPrompt sse_decode_box_autoadd_input_prompt(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_box_autoadd_usize(SseDeserializer deserializer);
+
+  @protected
+  BrowseItem sse_decode_browse_item(SseDeserializer deserializer);
+
+  @protected
+  BrowseItemHint sse_decode_browse_item_hint(SseDeserializer deserializer);
+
+  @protected
   BrowseItems sse_decode_browse_items(SseDeserializer deserializer);
+
+  @protected
+  BrowseList sse_decode_browse_list(SseDeserializer deserializer);
+
+  @protected
+  BrowseListHint sse_decode_browse_list_hint(SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -382,12 +406,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ImageKeyValue sse_decode_image_key_value(SseDeserializer deserializer);
 
   @protected
-  List<BrowseItem>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          SseDeserializer deserializer);
+  InputPrompt sse_decode_input_prompt(SseDeserializer deserializer);
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<BrowseItem> sse_decode_list_browse_item(SseDeserializer deserializer);
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
@@ -404,16 +429,37 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  BrowseItemHint? sse_decode_opt_box_autoadd_browse_item_hint(
+      SseDeserializer deserializer);
+
+  @protected
+  BrowseListHint? sse_decode_opt_box_autoadd_browse_list_hint(
+      SseDeserializer deserializer);
+
+  @protected
   int? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
+  InputPrompt? sse_decode_opt_box_autoadd_input_prompt(
+      SseDeserializer deserializer);
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  int? sse_decode_opt_box_autoadd_usize(SseDeserializer deserializer);
 
   @protected
   List<String>? sse_decode_opt_list_String(SseDeserializer deserializer);
 
   @protected
   RoonEvent sse_decode_roon_event(SseDeserializer deserializer);
+
+  @protected
+  ThemeEnum sse_decode_theme_enum(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_32(SseDeserializer deserializer);
@@ -435,11 +481,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          BrowseItem self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           RoonZone self, SseSerializer serializer);
 
@@ -455,11 +496,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          RoonApiBrowseItem self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
           RoonApiTransportNowPlaying self, SseSerializer serializer);
 
@@ -472,11 +508,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
           RoonApiTransportZone self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          BrowseItem self, SseSerializer serializer);
 
   @protected
   void
@@ -502,11 +533,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          BrowseItem self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           RoonZone self, SseSerializer serializer);
 
@@ -519,11 +545,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
           ZoneNowPlaying self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          RoonApiBrowseItem self, SseSerializer serializer);
 
   @protected
   void
@@ -552,8 +573,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           ZoneNowPlaying self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_browse_item(
+      BrowseItem self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_browse_item_hint(
+      BrowseItemHint self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_browse_items(
       BrowseItems self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_browse_list_hint(
+      BrowseListHint self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_i_64(int self, SseSerializer serializer);
@@ -563,10 +599,31 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       ImageKeyValue self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_input_prompt(
+      InputPrompt self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_usize(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_browse_item(BrowseItem self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_browse_item_hint(
+      BrowseItemHint self, SseSerializer serializer);
+
+  @protected
   void sse_encode_browse_items(BrowseItems self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_browse_list(BrowseList self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_browse_list_hint(
+      BrowseListHint self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
@@ -578,12 +635,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_image_key_value(ImageKeyValue self, SseSerializer serializer);
 
   @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          List<BrowseItem> self, SseSerializer serializer);
+  void sse_encode_input_prompt(InputPrompt self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_browse_item(
+      List<BrowseItem> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_prim_u_8_strict(
@@ -602,16 +661,37 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           ZoneNowPlaying? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_browse_item_hint(
+      BrowseItemHint? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_browse_list_hint(
+      BrowseListHint? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_i_64(int? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_input_prompt(
+      InputPrompt? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_usize(int? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer);
 
   @protected
   void sse_encode_roon_event(RoonEvent self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_theme_enum(ThemeEnum self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_32(int self, SseSerializer serializer);
@@ -636,18 +716,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
 class RustLibWire implements BaseWire {
   RustLibWire.fromExternalLibrary(ExternalLibrary lib);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-              ptr);
 
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           dynamic ptr) =>
@@ -683,18 +751,6 @@ class RustLibWire implements BaseWire {
           dynamic ptr) =>
       wasmModule
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-              ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
               ptr);
 
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
@@ -747,14 +803,6 @@ class RustLibWasmModule implements WasmModule {
   external RustLibWasmModule bind(dynamic thisArg, String moduleName);
 
   external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockBrowseItem(
-          dynamic ptr);
-
-  external void
       rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           dynamic ptr);
 
@@ -776,14 +824,6 @@ class RustLibWasmModule implements WasmModule {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apibrowseItem(
           dynamic ptr);
 
   external void
