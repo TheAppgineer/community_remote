@@ -8,7 +8,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = "=2.0.0-dev.25"
+flutter_rust_bridge = "=2.0.0-dev.26"
 log = "0.4"
 once_cell = "1.19"
 roon-api = { git = "https://github.com/TheAppgineer/rust-roon-api.git", rev = "264879b", features = ["browse", "image", "transport"] }
