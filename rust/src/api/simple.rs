@@ -16,6 +16,7 @@ pub enum RoonEvent {
     ZonesChanged(Vec<ZoneSummary>),
     ZoneChanged(RoonZone),
     BrowseItems(BrowseItems),
+    BrowseActions(Vec<BrowseItem>),
     Image(ImageKeyValue),
     Settings(Settings),
 }

@@ -1,5 +1,7 @@
 use roon_api::{
-    browse::{Browse, BrowseAction, BrowseItem, BrowseItemHint, BrowseOpts, LoadOpts},
+    browse::{
+        Browse, BrowseAction, BrowseItem, BrowseItemHint, BrowseListHint, BrowseOpts, LoadOpts,
+    },
     image::{Args, Image, Scale, Scaling},
     info,
     transport::{Transport, Zone},
@@ -130,6 +132,7 @@ impl Roon {
             };
 
             handler.browse_offset = 0;
+            handler.browse_level = 0;
 
             if let Some(path) = category_paths.get(&category) {
                 handler
@@ -343,22 +346,25 @@ impl RoonHandler {
                         self.browse_path.remove(key);
                     }
 
-                    let new_offset = result.offset + result.items.len();
+                    let event = if result.list.hint == Some(BrowseListHint::ActionList) {
+                        RoonEvent::BrowseActions(result.items)
+                    } else {
+                        let new_offset = result.offset + result.items.len();
 
-                    self.browse_id = multi_session_key;
-                    self.browse_offset = new_offset;
-                    self.browse_total = result.list.count;
+                        self.browse_id = multi_session_key;
+                        self.browse_offset = new_offset;
+                        self.browse_total = result.list.count;
 
-                    let browse_items = BrowseItems {
-                        list: result.list,
-                        offset: result.offset,
-                        items: result.items,
+                        let browse_items = BrowseItems {
+                            list: result.list,
+                            offset: result.offset,
+                            items: result.items,
+                        };
+
+                        RoonEvent::BrowseItems(browse_items)
                     };
 
-                    self.event_tx
-                        .send(RoonEvent::BrowseItems(browse_items))
-                        .await
-                        .unwrap();
+                    self.event_tx.send(event).await.unwrap();
                 }
                 Parsed::Jpeg((image_key, image)) | Parsed::Png((image_key, image)) => {
                     let image_key_value = ImageKeyValue { image_key, image };

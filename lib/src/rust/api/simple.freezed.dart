@@ -24,6 +24,7 @@ mixin _$RoonEvent {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) =>
@@ -35,6 +36,7 @@ mixin _$RoonEvent {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) =>
@@ -46,6 +48,7 @@ mixin _$RoonEvent {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -58,6 +61,7 @@ mixin _$RoonEvent {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) =>
@@ -69,6 +73,7 @@ mixin _$RoonEvent {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) =>
@@ -80,6 +85,7 @@ mixin _$RoonEvent {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -174,6 +180,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -188,6 +195,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -202,6 +210,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -220,6 +229,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -234,6 +244,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -248,6 +259,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -340,6 +352,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -354,6 +367,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -368,6 +382,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -386,6 +401,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -400,6 +416,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -414,6 +431,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -515,6 +533,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -529,6 +548,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -543,6 +563,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -561,6 +582,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -575,6 +597,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -589,6 +612,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -682,6 +706,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -696,6 +721,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -710,6 +736,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -728,6 +755,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -742,6 +770,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -756,6 +785,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -849,6 +879,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -863,6 +894,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -877,6 +909,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -895,6 +928,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -909,6 +943,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -923,6 +958,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -942,6 +978,187 @@ abstract class RoonEvent_BrowseItems implements RoonEvent {
   BrowseItems get field0;
   @JsonKey(ignore: true)
   _$$RoonEvent_BrowseItemsImplCopyWith<_$RoonEvent_BrowseItemsImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RoonEvent_BrowseActionsImplCopyWith<$Res> {
+  factory _$$RoonEvent_BrowseActionsImplCopyWith(
+          _$RoonEvent_BrowseActionsImpl value,
+          $Res Function(_$RoonEvent_BrowseActionsImpl) then) =
+      __$$RoonEvent_BrowseActionsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<BrowseItem> field0});
+}
+
+/// @nodoc
+class __$$RoonEvent_BrowseActionsImplCopyWithImpl<$Res>
+    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_BrowseActionsImpl>
+    implements _$$RoonEvent_BrowseActionsImplCopyWith<$Res> {
+  __$$RoonEvent_BrowseActionsImplCopyWithImpl(
+      _$RoonEvent_BrowseActionsImpl _value,
+      $Res Function(_$RoonEvent_BrowseActionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$RoonEvent_BrowseActionsImpl(
+      null == field0
+          ? _value._field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as List<BrowseItem>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$RoonEvent_BrowseActionsImpl implements RoonEvent_BrowseActions {
+  const _$RoonEvent_BrowseActionsImpl(final List<BrowseItem> field0)
+      : _field0 = field0;
+
+  final List<BrowseItem> _field0;
+  @override
+  List<BrowseItem> get field0 {
+    if (_field0 is EqualUnmodifiableListView) return _field0;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_field0);
+  }
+
+  @override
+  String toString() {
+    return 'RoonEvent.browseActions(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RoonEvent_BrowseActionsImpl &&
+            const DeepCollectionEquality().equals(other._field0, _field0));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RoonEvent_BrowseActionsImplCopyWith<_$RoonEvent_BrowseActionsImpl>
+      get copyWith => __$$RoonEvent_BrowseActionsImplCopyWithImpl<
+          _$RoonEvent_BrowseActionsImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0) coreLost,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
+    required TResult Function(RoonZone field0) zoneChanged,
+    required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
+    required TResult Function(ImageKeyValue field0) image,
+    required TResult Function(Settings field0) settings,
+  }) {
+    return browseActions(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0)? coreLost,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult? Function(RoonZone field0)? zoneChanged,
+    TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
+    TResult? Function(ImageKeyValue field0)? image,
+    TResult? Function(Settings field0)? settings,
+  }) {
+    return browseActions?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? coreFound,
+    TResult Function(String field0)? coreLost,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult Function(RoonZone field0)? zoneChanged,
+    TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
+    TResult Function(ImageKeyValue field0)? image,
+    TResult Function(Settings field0)? settings,
+    required TResult orElse(),
+  }) {
+    if (browseActions != null) {
+      return browseActions(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreLost value) coreLost,
+    required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
+    required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
+    required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
+    required TResult Function(RoonEvent_Image value) image,
+    required TResult Function(RoonEvent_Settings value) settings,
+  }) {
+    return browseActions(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreLost value)? coreLost,
+    TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult? Function(RoonEvent_Image value)? image,
+    TResult? Function(RoonEvent_Settings value)? settings,
+  }) {
+    return browseActions?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreLost value)? coreLost,
+    TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult Function(RoonEvent_Image value)? image,
+    TResult Function(RoonEvent_Settings value)? settings,
+    required TResult orElse(),
+  }) {
+    if (browseActions != null) {
+      return browseActions(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RoonEvent_BrowseActions implements RoonEvent {
+  const factory RoonEvent_BrowseActions(final List<BrowseItem> field0) =
+      _$RoonEvent_BrowseActionsImpl;
+
+  @override
+  List<BrowseItem> get field0;
+  @JsonKey(ignore: true)
+  _$$RoonEvent_BrowseActionsImplCopyWith<_$RoonEvent_BrowseActionsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1015,6 +1232,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -1029,6 +1247,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -1043,6 +1262,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -1061,6 +1281,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -1075,6 +1296,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -1089,6 +1311,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),
@@ -1181,6 +1404,7 @@ class _$RoonEvent_SettingsImpl implements RoonEvent_Settings {
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(RoonZone field0) zoneChanged,
     required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function(Settings field0) settings,
   }) {
@@ -1195,6 +1419,7 @@ class _$RoonEvent_SettingsImpl implements RoonEvent_Settings {
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(RoonZone field0)? zoneChanged,
     TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function(Settings field0)? settings,
   }) {
@@ -1209,6 +1434,7 @@ class _$RoonEvent_SettingsImpl implements RoonEvent_Settings {
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(RoonZone field0)? zoneChanged,
     TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function(Settings field0)? settings,
     required TResult orElse(),
@@ -1227,6 +1453,7 @@ class _$RoonEvent_SettingsImpl implements RoonEvent_Settings {
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_Settings value) settings,
   }) {
@@ -1241,6 +1468,7 @@ class _$RoonEvent_SettingsImpl implements RoonEvent_Settings {
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_Settings value)? settings,
   }) {
@@ -1255,6 +1483,7 @@ class _$RoonEvent_SettingsImpl implements RoonEvent_Settings {
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_Settings value)? settings,
     required TResult orElse(),

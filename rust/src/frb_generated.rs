@@ -1614,10 +1614,15 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::BrowseItems(var_field0);
             }
             5 => {
+                let mut var_field0 =
+                    <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::BrowseActions(var_field0);
+            }
+            6 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            6 => {
+            7 => {
                 let mut var_field0 = <Settings>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Settings(var_field0);
             }
@@ -2049,11 +2054,14 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::BrowseItems(field0) => {
                 [4.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::BrowseActions(field0) => {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Settings(field0) => {
+            crate::api::simple::RoonEvent::Image(field0) => {
                 [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::Settings(field0) => {
+                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
         }
     }
@@ -2545,12 +2553,16 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(4, serializer);
                 <crate::api::simple::BrowseItems>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::BrowseActions(field0) => {
                 <i32>::sse_encode(5, serializer);
+                <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::Image(field0) => {
+                <i32>::sse_encode(6, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::Settings(field0) => {
-                <i32>::sse_encode(6, serializer);
+                <i32>::sse_encode(7, serializer);
                 <Settings>::sse_encode(field0, serializer);
             }
         }

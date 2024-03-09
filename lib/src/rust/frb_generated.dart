@@ -1454,10 +1454,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_box_autoadd_browse_items(raw[1]),
         );
       case 5:
+        return RoonEvent_BrowseActions(
+          dco_decode_list_browse_item(raw[1]),
+        );
+      case 6:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 6:
+      case 7:
         return RoonEvent_Settings(
           dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
               raw[1]),
@@ -2025,9 +2029,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_box_autoadd_browse_items(deserializer);
         return RoonEvent_BrowseItems(var_field0);
       case 5:
+        var var_field0 = sse_decode_list_browse_item(deserializer);
+        return RoonEvent_BrowseActions(var_field0);
+      case 6:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 6:
+      case 7:
         var var_field0 =
             sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
                 deserializer);
@@ -2552,11 +2559,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_BrowseItems(field0: final field0):
         sse_encode_i_32(4, serializer);
         sse_encode_box_autoadd_browse_items(field0, serializer);
-      case RoonEvent_Image(field0: final field0):
+      case RoonEvent_BrowseActions(field0: final field0):
         sse_encode_i_32(5, serializer);
+        sse_encode_list_browse_item(field0, serializer);
+      case RoonEvent_Image(field0: final field0):
+        sse_encode_i_32(6, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_Settings(field0: final field0):
-        sse_encode_i_32(6, serializer);
+        sse_encode_i_32(7, serializer);
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
             field0, serializer);
     }

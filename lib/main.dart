@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/roon_transport_wrapper.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: appState.themeMode,
+      themeMode: appState.themeMode(),
       home: const MyHomePage(title: 'Community Remote'),
     );
   }
@@ -56,32 +57,35 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   String? serverName;
-  ThemeMode themeMode = ThemeMode.light;
   List<ZoneSummary>? zoneList;
   BrowseItems? browseItems;
+  List<BrowseItem>? actionItems;
+  String? pendingAction;
   RoonZone? zone;
   Map<String, Uint8List> imageCache = {};
   late Settings settings;
 
+  ThemeMode themeMode() {
+    ThemeMode themeMode = ThemeMode.light;
+
+    switch (settings.theme) {
+      case ThemeEnum.dark:
+        themeMode = ThemeMode.dark;
+        break;
+      case ThemeEnum.light:
+        themeMode = ThemeMode.light;
+        break;
+      case ThemeEnum.system:
+        themeMode = ThemeMode.system;
+        break;
+    }
+
+    return themeMode;
+  }
+
   void cb(event) {
     if (event is RoonEvent_Settings) {
       settings = event.field0;
-
-      switch (event.field0.theme) {
-        case ThemeEnum.dark:
-          themeMode = ThemeMode.dark;
-          break;
-        case ThemeEnum.light:
-          themeMode = ThemeMode.light;
-          break;
-        case ThemeEnum.system:
-          themeMode = ThemeMode.system;
-          break;
-      }
-
-      if (serverName != null) {
-        browse(category: settings.view, sessionId: exploreId);
-      }
     } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
@@ -100,6 +104,18 @@ class MyAppState extends ChangeNotifier {
       } else {
         browseItems!.items.addAll(event.field0.items);
       }
+    } else if (event is RoonEvent_BrowseActions) {
+      actionItems = event.field0;
+
+      if (actionItems != null && pendingAction != null) {
+        for (var item in actionItems!) {
+          if (item.title == pendingAction) {
+            selectBrowseItem(sessionId: exploreId, item: item);
+            pendingAction = null;
+            break;
+          }
+        }
+      }
     } else if (event is RoonEvent_Image) {
       imageCache[event.field0.imageKey] = event.field0.image;
     }
@@ -108,10 +124,21 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  void Function(int)? _onDestinationSelected;
+
+  void setOnDestinationSelected(onDestinationSelected) {
+    _onDestinationSelected = onDestinationSelected;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +157,7 @@ class MyHomePage extends StatelessWidget {
         appState.settings.setTheme(theme: ThemeEnum.light);
       },
     );
-    IconButton themeModeButton = (appState.themeMode == ThemeMode.dark ? lightModeButton : darkModeButton);
+    IconButton themeModeButton = (appState.settings.theme == ThemeEnum.dark ? lightModeButton : darkModeButton);
 
     return Scaffold(
       appBar: AppBar(
@@ -138,7 +165,7 @@ class MyHomePage extends StatelessWidget {
         scrolledUnderElevation: 0,
         title: ListTile(
           leading: const Icon(Icons.person_outline),
-          title: Text(title),
+          title: Text(widget.title),
           subtitle: Text('Served by: ${appState.serverName}'),
         ),
         actions: [
@@ -150,7 +177,7 @@ class MyHomePage extends StatelessWidget {
           themeModeButton,
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -160,12 +187,12 @@ class MyHomePage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  HamburgerMenu(),
-                  Expanded(
+                  HamburgerMenu(onDestinationSelected: _onDestinationSelected),
+                  const Expanded(
                     flex: 5,
                     child: Browse(),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 5,
                     child: Stack(
                       alignment: Alignment.bottomRight,
@@ -180,7 +207,7 @@ class MyHomePage extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
+            const Expanded(
               flex: 2,
               child: NowPlaying(),
             ),
@@ -192,9 +219,9 @@ class MyHomePage extends StatelessWidget {
 }
 
 class HamburgerMenu extends StatelessWidget {
-  const HamburgerMenu({
-    super.key,
-  });
+  const HamburgerMenu({super.key, this.onDestinationSelected});
+
+  final void Function(int)? onDestinationSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -260,13 +287,7 @@ class HamburgerMenu extends StatelessWidget {
             ),
           ],
           selectedIndex: appState.settings.view,
-          onDestinationSelected: (value) {
-            if (value == 0) {
-              appState.settings.setExpand(expand: !appState.settings.expand);
-            } else {
-              appState.settings.setView(view: value);
-            }
-          },
+          onDestinationSelected: onDestinationSelected,
         ),
       ),
     );
@@ -319,7 +340,7 @@ class Browse extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: appState.themeMode,
+      themeMode: appState.themeMode(),
       onGenerateRoute: Router.generateRoute,
       initialRoute: "-",
     );
@@ -356,6 +377,19 @@ class _BrowseLevelState extends State<BrowseLevel> {
     ListView? listView;
     Widget? browseTitle;
 
+    void onDestinationSelected(value) {
+      if (value == 0) {
+        appState.settings.setExpand(expand: !appState.settings.expand);
+      } else {
+        browse(category: value, sessionId: exploreId);
+        appState.settings.setView(view: value);
+        Navigator.of(context).popUntil(ModalRoute.withName('-'));
+      }
+    }
+
+    var home = context.findAncestorStateOfType<_MyHomePageState>();
+    home!.setOnDestinationSelected(onDestinationSelected);
+
     if (appState.browseItems != null) {
       var browseList = appState.browseItems!.items;
       var subtitle = appState.browseItems!.list.subtitle;
@@ -366,26 +400,89 @@ class _BrowseLevelState extends State<BrowseLevel> {
           title: Text(appState.browseItems!.list.title),
           subtitle: Text(subtitle),
           trailing: imageKey != null ? getImageFromCache(imageKey, appState.imageCache) : null,
-          contentPadding: const EdgeInsets.fromLTRB(16, 0, 40, 0),
+          contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
         );
       } else {
         browseTitle = Text(appState.browseItems!.list.title);
       }
 
       ListTile itemBuilder(context, index) {
+        Widget? leading;
+        Widget? trailing;
         Image? image = getImageFromCache(browseList[index].imageKey, appState.imageCache);
         Text? subtitle;
+
+        if (image != null) {
+          leading = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              image,
+              const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
+            ],
+          );
+        } else {
+          leading = const Padding(padding: EdgeInsets.fromLTRB(58, 0, 0, 0));
+        }
+
+        if (browseList[index].hint == BrowseItemHint.actionList) {
+          trailing = MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                    selectBrowseItem(sessionId: exploreId, item: browseList[index]);
+                  }
+                },
+                icon: const Icon(Icons.more_vert),
+              );
+            },
+            menuChildren: List<MenuItemButton>.generate(
+              (appState.actionItems != null ? appState.actionItems!.length : 0),
+              (index) => MenuItemButton(
+                child: Text(appState.actionItems![index].title),
+                onPressed: () {
+                  selectBrowseItem(sessionId: exploreId, item: appState.actionItems![index]);
+                  appState.actionItems = null;
+                },
+              ),
+            ),
+            onClose: () {
+              // Delay the onClose handling to make sure onPressed can be handled first
+              Future.delayed(const Duration(milliseconds: 100), () {
+                if (appState.actionItems != null) {
+                  appState.actionItems = null;
+                  browseBack(sessionId: exploreId);
+                }
+              });
+            },
+          );
+        }
 
         if (browseList[index].subtitle != null) {
           subtitle = Text(browseList[index].subtitle!);
         }
 
         return ListTile(
-          trailing: image,
+          leading: leading,
+          trailing: trailing,
           title: Text(browseList[index].title),
           subtitle: subtitle,
           onTap: () {
-            Navigator.pushNamed(context, appState.browseItems!.list.level.toString());
+            switch (browseList[index].hint) {
+              case BrowseItemHint.action:
+                break;
+              case BrowseItemHint.actionList:
+                // Take "Play Now" as default action, at least for now
+                appState.pendingAction = "Play Now";
+                break;
+              default:
+                Navigator.pushNamed(context, appState.browseItems!.list.level.toString());
+                break;
+            }
+
             selectBrowseItem(sessionId: exploreId, item: browseList[index]);
           },
         );

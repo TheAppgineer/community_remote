@@ -163,6 +163,9 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.browseItems(
     BrowseItems field0,
   ) = RoonEvent_BrowseItems;
+  const factory RoonEvent.browseActions(
+    List<BrowseItem> field0,
+  ) = RoonEvent_BrowseActions;
   const factory RoonEvent.image(
     ImageKeyValue field0,
   ) = RoonEvent_Image;
