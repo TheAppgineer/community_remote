@@ -310,6 +310,10 @@ impl RoonHandler {
                             ..Default::default()
                         };
 
+                        if result.list.as_ref()?.title == "Explore" {
+                            self.browse_category = 0;
+                        }
+
                         self.browse_level = result.list.as_ref()?.level;
                         self.browse.as_ref()?.load(&opts).await;
                     }

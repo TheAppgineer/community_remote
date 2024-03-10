@@ -96,6 +96,10 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_BrowseItems) {
       if (browseItems == null || event.field0.offset == 0) {
         browseItems = event.field0;
+
+        if (browseItems!.list.title == "Explore") {
+          browse(category: settings["view"], sessionId: exploreId);
+        }
       } else {
         browseItems!.items.addAll(event.field0.items);
       }
