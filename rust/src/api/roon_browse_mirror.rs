@@ -1,4 +1,8 @@
-pub use roon_api::browse::{BrowseItem, BrowseItemHint, BrowseList, BrowseListHint, InputPrompt};
+pub use roon_api::browse::InputPrompt;
+pub use roon_api::browse::Item as BrowseItem;
+pub use roon_api::browse::ItemHint as BrowseItemHint;
+pub use roon_api::browse::List as BrowseList;
+pub use roon_api::browse::ListHint as BrowseListHint;
 
 #[flutter_rust_bridge::frb(mirror(BrowseListHint))]
 pub enum _BrowseListHint {

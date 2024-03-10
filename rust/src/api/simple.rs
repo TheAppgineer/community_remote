@@ -1,12 +1,13 @@
 use flutter_rust_bridge::DartFnFuture;
 use once_cell::sync::Lazy;
-use roon_api::browse::{BrowseItem, BrowseList};
+use roon_api::browse::Item as BrowseItem;
+use roon_api::browse::List as BrowseList;
+use roon_api::transport::State as PlayState;
+use roon_api::transport::Zone;
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 
 use crate::backend::roon::Roon;
-
-use super::roon_transport_wrapper::{RoonZone, ZoneState};
 
 static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
 
@@ -14,7 +15,7 @@ pub enum RoonEvent {
     CoreFound(String),
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
-    ZoneChanged(RoonZone),
+    ZoneChanged(Zone),
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     Image(ImageKeyValue),
@@ -35,7 +36,7 @@ pub struct ImageKeyValue {
 pub struct ZoneSummary {
     pub zone_id: String,
     pub display_name: String,
-    pub state: ZoneState,
+    pub state: PlayState,
     pub now_playing: Option<String>,
     pub image_key: Option<String>,
 }

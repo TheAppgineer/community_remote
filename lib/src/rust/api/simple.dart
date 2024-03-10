@@ -7,7 +7,7 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 import 'roon_browse_mirror.dart';
-import 'roon_transport_wrapper.dart';
+import 'roon_transport_mirror.dart';
 part 'simple.freezed.dart';
 
 // The type `InternalState` is not used by any `pub` functions, thus it is ignored.
@@ -158,7 +158,7 @@ sealed class RoonEvent with _$RoonEvent {
     List<ZoneSummary> field0,
   ) = RoonEvent_ZonesChanged;
   const factory RoonEvent.zoneChanged(
-    RoonZone field0,
+    Zone field0,
   ) = RoonEvent_ZoneChanged;
   const factory RoonEvent.browseItems(
     BrowseItems field0,
@@ -183,7 +183,7 @@ enum ThemeEnum {
 class ZoneSummary {
   final String zoneId;
   final String displayName;
-  final ZoneState state;
+  final PlayState state;
   final String? nowPlaying;
   final String? imageKey;
 

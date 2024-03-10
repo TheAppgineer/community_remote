@@ -4,7 +4,7 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/roon_browse_mirror.dart';
-import 'api/roon_transport_wrapper.dart';
+import 'api/roon_transport_mirror.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -19,32 +19,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RoonZonePtr => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone;
-
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_SettingsPtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_ZoneNowPlayingPtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_RoonApiTransportNowPlayingPtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_RoonApiTransportStatePtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_RoonApiTransportZonePtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone;
-
-  @protected
-  RoonZone
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic raw);
 
   @protected
   Settings
@@ -52,38 +28,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  ZoneNowPlaying
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic raw);
-
-  @protected
-  RoonApiTransportNowPlaying
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          dynamic raw);
-
-  @protected
-  RoonApiTransportState
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          dynamic raw);
-
-  @protected
-  RoonApiTransportZone
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          dynamic raw);
-
-  @protected
-  RoonZone
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic raw);
-
-  @protected
   Settings
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw);
-
-  @protected
-  ZoneNowPlaying
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
           dynamic raw);
 
   @protected
@@ -94,33 +40,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object dco_decode_DartOpaque(dynamic raw);
 
   @protected
-  RoonZone
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic raw);
-
-  @protected
   Settings
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw);
-
-  @protected
-  ZoneNowPlaying
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic raw);
-
-  @protected
-  RoonApiTransportNowPlaying
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          dynamic raw);
-
-  @protected
-  RoonApiTransportState
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          dynamic raw);
-
-  @protected
-  RoonApiTransportZone
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
           dynamic raw);
 
   @protected
@@ -128,11 +49,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool dco_decode_bool(dynamic raw);
-
-  @protected
-  ZoneNowPlaying
-      dco_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic raw);
 
   @protected
   bool dco_decode_box_autoadd_bool(dynamic raw);
@@ -150,6 +66,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BrowseListHint dco_decode_box_autoadd_browse_list_hint(dynamic raw);
 
   @protected
+  double dco_decode_box_autoadd_f_32(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_i_64(dynamic raw);
 
   @protected
@@ -159,10 +78,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   InputPrompt dco_decode_box_autoadd_input_prompt(dynamic raw);
 
   @protected
+  NowPlaying dco_decode_box_autoadd_now_playing(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_usize(dynamic raw);
+
+  @protected
+  Volume dco_decode_box_autoadd_volume(dynamic raw);
+
+  @protected
+  Zone dco_decode_box_autoadd_zone(dynamic raw);
 
   @protected
   BrowseItem dco_decode_browse_item(dynamic raw);
@@ -178,6 +106,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BrowseListHint dco_decode_browse_list_hint(dynamic raw);
+
+  @protected
+  double dco_decode_f_32(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -198,18 +129,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<BrowseItem> dco_decode_list_browse_item(dynamic raw);
 
   @protected
+  List<Output> dco_decode_list_output(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  List<SourceControls> dco_decode_list_source_controls(dynamic raw);
 
   @protected
   List<ZoneSummary> dco_decode_list_zone_summary(dynamic raw);
 
   @protected
-  String? dco_decode_opt_String(dynamic raw);
+  NowPlaying dco_decode_now_playing(dynamic raw);
 
   @protected
-  ZoneNowPlaying?
-      dco_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic raw);
+  OneLine dco_decode_one_line(dynamic raw);
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw);
 
   @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
@@ -221,10 +159,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BrowseListHint? dco_decode_opt_box_autoadd_browse_list_hint(dynamic raw);
 
   @protected
+  double? dco_decode_opt_box_autoadd_f_32(dynamic raw);
+
+  @protected
   int? dco_decode_opt_box_autoadd_i_64(dynamic raw);
 
   @protected
   InputPrompt? dco_decode_opt_box_autoadd_input_prompt(dynamic raw);
+
+  @protected
+  NowPlaying? dco_decode_opt_box_autoadd_now_playing(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
@@ -233,13 +177,43 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int? dco_decode_opt_box_autoadd_usize(dynamic raw);
 
   @protected
+  Volume? dco_decode_opt_box_autoadd_volume(dynamic raw);
+
+  @protected
   List<String>? dco_decode_opt_list_String(dynamic raw);
+
+  @protected
+  List<SourceControls>? dco_decode_opt_list_source_controls(dynamic raw);
+
+  @protected
+  Output dco_decode_output(dynamic raw);
+
+  @protected
+  PlayState dco_decode_play_state(dynamic raw);
+
+  @protected
+  Repeat dco_decode_repeat(dynamic raw);
 
   @protected
   RoonEvent dco_decode_roon_event(dynamic raw);
 
   @protected
+  Scale dco_decode_scale(dynamic raw);
+
+  @protected
+  SourceControls dco_decode_source_controls(dynamic raw);
+
+  @protected
+  Status dco_decode_status(dynamic raw);
+
+  @protected
   ThemeEnum dco_decode_theme_enum(dynamic raw);
+
+  @protected
+  ThreeLine dco_decode_three_line(dynamic raw);
+
+  @protected
+  TwoLine dco_decode_two_line(dynamic raw);
 
   @protected
   int dco_decode_u_32(dynamic raw);
@@ -254,44 +228,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_usize(dynamic raw);
 
   @protected
-  ZoneState dco_decode_zone_state(dynamic raw);
+  Volume dco_decode_volume(dynamic raw);
+
+  @protected
+  Zone dco_decode_zone(dynamic raw);
+
+  @protected
+  ZoneSettings dco_decode_zone_settings(dynamic raw);
 
   @protected
   ZoneSummary dco_decode_zone_summary(dynamic raw);
 
   @protected
-  RoonZone
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          SseDeserializer deserializer);
-
-  @protected
   Settings
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer);
-
-  @protected
-  ZoneNowPlaying
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiTransportNowPlaying
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiTransportState
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiTransportZone
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonZone
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
           SseDeserializer deserializer);
 
   @protected
@@ -300,17 +250,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  ZoneNowPlaying
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          SseDeserializer deserializer);
-
-  @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
-
-  @protected
-  RoonZone
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          SseDeserializer deserializer);
 
   @protected
   Settings
@@ -318,35 +258,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  ZoneNowPlaying
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiTransportNowPlaying
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiTransportState
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          SseDeserializer deserializer);
-
-  @protected
-  RoonApiTransportZone
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          SseDeserializer deserializer);
-
-  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer);
-
-  @protected
-  ZoneNowPlaying
-      sse_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          SseDeserializer deserializer);
 
   @protected
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
@@ -366,6 +281,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  double sse_decode_box_autoadd_f_32(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
@@ -376,10 +294,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   InputPrompt sse_decode_box_autoadd_input_prompt(SseDeserializer deserializer);
 
   @protected
+  NowPlaying sse_decode_box_autoadd_now_playing(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_usize(SseDeserializer deserializer);
+
+  @protected
+  Volume sse_decode_box_autoadd_volume(SseDeserializer deserializer);
+
+  @protected
+  Zone sse_decode_box_autoadd_zone(SseDeserializer deserializer);
 
   @protected
   BrowseItem sse_decode_browse_item(SseDeserializer deserializer);
@@ -395,6 +322,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BrowseListHint sse_decode_browse_list_hint(SseDeserializer deserializer);
+
+  @protected
+  double sse_decode_f_32(SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -415,18 +345,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<BrowseItem> sse_decode_list_browse_item(SseDeserializer deserializer);
 
   @protected
+  List<Output> sse_decode_list_output(SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  List<SourceControls> sse_decode_list_source_controls(
+      SseDeserializer deserializer);
 
   @protected
   List<ZoneSummary> sse_decode_list_zone_summary(SseDeserializer deserializer);
 
   @protected
-  String? sse_decode_opt_String(SseDeserializer deserializer);
+  NowPlaying sse_decode_now_playing(SseDeserializer deserializer);
 
   @protected
-  ZoneNowPlaying?
-      sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          SseDeserializer deserializer);
+  OneLine sse_decode_one_line(SseDeserializer deserializer);
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
@@ -440,10 +378,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  double? sse_decode_opt_box_autoadd_f_32(SseDeserializer deserializer);
+
+  @protected
   int? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
   InputPrompt? sse_decode_opt_box_autoadd_input_prompt(
+      SseDeserializer deserializer);
+
+  @protected
+  NowPlaying? sse_decode_opt_box_autoadd_now_playing(
       SseDeserializer deserializer);
 
   @protected
@@ -453,13 +398,44 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int? sse_decode_opt_box_autoadd_usize(SseDeserializer deserializer);
 
   @protected
+  Volume? sse_decode_opt_box_autoadd_volume(SseDeserializer deserializer);
+
+  @protected
   List<String>? sse_decode_opt_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<SourceControls>? sse_decode_opt_list_source_controls(
+      SseDeserializer deserializer);
+
+  @protected
+  Output sse_decode_output(SseDeserializer deserializer);
+
+  @protected
+  PlayState sse_decode_play_state(SseDeserializer deserializer);
+
+  @protected
+  Repeat sse_decode_repeat(SseDeserializer deserializer);
 
   @protected
   RoonEvent sse_decode_roon_event(SseDeserializer deserializer);
 
   @protected
+  Scale sse_decode_scale(SseDeserializer deserializer);
+
+  @protected
+  SourceControls sse_decode_source_controls(SseDeserializer deserializer);
+
+  @protected
+  Status sse_decode_status(SseDeserializer deserializer);
+
+  @protected
   ThemeEnum sse_decode_theme_enum(SseDeserializer deserializer);
+
+  @protected
+  ThreeLine sse_decode_three_line(SseDeserializer deserializer);
+
+  @protected
+  TwoLine sse_decode_two_line(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_32(SseDeserializer deserializer);
@@ -474,15 +450,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_usize(SseDeserializer deserializer);
 
   @protected
-  ZoneState sse_decode_zone_state(SseDeserializer deserializer);
+  Volume sse_decode_volume(SseDeserializer deserializer);
+
+  @protected
+  Zone sse_decode_zone(SseDeserializer deserializer);
+
+  @protected
+  ZoneSettings sse_decode_zone_settings(SseDeserializer deserializer);
 
   @protected
   ZoneSummary sse_decode_zone_summary(SseDeserializer deserializer);
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          RoonZone self, SseSerializer serializer);
 
   @protected
   void
@@ -491,38 +468,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          ZoneNowPlaying self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          RoonApiTransportNowPlaying self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          RoonApiTransportState self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          RoonApiTransportZone self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          RoonZone self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
           Settings self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          ZoneNowPlaying self, SseSerializer serializer);
 
   @protected
   void sse_encode_DartFn_Inputs_roon_event_Output_unit(
@@ -533,44 +480,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          RoonZone self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
           Settings self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          ZoneNowPlaying self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          RoonApiTransportNowPlaying self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          RoonApiTransportState self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          RoonApiTransportZone self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          ZoneNowPlaying self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
@@ -592,6 +509,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BrowseListHint self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_f_32(double self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_i_64(int self, SseSerializer serializer);
 
   @protected
@@ -603,10 +523,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       InputPrompt self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_now_playing(
+      NowPlaying self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_usize(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_volume(Volume self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_zone(Zone self, SseSerializer serializer);
 
   @protected
   void sse_encode_browse_item(BrowseItem self, SseSerializer serializer);
@@ -624,6 +554,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_browse_list_hint(
       BrowseListHint self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_f_32(double self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
@@ -645,20 +578,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<BrowseItem> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_output(List<Output> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_source_controls(
+      List<SourceControls> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_zone_summary(
       List<ZoneSummary> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_opt_String(String? self, SseSerializer serializer);
+  void sse_encode_now_playing(NowPlaying self, SseSerializer serializer);
 
   @protected
-  void
-      sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          ZoneNowPlaying? self, SseSerializer serializer);
+  void sse_encode_one_line(OneLine self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
@@ -672,11 +613,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BrowseListHint? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_f_32(double? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_i_64(int? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_input_prompt(
       InputPrompt? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_now_playing(
+      NowPlaying? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
@@ -685,13 +633,46 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_box_autoadd_usize(int? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_volume(
+      Volume? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_source_controls(
+      List<SourceControls>? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_output(Output self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_play_state(PlayState self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_repeat(Repeat self, SseSerializer serializer);
 
   @protected
   void sse_encode_roon_event(RoonEvent self, SseSerializer serializer);
 
   @protected
+  void sse_encode_scale(Scale self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_source_controls(
+      SourceControls self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_status(Status self, SseSerializer serializer);
+
+  @protected
   void sse_encode_theme_enum(ThemeEnum self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_three_line(ThreeLine self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_two_line(TwoLine self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_32(int self, SseSerializer serializer);
@@ -706,7 +687,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_usize(int self, SseSerializer serializer);
 
   @protected
-  void sse_encode_zone_state(ZoneState self, SseSerializer serializer);
+  void sse_encode_volume(Volume self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_zone(Zone self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_zone_settings(ZoneSettings self, SseSerializer serializer);
 
   @protected
   void sse_encode_zone_summary(ZoneSummary self, SseSerializer serializer);
@@ -716,18 +703,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
 class RustLibWire implements BaseWire {
   RustLibWire.fromExternalLibrary(ExternalLibrary lib);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-              ptr);
 
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
           dynamic ptr) =>
@@ -739,54 +714,6 @@ class RustLibWire implements BaseWire {
           dynamic ptr) =>
       wasmModule
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-              ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-              ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-              ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-              ptr);
-
-  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-              ptr);
-
-  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          dynamic ptr) =>
-      wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
               ptr);
 }
 
@@ -803,50 +730,10 @@ class RustLibWasmModule implements WasmModule {
   external RustLibWasmModule bind(dynamic thisArg, String moduleName);
 
   external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockRoonZone(
-          dynamic ptr);
-
-  external void
       rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
           dynamic ptr);
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockZoneNowPlaying(
-          dynamic ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportNowPlaying(
-          dynamic ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportState(
-          dynamic ptr);
-
-  external void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
-          dynamic ptr);
-
-  external void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockroon_apitransportZone(
           dynamic ptr);
 }

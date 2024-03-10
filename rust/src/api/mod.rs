@@ -3,5 +3,5 @@
 //
 
 pub mod roon_browse_mirror;
-pub mod roon_transport_wrapper;
+pub mod roon_transport_mirror;
 pub mod simple;

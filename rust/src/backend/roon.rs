@@ -1,7 +1,9 @@
+use roon_api::browse::Action as BrowseAction;
+use roon_api::browse::Item as BrowseItem;
+use roon_api::browse::ItemHint as BrowseItemHint;
+use roon_api::browse::ListHint as BrowseListHint;
 use roon_api::{
-    browse::{
-        Browse, BrowseAction, BrowseItem, BrowseItemHint, BrowseListHint, BrowseOpts, LoadOpts,
-    },
+    browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
     info,
     transport::{Transport, Zone},
@@ -15,10 +17,7 @@ use tokio::sync::{
     Mutex,
 };
 
-use crate::api::{
-    roon_transport_wrapper::{RoonZone, ZoneState},
-    simple::{BrowseItems, ImageKeyValue, RoonEvent, Settings, ZoneSummary},
-};
+use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, Settings, ZoneSummary};
 
 const CONFIG_PATH: &str = "config.json";
 const BROWSE_PAGE_SIZE: usize = 20;
@@ -96,7 +95,7 @@ impl Roon {
 
     pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
         let mut handler = self.handler.lock().await;
-        let zone = RoonZone::new(handler.zone_map.get(zone_id).cloned()?);
+        let zone = handler.zone_map.get(zone_id).cloned()?;
 
         handler.zone_id = Some(zone_id.to_owned());
         handler
@@ -281,7 +280,7 @@ impl RoonHandler {
 
                     for zone in zones {
                         if Some(&zone.zone_id) == self.zone_id.as_ref() {
-                            curr_zone = Some(RoonZone::new(zone.to_owned()));
+                            curr_zone = Some(zone.to_owned());
                         }
                         self.zone_map.insert(zone.zone_id.to_owned(), zone);
                     }
@@ -400,7 +399,7 @@ impl RoonHandler {
                 ZoneSummary {
                     zone_id: zone_id.to_owned(),
                     display_name: zone.display_name.to_owned(),
-                    state: ZoneState::from(zone.state.to_owned()),
+                    state: zone.state.to_owned(),
                     now_playing,
                     image_key,
                 }

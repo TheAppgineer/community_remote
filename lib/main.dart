@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
-import 'package:community_remote/src/rust/api/roon_transport_wrapper.dart';
+import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
 
@@ -61,7 +61,7 @@ class MyAppState extends ChangeNotifier {
   BrowseItems? browseItems;
   List<BrowseItem>? actionItems;
   String? pendingAction;
-  RoonZone? zone;
+  Zone? zone;
   Map<String, Uint8List> imageCache = {};
   late Settings settings;
 
@@ -209,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const Expanded(
               flex: 2,
-              child: NowPlaying(),
+              child: NowPlayingWidget(),
             ),
           ],
         ),
@@ -557,16 +557,16 @@ class Zones extends StatelessWidget {
         Text? metaData;
 
         switch (zones[index].state) {
-          case ZoneState.playing:
+          case PlayState.playing:
             playState = const Icon(Icons.play_circle_outline);
             break;
-          case ZoneState.paused:
+          case PlayState.paused:
             playState = const Icon(Icons.pause_circle_outline);
             break;
-          case ZoneState.loading:
+          case PlayState.loading:
             playState = const Icon(Icons.hourglass_top_outlined);
             break;
-          case ZoneState.stopped:
+          case PlayState.stopped:
             playState = const Icon(Icons.stop_circle_outlined);
             break;
         }
@@ -605,8 +605,8 @@ class Zones extends StatelessWidget {
   }
 }
 
-class NowPlaying extends StatelessWidget {
-  const NowPlaying({
+class NowPlayingWidget extends StatelessWidget {
+  const NowPlayingWidget({
     super.key,
   });
 
@@ -618,12 +618,12 @@ class NowPlaying extends StatelessWidget {
     );
 
     if (appState.zone != null && appState.zone!.nowPlaying != null) {
-      ZoneNowPlaying nowPlaying = appState.zone!.nowPlaying!;
+      NowPlaying nowPlaying = appState.zone!.nowPlaying!;
 
       child = ListTile(
         leading: getImageFromCache(nowPlaying.imageKey, appState.imageCache),
-        title: Text(nowPlaying.threeLine[0]),
-        subtitle: Text('${nowPlaying.threeLine[1]}\n${nowPlaying.threeLine[2]}'),
+        title: Text(nowPlaying.threeLine.line1),
+        subtitle: Text('${nowPlaying.threeLine.line2}\n${nowPlaying.threeLine.line3}'),
         isThreeLine: true,
       );
     }
