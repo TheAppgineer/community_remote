@@ -9,7 +9,6 @@ use roon_api::{
     transport::{Transport, Zone},
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
-use serde::Serialize;
 use serde_json::Value;
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::{
@@ -17,7 +16,7 @@ use tokio::sync::{
     Mutex,
 };
 
-use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, Settings, ZoneSummary};
+use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
 const CONFIG_PATH: &str = "config.json";
 const BROWSE_PAGE_SIZE: usize = 20;
@@ -42,7 +41,7 @@ struct RoonHandler {
 }
 
 impl Roon {
-    pub async fn start() -> (Roon, Receiver<RoonEvent>, Settings) {
+    pub async fn start() -> (Roon, Receiver<RoonEvent>, String) {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
@@ -78,9 +77,8 @@ impl Roon {
 
         let roon = Self { handler };
         let value = RoonApi::load_config(CONFIG_PATH, "settings");
-        let settings: Settings = serde_json::from_value(value).unwrap_or_default();
 
-        (roon, rx, settings)
+        (roon, rx, value.to_string())
     }
 
     pub async fn get_image(&self, image_key: String, width: u32, height: u32) -> Option<()> {
@@ -210,8 +208,8 @@ impl Roon {
         Some(())
     }
 
-    pub async fn save(&self, settings: Settings) {
-        let value = settings.serialize(serde_json::value::Serializer).unwrap();
+    pub async fn save(&self, settings: String) {
+        let value = serde_json::from_str::<Value>(&settings).unwrap();
 
         RoonApi::save_config(CONFIG_PATH, "settings", value).unwrap();
 
@@ -219,7 +217,7 @@ impl Roon {
             .lock()
             .await
             .event_tx
-            .send(RoonEvent::Settings(settings))
+            .send(RoonEvent::SettingsSaved)
             .await
             .unwrap();
     }

@@ -12,7 +12,7 @@ part 'simple.freezed.dart';
 
 // The type `InternalState` is not used by any `pub` functions, thus it is ignored.
 
-Future<void> startRoon(
+Future<String> startRoon(
         {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) =>
     RustLib.instance.api.startRoon(cb: cb, hint: hint);
 
@@ -43,63 +43,8 @@ Future<void> selectBrowseItem(
     RustLib.instance.api
         .selectBrowseItem(sessionId: sessionId, item: item, hint: hint);
 
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::rust_async::RwLock<Settings>>
-@sealed
-class Settings extends RustOpaque {
-  Settings.dcoDecode(List<dynamic> wire) : super.dcoDecode(wire, _kStaticData);
-
-  Settings.sseDecode(int ptr, int externalSizeOnNative)
-      : super.sseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_Settings,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_Settings,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_SettingsPtr,
-  );
-
-  bool get expand => RustLib.instance.api.settingsExpand(
-        that: this,
-      );
-
-  Future<void> setExpand({required bool expand, dynamic hint}) =>
-      RustLib.instance.api.settingsSetExpand(
-        that: this,
-        expand: expand,
-      );
-
-  Future<void> setTheme({required ThemeEnum theme, dynamic hint}) =>
-      RustLib.instance.api.settingsSetTheme(
-        that: this,
-        theme: theme,
-      );
-
-  Future<void> setView({required int view, dynamic hint}) =>
-      RustLib.instance.api.settingsSetView(
-        that: this,
-        view: view,
-      );
-
-  Future<void> setZoneId({required String zoneId, dynamic hint}) =>
-      RustLib.instance.api.settingsSetZoneId(
-        that: this,
-        zoneId: zoneId,
-      );
-
-  ThemeEnum get theme => RustLib.instance.api.settingsTheme(
-        that: this,
-      );
-
-  int get view => RustLib.instance.api.settingsView(
-        that: this,
-      );
-
-  String? get zoneId => RustLib.instance.api.settingsZoneId(
-        that: this,
-      );
-}
+Future<void> saveSettings({required String settings, dynamic hint}) =>
+    RustLib.instance.api.saveSettings(settings: settings, hint: hint);
 
 class BrowseItems {
   final BrowseList list;
@@ -169,15 +114,7 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.image(
     ImageKeyValue field0,
   ) = RoonEvent_Image;
-  const factory RoonEvent.settings(
-    Settings field0,
-  ) = RoonEvent_Settings;
-}
-
-enum ThemeEnum {
-  dark,
-  light,
-  system,
+  const factory RoonEvent.settingsSaved() = RoonEvent_SettingsSaved;
 }
 
 class ZoneSummary {

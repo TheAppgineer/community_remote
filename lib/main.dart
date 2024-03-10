@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -15,7 +16,17 @@ Future<void> main() async {
   var appState = MyAppState();
 
   await RustLib.init();
-  await startRoon(cb: appState.cb);
+
+  String jsonString = await startRoon(cb: appState.cb);
+  Map<String, dynamic> stored = jsonDecode(jsonString) as Map<String, dynamic>;
+  Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
+    "expand": false,
+    "theme": "light",
+    "view": 11,
+    "zoneId": null,
+  };
+
+  appState.setSettings(settings);
 
   runApp(
     ChangeNotifierProvider(
@@ -49,7 +60,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: appState.themeMode(),
+      themeMode: ThemeMode.values.byName(appState.settings["theme"]),
       home: const MyHomePage(title: 'Community Remote'),
     );
   }
@@ -63,36 +74,20 @@ class MyAppState extends ChangeNotifier {
   String? pendingAction;
   Zone? zone;
   Map<String, Uint8List> imageCache = {};
-  late Settings settings;
+  late Map<String, dynamic> settings;
 
-  ThemeMode themeMode() {
-    ThemeMode themeMode = ThemeMode.light;
-
-    switch (settings.theme) {
-      case ThemeEnum.dark:
-        themeMode = ThemeMode.dark;
-        break;
-      case ThemeEnum.light:
-        themeMode = ThemeMode.light;
-        break;
-      case ThemeEnum.system:
-        themeMode = ThemeMode.system;
-        break;
-    }
-
-    return themeMode;
+  setSettings(settings) {
+    this.settings = settings;
   }
 
   void cb(event) {
-    if (event is RoonEvent_Settings) {
-      settings = event.field0;
-    } else if (event is RoonEvent_CoreFound) {
+    if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
-      browse(category: settings.view, sessionId: exploreId);
+      browse(category: settings["view"], sessionId: exploreId);
 
-      if (settings.zoneId != null) {
-        selectZone(zoneId: settings.zoneId!);
+      if (settings["zoneId"] != null) {
+        selectZone(zoneId: settings["zoneId"]!);
       }
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
@@ -147,17 +142,20 @@ class _MyHomePageState extends State<MyHomePage> {
       icon: const Icon(Icons.dark_mode_outlined),
       tooltip: 'Dark Mode',
       onPressed: () {
-        appState.settings.setTheme(theme: ThemeEnum.dark);
+        appState.settings["theme"] = ThemeMode.dark.name;
+        saveSettings(settings: jsonEncode(appState.settings));
       },
     );
     final lightModeButton = IconButton(
       icon: const Icon(Icons.light_mode_outlined),
       tooltip: 'Light Mode',
       onPressed: () {
-        appState.settings.setTheme(theme: ThemeEnum.light);
+        appState.settings["theme"] = ThemeMode.light.name;
+        saveSettings(settings: jsonEncode(appState.settings));
       },
     );
-    IconButton themeModeButton = (appState.settings.theme == ThemeEnum.dark ? lightModeButton : darkModeButton);
+    ThemeMode theme = ThemeMode.values.byName(appState.settings["theme"]);
+    IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
 
     return Scaffold(
       appBar: AppBar(
@@ -226,12 +224,12 @@ class HamburgerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    Icon icon = Icon(appState.settings.expand ? Icons.arrow_circle_left_outlined : Icons.arrow_circle_right_outlined);
+    Icon icon = Icon(appState.settings["expand"] ? Icons.arrow_circle_left_outlined : Icons.arrow_circle_right_outlined);
 
     return SingleChildScrollView(
       child: IntrinsicHeight(
         child: NavigationRail(
-          extended: appState.settings.expand,
+          extended: appState.settings["expand"],
           minWidth: 72,
           minExtendedWidth: 192,
           destinations: [
@@ -286,7 +284,7 @@ class HamburgerMenu extends StatelessWidget {
               label: Text("Settings", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
             ),
           ],
-          selectedIndex: appState.settings.view,
+          selectedIndex: appState.settings["view"],
           onDestinationSelected: onDestinationSelected,
         ),
       ),
@@ -340,7 +338,7 @@ class Browse extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: appState.themeMode(),
+      themeMode: ThemeMode.values.byName(appState.settings["theme"]),
       onGenerateRoute: Router.generateRoute,
       initialRoute: "-",
     );
@@ -379,11 +377,13 @@ class _BrowseLevelState extends State<BrowseLevel> {
 
     void onDestinationSelected(value) {
       if (value == 0) {
-        appState.settings.setExpand(expand: !appState.settings.expand);
+        appState.settings["expand"] = !appState.settings["expand"];
+        saveSettings(settings: jsonEncode(appState.settings));
       } else {
         browse(category: value, sessionId: exploreId);
-        appState.settings.setView(view: value);
+        appState.settings["view"] = value;
         Navigator.of(context).popUntil(ModalRoute.withName('-'));
+        saveSettings(settings: jsonEncode(appState.settings));
       }
     }
 
@@ -583,8 +583,9 @@ class Zones extends StatelessWidget {
           onTap: () {
             var zoneId = zones[index].zoneId;
 
-            appState.settings.setZoneId(zoneId: zoneId);
+            appState.settings["zoneId"] = zoneId;
             selectZone(zoneId: zoneId);
+            saveSettings(settings: jsonEncode(appState.settings));
           },
         );
       }

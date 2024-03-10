@@ -66,26 +66,6 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  bool settingsExpand({required Settings that, dynamic hint});
-
-  Future<void> settingsSetExpand(
-      {required Settings that, required bool expand, dynamic hint});
-
-  Future<void> settingsSetTheme(
-      {required Settings that, required ThemeEnum theme, dynamic hint});
-
-  Future<void> settingsSetView(
-      {required Settings that, required int view, dynamic hint});
-
-  Future<void> settingsSetZoneId(
-      {required Settings that, required String zoneId, dynamic hint});
-
-  ThemeEnum settingsTheme({required Settings that, dynamic hint});
-
-  int settingsView({required Settings that, dynamic hint});
-
-  String? settingsZoneId({required Settings that, dynamic hint});
-
   Future<void> browse(
       {required int category, required int sessionId, dynamic hint});
 
@@ -101,21 +81,15 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> initApp({dynamic hint});
 
+  Future<void> saveSettings({required String settings, dynamic hint});
+
   Future<void> selectBrowseItem(
       {required int sessionId, required BrowseItem item, dynamic hint});
 
   Future<void> selectZone({required String zoneId, dynamic hint});
 
-  Future<void> startRoon(
+  Future<String> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint});
-
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Settings;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Settings;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_SettingsPtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -125,218 +99,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
-
-  @override
-  bool settingsExpand({required Settings that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_bool,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsExpandConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsExpandConstMeta => const TaskConstMeta(
-        debugName: "Settings_expand",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<void> settingsSetExpand(
-      {required Settings that, required bool expand, dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        sse_encode_bool(expand, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 9, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsSetExpandConstMeta,
-      argValues: [that, expand],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsSetExpandConstMeta => const TaskConstMeta(
-        debugName: "Settings_set_expand",
-        argNames: ["that", "expand"],
-      );
-
-  @override
-  Future<void> settingsSetTheme(
-      {required Settings that, required ThemeEnum theme, dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        sse_encode_theme_enum(theme, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 11, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsSetThemeConstMeta,
-      argValues: [that, theme],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsSetThemeConstMeta => const TaskConstMeta(
-        debugName: "Settings_set_theme",
-        argNames: ["that", "theme"],
-      );
-
-  @override
-  Future<void> settingsSetView(
-      {required Settings that, required int view, dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        sse_encode_i_32(view, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 13, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsSetViewConstMeta,
-      argValues: [that, view],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsSetViewConstMeta => const TaskConstMeta(
-        debugName: "Settings_set_view",
-        argNames: ["that", "view"],
-      );
-
-  @override
-  Future<void> settingsSetZoneId(
-      {required Settings that, required String zoneId, dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        sse_encode_String(zoneId, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 15, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsSetZoneIdConstMeta,
-      argValues: [that, zoneId],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsSetZoneIdConstMeta => const TaskConstMeta(
-        debugName: "Settings_set_zone_id",
-        argNames: ["that", "zoneId"],
-      );
-
-  @override
-  ThemeEnum settingsTheme({required Settings that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_theme_enum,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsThemeConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsThemeConstMeta => const TaskConstMeta(
-        debugName: "Settings_theme",
-        argNames: ["that"],
-      );
-
-  @override
-  int settingsView({required Settings that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_i_32,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsViewConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsViewConstMeta => const TaskConstMeta(
-        debugName: "Settings_view",
-        argNames: ["that"],
-      );
-
-  @override
-  String? settingsZoneId({required Settings that, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_opt_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kSettingsZoneIdConstMeta,
-      argValues: [that],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kSettingsZoneIdConstMeta => const TaskConstMeta(
-        debugName: "Settings_zone_id",
-        argNames: ["that"],
-      );
 
   @override
   Future<void> browse(
@@ -470,6 +232,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> saveSettings({required String settings, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(settings, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 9, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kSaveSettingsConstMeta,
+      argValues: [settings],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSaveSettingsConstMeta => const TaskConstMeta(
+        debugName: "save_settings",
+        argNames: ["settings"],
+      );
+
+  @override
   Future<void> selectBrowseItem(
       {required int sessionId, required BrowseItem item, dynamic hint}) {
     return handler.executeNormal(NormalTask(
@@ -522,7 +309,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> startRoon(
+  Future<String> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
@@ -532,7 +319,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             funcId: 2, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
+        decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
       constMeta: kStartRoonConstMeta,
@@ -567,30 +354,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     };
   }
 
-  RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_Settings => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_Settings => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings;
-
-  @protected
-  Settings
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return Settings.dcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  Settings
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return Settings.dcoDecode(raw as List<dynamic>);
-  }
-
   @protected
   FutureOr<void> Function(RoonEvent)
       dco_decode_DartFn_Inputs_roon_event_Output_unit(dynamic raw) {
@@ -602,14 +365,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Object dco_decode_DartOpaque(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return decodeDartOpaque(raw, generalizedFrbRustBinding);
-  }
-
-  @protected
-  Settings
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return Settings.dcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1013,10 +768,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
       case 7:
-        return RoonEvent_Settings(
-          dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-              raw[1]),
-        );
+        return RoonEvent_SettingsSaved();
       default:
         throw Exception("unreachable");
     }
@@ -1046,12 +798,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Status dco_decode_status(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Status.values[raw as int];
-  }
-
-  @protected
-  ThemeEnum dco_decode_theme_enum(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return ThemeEnum.values[raw as int];
   }
 
   @protected
@@ -1174,37 +920,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Settings
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return Settings.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  Settings
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return Settings.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_usize(deserializer);
     return decodeDartOpaque(inner, generalizedFrbRustBinding);
-  }
-
-  @protected
-  Settings
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return Settings.sseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
@@ -1713,10 +1432,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
       case 7:
-        var var_field0 =
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-                deserializer);
-        return RoonEvent_Settings(var_field0);
+        return RoonEvent_SettingsSaved();
       default:
         throw UnimplementedError('');
     }
@@ -1748,13 +1464,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return Status.values[inner];
-  }
-
-  @protected
-  ThemeEnum sse_decode_theme_enum(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_i_32(deserializer);
-    return ThemeEnum.values[inner];
   }
 
   @protected
@@ -1880,22 +1589,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          Settings self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: true), serializer);
-  }
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          Settings self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: false), serializer);
-  }
-
-  @protected
   void sse_encode_DartFn_Inputs_roon_event_Output_unit(
       FutureOr<void> Function(RoonEvent) self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1910,14 +1603,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         PlatformPointerUtil.ptrToInt(encodeDartOpaque(
             self, portManager.dartHandlerPort, generalizedFrbRustBinding)),
         serializer);
-  }
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          Settings self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(self.sseEncode(move: null), serializer);
   }
 
   @protected
@@ -2362,10 +2047,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_Image(field0: final field0):
         sse_encode_i_32(6, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
-      case RoonEvent_Settings(field0: final field0):
+      case RoonEvent_SettingsSaved():
         sse_encode_i_32(7, serializer);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-            field0, serializer);
     }
   }
 
@@ -2387,12 +2070,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void sse_encode_status(Status self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.index, serializer);
-  }
-
-  @protected
-  void sse_encode_theme_enum(ThemeEnum self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
   }

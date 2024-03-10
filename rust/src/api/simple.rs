@@ -4,7 +4,6 @@ use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::List as BrowseList;
 use roon_api::transport::State as PlayState;
 use roon_api::transport::Zone;
-use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 
 use crate::backend::roon::Roon;
@@ -19,7 +18,7 @@ pub enum RoonEvent {
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     Image(ImageKeyValue),
-    Settings(Settings),
+    SettingsSaved,
 }
 
 pub struct BrowseItems {
@@ -41,93 +40,6 @@ pub struct ZoneSummary {
     pub image_key: Option<String>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ThemeEnum {
-    Dark,
-    #[default]
-    Light,
-    System,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[flutter_rust_bridge::frb(opaque)]
-pub struct Settings {
-    expand: bool,
-    theme: ThemeEnum,
-    view: i32,
-    zone_id: Option<String>,
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            expand: false,
-            theme: Default::default(),
-            view: 12,
-            zone_id: Default::default(),
-        }
-    }
-}
-
-impl Settings {
-    pub async fn set_expand(mut self, expand: bool) {
-        self.expand = expand;
-        let api = API.lock().await;
-
-        if let Some(roon) = api.roon.as_ref() {
-            roon.save(self).await;
-        }
-    }
-
-    #[flutter_rust_bridge::frb(sync, getter)]
-    pub fn expand(&self) -> bool {
-        self.expand
-    }
-
-    pub async fn set_theme(mut self, theme: ThemeEnum) {
-        self.theme = theme;
-        let api = API.lock().await;
-
-        if let Some(roon) = api.roon.as_ref() {
-            roon.save(self).await;
-        }
-    }
-
-    #[flutter_rust_bridge::frb(sync, getter)]
-    pub fn theme(&self) -> ThemeEnum {
-        self.theme.to_owned()
-    }
-
-    pub async fn set_view(mut self, view: i32) {
-        self.view = view;
-        let api = API.lock().await;
-
-        if let Some(roon) = api.roon.as_ref() {
-            roon.save(self).await;
-        }
-    }
-
-    #[flutter_rust_bridge::frb(sync, getter)]
-    pub fn view(&self) -> i32 {
-        self.view.to_owned()
-    }
-
-    pub async fn set_zone_id(mut self, zone_id: String) {
-        self.zone_id = Some(zone_id);
-        let api = API.lock().await;
-
-        if let Some(roon) = api.roon.as_ref() {
-            roon.save(self).await;
-        }
-    }
-
-    #[flutter_rust_bridge::frb(sync, getter)]
-    pub fn zone_id(&self) -> Option<String> {
-        self.zone_id.to_owned()
-    }
-}
-
 struct InternalState {
     roon: Option<Roon>,
 }
@@ -145,11 +57,9 @@ pub async fn init_app() {
     simple_logging::log_to_stderr(log::LevelFilter::Info);
 }
 
-pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) {
+pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) -> String {
     let (roon, mut rx, settings) = Roon::start().await;
     let mut api = API.lock().await;
-
-    cb(RoonEvent::Settings(settings)).await;
 
     api.roon = Some(roon);
 
@@ -160,6 +70,8 @@ pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'sta
             }
         }
     });
+
+    settings
 }
 
 pub async fn select_zone(zone_id: String) {
@@ -207,5 +119,13 @@ pub async fn select_browse_item(session_id: i32, item: BrowseItem) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.select_browse_item(session_id, item).await;
+    }
+}
+
+pub async fn save_settings(settings: String) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.save(settings).await;
     }
 }

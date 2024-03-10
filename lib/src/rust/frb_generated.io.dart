@@ -20,30 +20,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_SettingsPtr => wire
-      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettingsPtr;
-
-  @protected
-  Settings
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw);
-
-  @protected
-  Settings
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw);
-
   @protected
   FutureOr<void> Function(RoonEvent)
       dco_decode_DartFn_Inputs_roon_event_Output_unit(dynamic raw);
 
   @protected
   Object dco_decode_DartOpaque(dynamic raw);
-
-  @protected
-  Settings
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
@@ -208,9 +190,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Status dco_decode_status(dynamic raw);
 
   @protected
-  ThemeEnum dco_decode_theme_enum(dynamic raw);
-
-  @protected
   ThreeLine dco_decode_three_line(dynamic raw);
 
   @protected
@@ -241,22 +220,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ZoneSummary dco_decode_zone_summary(dynamic raw);
 
   @protected
-  Settings
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer);
-
-  @protected
-  Settings
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer);
-
-  @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
-
-  @protected
-  Settings
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
@@ -430,9 +394,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Status sse_decode_status(SseDeserializer deserializer);
 
   @protected
-  ThemeEnum sse_decode_theme_enum(SseDeserializer deserializer);
-
-  @protected
   ThreeLine sse_decode_three_line(SseDeserializer deserializer);
 
   @protected
@@ -463,26 +424,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ZoneSummary sse_decode_zone_summary(SseDeserializer deserializer);
 
   @protected
-  void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          Settings self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          Settings self, SseSerializer serializer);
-
-  @protected
   void sse_encode_DartFn_Inputs_roon_event_Output_unit(
       FutureOr<void> Function(RoonEvent) self, SseSerializer serializer);
 
   @protected
   void sse_encode_DartOpaque(Object self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-          Settings self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -667,9 +613,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_status(Status self, SseSerializer serializer);
 
   @protected
-  void sse_encode_theme_enum(ThemeEnum self, SseSerializer serializer);
-
-  @protected
   void sse_encode_three_line(ThreeLine self, SseSerializer serializer);
 
   @protected
@@ -713,36 +656,4 @@ class RustLibWire implements BaseWire {
   /// The symbols are looked up in [dynamicLibrary].
   RustLibWire(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
-
-  void
-      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-      ptr,
-    );
-  }
-
-  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettingsPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_community_remote_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings');
-  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings =
-      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettingsPtr
-          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  void
-      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings(
-      ptr,
-    );
-  }
-
-  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettingsPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_community_remote_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings');
-  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettings =
-      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedrust_asyncRwLockSettingsPtr
-          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 }
