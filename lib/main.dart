@@ -96,10 +96,6 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_BrowseItems) {
       if (browseItems == null || event.field0.offset == 0) {
         browseItems = event.field0;
-
-        if (browseItems!.list.title == "Explore") {
-          browse(category: settings["view"], sessionId: exploreId);
-        }
       } else {
         browseItems!.items.addAll(event.field0.items);
       }
@@ -115,6 +111,8 @@ class MyAppState extends ChangeNotifier {
           }
         }
       }
+    } else if (event is RoonEvent_BrowseReset) {
+      browse(category: settings["view"], sessionId: exploreId);
     } else if (event is RoonEvent_Image) {
       imageCache[event.field0.imageKey] = event.field0.image;
     }
@@ -171,11 +169,6 @@ class _MyHomePageState extends State<MyHomePage> {
           subtitle: Text('Served by: ${appState.serverName}'),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            tooltip: "Search",
-            onPressed: () {},
-          ),
           themeModeButton,
         ],
       ),
@@ -506,6 +499,20 @@ class _BrowseLevelState extends State<BrowseLevel> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           title: browseTitle,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search_outlined),
+              tooltip: "Search",
+              onPressed: () {
+                Navigator.of(context).popUntil(ModalRoute.withName('-'));
+                Navigator.of(context).pushNamed("search");
+                showSearch(
+                  context: context,
+                  delegate: LibSearchDelegate(),
+                );
+              },
+            ),
+          ],
         ),
         body: Card(
           margin: const EdgeInsets.all(10),
@@ -522,6 +529,48 @@ class _BrowseLevelState extends State<BrowseLevel> {
         }
       },
     );
+  }
+}
+
+class LibSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          if (query.isNotEmpty) {
+            query = '';
+          } else {
+            close(context, null);
+            Navigator.of(context).pop();
+          }
+        },
+        icon: const Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+        Navigator.of(context).pop();
+      },
+      icon: const BackButtonIcon(),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    browseWithInput(category: 1, sessionId: exploreId, input: query);
+    close(context, null);
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Container();
   }
 }
 

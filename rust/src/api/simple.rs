@@ -17,6 +17,7 @@ pub enum RoonEvent {
     ZoneChanged(Zone),
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
+    BrowseReset,
     Image(ImageKeyValue),
     SettingsSaved,
 }
@@ -94,7 +95,15 @@ pub async fn browse(category: i32, session_id: i32) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.browse_category(category, session_id).await;
+        roon.browse_category(category, session_id, None).await;
+    }
+}
+
+pub async fn browse_with_input(category: i32, session_id: i32, input: Option<String>) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.browse_category(category, session_id, input).await;
     }
 }
 

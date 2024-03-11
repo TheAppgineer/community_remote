@@ -38,6 +38,7 @@ struct RoonHandler {
     zone_id: Option<String>,
     browse_path: HashMap<String, Vec<&'static str>>,
     browse_category: i32,
+    browse_input: Option<String>,
 }
 
 impl Roon {
@@ -105,11 +106,17 @@ impl Roon {
         Some(())
     }
 
-    pub async fn browse_category(&self, category: i32, session_id: i32) -> Option<()> {
+    pub async fn browse_category(
+        &self,
+        category: i32,
+        session_id: i32,
+        input: Option<String>,
+    ) -> Option<()> {
         let mut handler = self.handler.lock().await;
 
         if category != handler.browse_category {
             let category_paths = HashMap::from([
+                (1, vec!["Search", "Library"]),
                 (2, vec!["Artists", "Library"]),
                 (3, vec!["Albums", "Library"]),
                 (4, vec!["Tracks", "Library"]),
@@ -139,6 +146,7 @@ impl Roon {
 
             handler.browse.as_ref()?.browse(&opts).await;
             handler.browse_category = category;
+            handler.browse_input = input;
         }
 
         Some(())
@@ -238,6 +246,7 @@ impl RoonHandler {
             zone_id: None,
             browse_path: HashMap::new(),
             browse_category: 0,
+            browse_input: None,
         }
     }
 
@@ -324,6 +333,11 @@ impl RoonHandler {
 
                     if let Some(path) = self.browse_path.get_mut(key) {
                         if let Some(category) = path.pop() {
+                            let input = if category == "Search" {
+                                self.browse_input.take()
+                            } else {
+                                None
+                            };
                             let item_key = result.items.iter().find_map(|item| {
                                 if item.title == *category {
                                     item.item_key.as_ref()
@@ -333,6 +347,7 @@ impl RoonHandler {
                             });
                             self.browse_offset = 0;
                             let opts = BrowseOpts {
+                                input,
                                 item_key: item_key.cloned(),
                                 multi_session_key,
                                 set_display_offset: Some(self.browse_offset),
@@ -347,25 +362,29 @@ impl RoonHandler {
                         self.browse_path.remove(key);
                     }
 
-                    let event = if result.list.hint == Some(BrowseListHint::ActionList) {
-                        RoonEvent::BrowseActions(result.items)
+                    if result.list.title == "Explore" || result.list.title == "Library" {
+                        self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
-                        let new_offset = result.offset + result.items.len();
+                        let event = if result.list.hint == Some(BrowseListHint::ActionList) {
+                            RoonEvent::BrowseActions(result.items)
+                        } else {
+                            let new_offset = result.offset + result.items.len();
 
-                        self.browse_id = multi_session_key;
-                        self.browse_offset = new_offset;
-                        self.browse_total = result.list.count;
+                            self.browse_id = multi_session_key;
+                            self.browse_offset = new_offset;
+                            self.browse_total = result.list.count;
 
-                        let browse_items = BrowseItems {
-                            list: result.list,
-                            offset: result.offset,
-                            items: result.items,
+                            let browse_items = BrowseItems {
+                                list: result.list,
+                                offset: result.offset,
+                                items: result.items,
+                            };
+
+                            RoonEvent::BrowseItems(browse_items)
                         };
 
-                        RoonEvent::BrowseItems(browse_items)
-                    };
-
-                    self.event_tx.send(event).await.unwrap();
+                        self.event_tx.send(event).await.unwrap();
+                    }
                 }
                 Parsed::Jpeg((image_key, image)) | Parsed::Png((image_key, image)) => {
                     let image_key_value = ImageKeyValue { image_key, image };

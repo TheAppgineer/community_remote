@@ -73,6 +73,12 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> browseNextPage({dynamic hint});
 
+  Future<void> browseWithInput(
+      {required int category,
+      required int sessionId,
+      String? input,
+      dynamic hint});
+
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -134,7 +140,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(sessionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 7, port: port_);
+            funcId: 8, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -158,7 +164,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 6, port: port_);
+            funcId: 7, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -174,6 +180,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kBrowseNextPageConstMeta => const TaskConstMeta(
         debugName: "browse_next_page",
         argNames: [],
+      );
+
+  @override
+  Future<void> browseWithInput(
+      {required int category,
+      required int sessionId,
+      String? input,
+      dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_i_32(category, serializer);
+        sse_encode_i_32(sessionId, serializer);
+        sse_encode_opt_String(input, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 6, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kBrowseWithInputConstMeta,
+      argValues: [category, sessionId, input],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kBrowseWithInputConstMeta => const TaskConstMeta(
+        debugName: "browse_with_input",
+        argNames: ["category", "sessionId", "input"],
       );
 
   @override
@@ -238,7 +275,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(settings, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 9, port: port_);
+            funcId: 10, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -265,7 +302,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_i_32(sessionId, serializer);
         sse_encode_box_autoadd_browse_item(item, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 8, port: port_);
+            funcId: 9, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -764,10 +801,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_list_browse_item(raw[1]),
         );
       case 6:
+        return RoonEvent_BrowseReset();
+      case 7:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 7:
+      case 8:
         return RoonEvent_SettingsSaved();
       default:
         throw Exception("unreachable");
@@ -1429,9 +1468,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_list_browse_item(deserializer);
         return RoonEvent_BrowseActions(var_field0);
       case 6:
+        return RoonEvent_BrowseReset();
+      case 7:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 7:
+      case 8:
         return RoonEvent_SettingsSaved();
       default:
         throw UnimplementedError('');
@@ -2044,11 +2085,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_BrowseActions(field0: final field0):
         sse_encode_i_32(5, serializer);
         sse_encode_list_browse_item(field0, serializer);
-      case RoonEvent_Image(field0: final field0):
+      case RoonEvent_BrowseReset():
         sse_encode_i_32(6, serializer);
+      case RoonEvent_Image(field0: final field0):
+        sse_encode_i_32(7, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
-        sse_encode_i_32(7, serializer);
+        sse_encode_i_32(8, serializer);
     }
   }
 

@@ -32,6 +32,14 @@ Future<void> browse(
     RustLib.instance.api
         .browse(category: category, sessionId: sessionId, hint: hint);
 
+Future<void> browseWithInput(
+        {required int category,
+        required int sessionId,
+        String? input,
+        dynamic hint}) =>
+    RustLib.instance.api.browseWithInput(
+        category: category, sessionId: sessionId, input: input, hint: hint);
+
 Future<void> browseNextPage({dynamic hint}) =>
     RustLib.instance.api.browseNextPage(hint: hint);
 
@@ -111,6 +119,7 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.browseActions(
     List<BrowseItem> field0,
   ) = RoonEvent_BrowseActions;
+  const factory RoonEvent.browseReset() = RoonEvent_BrowseReset;
   const factory RoonEvent.image(
     ImageKeyValue field0,
   ) = RoonEvent_Image;

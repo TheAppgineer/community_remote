@@ -145,6 +145,50 @@ fn wire_browse_next_page_impl(
         },
     )
 }
+fn wire_browse_with_input_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "browse_with_input",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_category = <i32>::sse_decode(&mut deserializer);
+            let api_session_id = <i32>::sse_decode(&mut deserializer);
+            let api_input = <Option<String>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::browse_with_input(
+                                api_category,
+                                api_session_id,
+                                api_input,
+                            )
+                            .await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_image_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1064,10 +1108,13 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::BrowseActions(var_field0);
             }
             6 => {
+                return crate::api::simple::RoonEvent::BrowseReset;
+            }
+            7 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            7 => {
+            8 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
             _ => {
@@ -1279,12 +1326,13 @@ fn pde_ffi_dispatcher_primary_impl(
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
         5 => wire_browse_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
-        6 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
+        6 => wire_browse_with_input_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        9 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
         3 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
         2 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
@@ -1571,10 +1619,11 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::BrowseActions(field0) => {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
+            crate::api::simple::RoonEvent::BrowseReset => [6.into_dart()].into_dart(),
             crate::api::simple::RoonEvent::Image(field0) => {
-                [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [7.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::SettingsSaved => [8.into_dart()].into_dart(),
         }
     }
 }
@@ -2194,12 +2243,15 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(5, serializer);
                 <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::BrowseReset => {
                 <i32>::sse_encode(6, serializer);
+            }
+            crate::api::simple::RoonEvent::Image(field0) => {
+                <i32>::sse_encode(7, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(7, serializer);
+                <i32>::sse_encode(8, serializer);
             }
         }
     }
