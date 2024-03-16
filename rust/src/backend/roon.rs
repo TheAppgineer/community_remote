@@ -3,6 +3,8 @@ use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
 use roon_api::browse::ListHint as BrowseListHint;
+use roon_api::transport::QueueItem;
+use roon_api::transport::QueueOperation;
 use roon_api::{
     browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
@@ -45,6 +47,7 @@ struct RoonHandler {
     browse_total: usize,
     browse_level: u32,
     pop_levels: Option<u32>,
+    queue: Option<Vec<QueueItem>>,
 }
 
 impl Roon {
@@ -100,14 +103,22 @@ impl Roon {
 
     pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
         let mut handler = self.handler.lock().await;
-        let zone = handler.zone_map.get(zone_id).cloned()?;
 
-        handler.zone_id = Some(zone_id.to_owned());
-        handler
-            .event_tx
-            .send(RoonEvent::ZoneChanged(zone))
-            .await
-            .unwrap();
+        if handler.zone_id.as_deref() != Some(zone_id) {
+            let zone = handler.zone_map.get(zone_id).cloned()?;
+
+            handler.zone_id = Some(zone_id.to_owned());
+            handler
+                .transport
+                .as_ref()?
+                .subscribe_queue(zone_id, 100)
+                .await;
+            handler
+                .event_tx
+                .send(RoonEvent::ZoneChanged(zone))
+                .await
+                .unwrap();
+        }
 
         Some(())
     }
@@ -224,6 +235,18 @@ impl Roon {
 
             browse.browse(&opts).await;
         }
+
+        Some(())
+    }
+
+    pub async fn select_queue_item(&self, queue_item_id: u32) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler
+            .transport
+            .as_ref()?
+            .play_from_here(handler.zone_id.as_deref()?, queue_item_id)
+            .await;
 
         Some(())
     }
@@ -353,6 +376,7 @@ impl RoonHandler {
             browse_total: 0,
             browse_level: 0,
             pop_levels: None,
+            queue: None,
         }
     }
 
@@ -518,6 +542,36 @@ impl RoonHandler {
 
                         self.event_tx.send(event).await.unwrap();
                     }
+                }
+                Parsed::Queue(queue) => {
+                    self.queue = Some(queue.to_owned());
+                    self.event_tx
+                        .send(RoonEvent::QueueItems(queue))
+                        .await
+                        .unwrap();
+                }
+                Parsed::QueueChanges(changes) => {
+                    for change in changes {
+                        match change.operation {
+                            QueueOperation::Insert => {
+                                let queue = self.queue.as_mut()?;
+
+                                change.items?.iter().enumerate().for_each(|(index, item)| {
+                                    queue.insert(change.index + index, item.to_owned());
+                                });
+                            }
+                            QueueOperation::Remove => {
+                                for _ in 0..change.count? {
+                                    self.queue.as_mut()?.remove(change.index);
+                                }
+                            }
+                        }
+                    }
+
+                    self.event_tx
+                        .send(RoonEvent::QueueItems(self.queue.as_ref()?.to_owned()))
+                        .await
+                        .unwrap();
                 }
                 Parsed::Jpeg((image_key, image)) | Parsed::Png((image_key, image)) => {
                     let image_key_value = ImageKeyValue { image_key, image };

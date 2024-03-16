@@ -120,6 +120,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<QueueItem> dco_decode_list_queue_item(dynamic raw);
+
+  @protected
   List<SourceControls> dco_decode_list_source_controls(dynamic raw);
 
   @protected
@@ -175,6 +178,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlayState dco_decode_play_state(dynamic raw);
+
+  @protected
+  QueueItem dco_decode_queue_item(dynamic raw);
 
   @protected
   Repeat dco_decode_repeat(dynamic raw);
@@ -321,6 +327,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<QueueItem> sse_decode_list_queue_item(SseDeserializer deserializer);
+
+  @protected
   List<SourceControls> sse_decode_list_source_controls(
       SseDeserializer deserializer);
 
@@ -382,6 +391,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlayState sse_decode_play_state(SseDeserializer deserializer);
+
+  @protected
+  QueueItem sse_decode_queue_item(SseDeserializer deserializer);
 
   @protected
   Repeat sse_decode_repeat(SseDeserializer deserializer);
@@ -540,6 +552,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_queue_item(
+      List<QueueItem> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_source_controls(
       List<SourceControls> self, SseSerializer serializer);
 
@@ -603,6 +619,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_play_state(PlayState self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_queue_item(QueueItem self, SseSerializer serializer);
 
   @protected
   void sse_encode_repeat(Repeat self, SseSerializer serializer);

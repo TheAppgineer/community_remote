@@ -370,6 +370,43 @@ fn wire_select_browse_item_impl(
         },
     )
 }
+fn wire_select_queue_item_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "select_queue_item",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_queue_item_id = <u32>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::select_queue_item(api_queue_item_id).await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_select_zone_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -476,6 +513,9 @@ pub struct mirror_Output(crate::api::roon_transport_mirror::Output);
 pub struct mirror_PlayState(crate::api::roon_transport_mirror::PlayState);
 
 #[derive(Clone)]
+pub struct mirror_QueueItem(crate::api::roon_transport_mirror::QueueItem);
+
+#[derive(Clone)]
 pub struct mirror_Repeat(crate::api::roon_transport_mirror::Repeat);
 
 #[derive(Clone)]
@@ -555,6 +595,15 @@ const _: fn() = || {
         let _: Option<crate::api::roon_transport_mirror::Volume> = Output.volume;
         let _: Option<Vec<crate::api::roon_transport_mirror::SourceControls>> =
             Output.source_controls;
+    }
+    {
+        let QueueItem = None::<crate::api::roon_transport_mirror::QueueItem>.unwrap();
+        let _: Option<String> = QueueItem.image_key;
+        let _: u32 = QueueItem.length;
+        let _: u32 = QueueItem.queue_item_id;
+        let _: crate::api::roon_transport_mirror::OneLine = QueueItem.one_line;
+        let _: crate::api::roon_transport_mirror::TwoLine = QueueItem.two_line;
+        let _: crate::api::roon_transport_mirror::ThreeLine = QueueItem.three_line;
     }
     {
         let SourceControls = None::<crate::api::roon_transport_mirror::SourceControls>.unwrap();
@@ -865,6 +914,20 @@ impl SseDecode for Vec<u8> {
     }
 }
 
+impl SseDecode for Vec<crate::api::roon_transport_mirror::QueueItem> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::roon_transport_mirror::QueueItem>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::roon_transport_mirror::SourceControls> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1117,6 +1180,29 @@ impl SseDecode for crate::api::roon_transport_mirror::PlayState {
     }
 }
 
+impl SseDecode for crate::api::roon_transport_mirror::QueueItem {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_imageKey = <Option<String>>::sse_decode(deserializer);
+        let mut var_length = <u32>::sse_decode(deserializer);
+        let mut var_queueItemId = <u32>::sse_decode(deserializer);
+        let mut var_oneLine =
+            <crate::api::roon_transport_mirror::OneLine>::sse_decode(deserializer);
+        let mut var_twoLine =
+            <crate::api::roon_transport_mirror::TwoLine>::sse_decode(deserializer);
+        let mut var_threeLine =
+            <crate::api::roon_transport_mirror::ThreeLine>::sse_decode(deserializer);
+        return crate::api::roon_transport_mirror::QueueItem {
+            image_key: var_imageKey,
+            length: var_length,
+            queue_item_id: var_queueItemId,
+            one_line: var_oneLine,
+            two_line: var_twoLine,
+            three_line: var_threeLine,
+        };
+    }
+}
+
 impl SseDecode for crate::api::roon_transport_mirror::Repeat {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1166,10 +1252,15 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::BrowseReset;
             }
             7 => {
+                let mut var_field0 =
+                    <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::QueueItems(var_field0);
+            }
+            8 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            8 => {
+            9 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
             _ => {
@@ -1384,11 +1475,12 @@ fn pde_ffi_dispatcher_primary_impl(
         8 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
         7 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_browse_with_input_impl(port, ptr, rust_vec_len, data_len),
-        11 => wire_control_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire_control_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
         9 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire_select_queue_item_impl(port, ptr, rust_vec_len, data_len),
         3 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
         2 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
@@ -1657,6 +1749,28 @@ impl flutter_rust_bridge::IntoIntoDart<mirror_PlayState>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_QueueItem {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.image_key.into_into_dart().into_dart(),
+            self.0.length.into_into_dart().into_dart(),
+            self.0.queue_item_id.into_into_dart().into_dart(),
+            self.0.one_line.into_into_dart().into_dart(),
+            self.0.two_line.into_into_dart().into_dart(),
+            self.0.three_line.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_QueueItem {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_QueueItem>
+    for crate::api::roon_transport_mirror::QueueItem
+{
+    fn into_into_dart(self) -> mirror_QueueItem {
+        mirror_QueueItem(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for mirror_Repeat {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self.0 {
@@ -1697,10 +1811,13 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             crate::api::simple::RoonEvent::BrowseReset => [6.into_dart()].into_dart(),
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
                 [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [8.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Image(field0) => {
+                [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::SettingsSaved => [9.into_dart()].into_dart(),
         }
     }
 }
@@ -2092,6 +2209,16 @@ impl SseEncode for Vec<u8> {
     }
 }
 
+impl SseEncode for Vec<crate::api::roon_transport_mirror::QueueItem> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::roon_transport_mirror::QueueItem>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::roon_transport_mirror::SourceControls> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2295,6 +2422,18 @@ impl SseEncode for crate::api::roon_transport_mirror::PlayState {
     }
 }
 
+impl SseEncode for crate::api::roon_transport_mirror::QueueItem {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Option<String>>::sse_encode(self.image_key, serializer);
+        <u32>::sse_encode(self.length, serializer);
+        <u32>::sse_encode(self.queue_item_id, serializer);
+        <crate::api::roon_transport_mirror::OneLine>::sse_encode(self.one_line, serializer);
+        <crate::api::roon_transport_mirror::TwoLine>::sse_encode(self.two_line, serializer);
+        <crate::api::roon_transport_mirror::ThreeLine>::sse_encode(self.three_line, serializer);
+    }
+}
+
 impl SseEncode for crate::api::roon_transport_mirror::Repeat {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2343,12 +2482,16 @@ impl SseEncode for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::BrowseReset => {
                 <i32>::sse_encode(6, serializer);
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
                 <i32>::sse_encode(7, serializer);
+                <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::Image(field0) => {
+                <i32>::sse_encode(8, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(8, serializer);
+                <i32>::sse_encode(9, serializer);
             }
         }
     }

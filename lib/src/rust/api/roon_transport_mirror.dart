@@ -122,6 +122,45 @@ enum PlayState {
   stopped,
 }
 
+class QueueItem {
+  final String? imageKey;
+  final int length;
+  final int queueItemId;
+  final OneLine oneLine;
+  final TwoLine twoLine;
+  final ThreeLine threeLine;
+
+  const QueueItem({
+    this.imageKey,
+    required this.length,
+    required this.queueItemId,
+    required this.oneLine,
+    required this.twoLine,
+    required this.threeLine,
+  });
+
+  @override
+  int get hashCode =>
+      imageKey.hashCode ^
+      length.hashCode ^
+      queueItemId.hashCode ^
+      oneLine.hashCode ^
+      twoLine.hashCode ^
+      threeLine.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is QueueItem &&
+          runtimeType == other.runtimeType &&
+          imageKey == other.imageKey &&
+          length == other.length &&
+          queueItemId == other.queueItemId &&
+          oneLine == other.oneLine &&
+          twoLine == other.twoLine &&
+          threeLine == other.threeLine;
+}
+
 enum Repeat {
   off,
   all,

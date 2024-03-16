@@ -3,7 +3,7 @@ use once_cell::sync::Lazy;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::List as BrowseList;
 use roon_api::transport::State as PlayState;
-use roon_api::transport::{Control, Zone};
+use roon_api::transport::{Control, QueueItem, Zone};
 use simplelog::{format_description, ColorChoice, ConfigBuilder, TermLogger, TerminalMode};
 use time::UtcOffset;
 use tokio::sync::Mutex;
@@ -20,6 +20,7 @@ pub enum RoonEvent {
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,
+    QueueItems(Vec<QueueItem>),
     Image(ImageKeyValue),
     SettingsSaved,
 }
@@ -149,6 +150,13 @@ pub async fn select_browse_item(session_id: i32, item: BrowseItem) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.select_browse_item(session_id, item).await;
+    }
+}
+pub async fn select_queue_item(queue_item_id: u32) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.select_queue_item(queue_item_id).await;
     }
 }
 

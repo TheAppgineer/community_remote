@@ -51,6 +51,9 @@ Future<void> selectBrowseItem(
     RustLib.instance.api
         .selectBrowseItem(sessionId: sessionId, item: item, hint: hint);
 
+Future<void> selectQueueItem({required int queueItemId, dynamic hint}) =>
+    RustLib.instance.api.selectQueueItem(queueItemId: queueItemId, hint: hint);
+
 Future<void> saveSettings({required String settings, dynamic hint}) =>
     RustLib.instance.api.saveSettings(settings: settings, hint: hint);
 
@@ -123,6 +126,9 @@ sealed class RoonEvent with _$RoonEvent {
     List<BrowseItem> field0,
   ) = RoonEvent_BrowseActions;
   const factory RoonEvent.browseReset() = RoonEvent_BrowseReset;
+  const factory RoonEvent.queueItems(
+    List<QueueItem> field0,
+  ) = RoonEvent_QueueItems;
   const factory RoonEvent.image(
     ImageKeyValue field0,
   ) = RoonEvent_Image;

@@ -94,6 +94,8 @@ abstract class RustLibApi extends BaseApi {
   Future<void> selectBrowseItem(
       {required int sessionId, required BrowseItem item, dynamic hint});
 
+  Future<void> selectQueueItem({required int queueItemId, dynamic hint});
+
   Future<void> selectZone({required String zoneId, dynamic hint});
 
   Future<String> startRoon(
@@ -222,7 +224,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_control(control, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 11, port: port_);
+            funcId: 12, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -302,7 +304,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(settings, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 10, port: port_);
+            funcId: 11, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -345,6 +347,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kSelectBrowseItemConstMeta => const TaskConstMeta(
         debugName: "select_browse_item",
         argNames: ["sessionId", "item"],
+      );
+
+  @override
+  Future<void> selectQueueItem({required int queueItemId, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_u_32(queueItemId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 10, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kSelectQueueItemConstMeta,
+      argValues: [queueItemId],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSelectQueueItemConstMeta => const TaskConstMeta(
+        debugName: "select_queue_item",
+        argNames: ["queueItemId"],
       );
 
   @override
@@ -660,6 +687,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<QueueItem> dco_decode_list_queue_item(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_queue_item).toList();
+  }
+
+  @protected
   List<SourceControls> dco_decode_list_source_controls(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_source_controls).toList();
@@ -800,6 +833,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  QueueItem dco_decode_queue_item(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return QueueItem(
+      imageKey: dco_decode_opt_String(arr[0]),
+      length: dco_decode_u_32(arr[1]),
+      queueItemId: dco_decode_u_32(arr[2]),
+      oneLine: dco_decode_one_line(arr[3]),
+      twoLine: dco_decode_two_line(arr[4]),
+      threeLine: dco_decode_three_line(arr[5]),
+    );
+  }
+
+  @protected
   Repeat dco_decode_repeat(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Repeat.values[raw as int];
@@ -836,10 +885,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 6:
         return RoonEvent_BrowseReset();
       case 7:
+        return RoonEvent_QueueItems(
+          dco_decode_list_queue_item(raw[1]),
+        );
+      case 8:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 8:
+      case 9:
         return RoonEvent_SettingsSaved();
       default:
         throw Exception("unreachable");
@@ -1252,6 +1305,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<QueueItem> sse_decode_list_queue_item(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <QueueItem>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_queue_item(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<SourceControls> sse_decode_list_source_controls(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1477,6 +1542,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  QueueItem sse_decode_queue_item(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_imageKey = sse_decode_opt_String(deserializer);
+    var var_length = sse_decode_u_32(deserializer);
+    var var_queueItemId = sse_decode_u_32(deserializer);
+    var var_oneLine = sse_decode_one_line(deserializer);
+    var var_twoLine = sse_decode_two_line(deserializer);
+    var var_threeLine = sse_decode_three_line(deserializer);
+    return QueueItem(
+        imageKey: var_imageKey,
+        length: var_length,
+        queueItemId: var_queueItemId,
+        oneLine: var_oneLine,
+        twoLine: var_twoLine,
+        threeLine: var_threeLine);
+  }
+
+  @protected
   Repeat sse_decode_repeat(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
@@ -1510,9 +1593,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 6:
         return RoonEvent_BrowseReset();
       case 7:
+        var var_field0 = sse_decode_list_queue_item(deserializer);
+        return RoonEvent_QueueItems(var_field0);
+      case 8:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 8:
+      case 9:
         return RoonEvent_SettingsSaved();
       default:
         throw UnimplementedError('');
@@ -1912,6 +1998,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_queue_item(
+      List<QueueItem> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_queue_item(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_source_controls(
       List<SourceControls> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -2104,6 +2200,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_queue_item(QueueItem self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.imageKey, serializer);
+    sse_encode_u_32(self.length, serializer);
+    sse_encode_u_32(self.queueItemId, serializer);
+    sse_encode_one_line(self.oneLine, serializer);
+    sse_encode_two_line(self.twoLine, serializer);
+    sse_encode_three_line(self.threeLine, serializer);
+  }
+
+  @protected
   void sse_encode_repeat(Repeat self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
@@ -2133,11 +2240,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_list_browse_item(field0, serializer);
       case RoonEvent_BrowseReset():
         sse_encode_i_32(6, serializer);
-      case RoonEvent_Image(field0: final field0):
+      case RoonEvent_QueueItems(field0: final field0):
         sse_encode_i_32(7, serializer);
+        sse_encode_list_queue_item(field0, serializer);
+      case RoonEvent_Image(field0: final field0):
+        sse_encode_i_32(8, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
-        sse_encode_i_32(8, serializer);
+        sse_encode_i_32(9, serializer);
     }
   }
 

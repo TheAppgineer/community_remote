@@ -2,7 +2,8 @@ pub use roon_api::transport::Settings as ZoneSettings;
 pub use roon_api::transport::State as PlayState;
 pub use roon_api::transport::{
     volume::{Scale, Volume},
-    Control, NowPlaying, OneLine, Output, Repeat, SourceControls, Status, ThreeLine, TwoLine, Zone,
+    Control, NowPlaying, OneLine, Output, QueueItem, Repeat, SourceControls, Status, ThreeLine,
+    TwoLine, Zone,
 };
 
 #[flutter_rust_bridge::frb(mirror(Control))]
@@ -51,6 +52,16 @@ pub struct _NowPlaying {
     pub image_key: Option<String>,
     pub length: Option<u32>,
     pub seek_position: Option<i64>,
+    pub one_line: OneLine,
+    pub two_line: TwoLine,
+    pub three_line: ThreeLine,
+}
+
+#[flutter_rust_bridge::frb(mirror(QueueItem))]
+pub struct _QueueItem {
+    pub image_key: Option<String>,
+    pub length: u32,
+    pub queue_item_id: u32,
     pub one_line: OneLine,
     pub two_line: TwoLine,
     pub three_line: ThreeLine,
