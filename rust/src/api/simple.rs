@@ -4,6 +4,8 @@ use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::List as BrowseList;
 use roon_api::transport::State as PlayState;
 use roon_api::transport::{Control, Zone};
+use simplelog::{format_description, ColorChoice, ConfigBuilder, TermLogger, TerminalMode};
+use time::UtcOffset;
 use tokio::sync::Mutex;
 
 use crate::backend::roon::Roon;
@@ -53,9 +55,28 @@ impl InternalState {
 
 #[flutter_rust_bridge::frb(init)]
 pub async fn init_app() {
-    // Default utilities - feel free to customize
+    let time_format = format_description!("[hour]:[minute]:[second].[subsecond]");
+    let seconds = chrono::Local::now().offset().local_minus_utc();
+    let utc_offset = UtcOffset::from_whole_seconds(seconds).unwrap_or(UtcOffset::UTC);
+    let config = ConfigBuilder::new()
+        .set_time_format_custom(time_format)
+        .set_time_offset(utc_offset)
+        .build();
+
     flutter_rust_bridge::setup_default_user_utils();
-    simple_logging::log_to_stderr(log::LevelFilter::Info);
+    TermLogger::init(
+        log::LevelFilter::Info,
+        config,
+        TerminalMode::Stdout,
+        ColorChoice::Never,
+    )
+    .unwrap();
+
+    if utc_offset == UtcOffset::UTC {
+        log::warn!("Timestamps are UTC");
+    } else {
+        log::info!("Timestamps are local time");
+    }
 }
 
 pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) -> String {
