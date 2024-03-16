@@ -6,6 +6,15 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+enum Control {
+  play,
+  pause,
+  playPause,
+  stop,
+  previous,
+  next,
+}
+
 class NowPlaying {
   final List<String>? artistImageKeys;
   final String? imageKey;

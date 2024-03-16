@@ -54,6 +54,9 @@ Future<void> selectBrowseItem(
 Future<void> saveSettings({required String settings, dynamic hint}) =>
     RustLib.instance.api.saveSettings(settings: settings, hint: hint);
 
+Future<void> control({required Control control, dynamic hint}) =>
+    RustLib.instance.api.control(control: control, hint: hint);
+
 class BrowseItems {
   final BrowseList list;
   final int offset;

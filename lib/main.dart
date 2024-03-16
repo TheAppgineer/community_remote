@@ -71,7 +71,7 @@ class MyAppState extends ChangeNotifier {
   List<ZoneSummary>? zoneList;
   BrowseItems? browseItems;
   List<BrowseItem>? actionItems;
-  String? pendingAction;
+  bool takeDefaultAction = false;
   Zone? zone;
   Map<String, Uint8List> imageCache = {};
   late Map<String, dynamic> settings;
@@ -102,14 +102,10 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_BrowseActions) {
       actionItems = event.field0;
 
-      if (actionItems != null && pendingAction != null) {
-        for (var item in actionItems!) {
-          if (item.title == pendingAction) {
-            selectBrowseItem(sessionId: exploreId, item: item);
-            pendingAction = null;
-            break;
-          }
-        }
+      if (actionItems != null && takeDefaultAction) {
+        // Take first as default action, at least for now
+        selectBrowseItem(sessionId: exploreId, item: actionItems![2]);
+        takeDefaultAction = false;
       }
     } else if (event is RoonEvent_BrowseReset) {
       browse(category: settings["view"], sessionId: exploreId);
@@ -208,6 +204,93 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: QuickAccessButton(appState: appState),
+    );
+  }
+}
+
+class QuickAccessButton extends StatelessWidget {
+  const QuickAccessButton({
+    super.key,
+    required this.appState,
+  });
+
+  final MyAppState appState;
+
+  Widget getIcon() {
+    IconData icon;
+
+    if (appState.zone == null) {
+      icon = Icons.speaker_outlined;
+    } else {
+      switch (appState.zone!.state) {
+        case PlayState.playing:
+          icon = Icons.pause_circle_outline;
+          break;
+        case PlayState.paused:
+        case PlayState.stopped:
+          icon = Icons.play_circle_outline;
+          break;
+        case PlayState.loading:
+          icon = Icons.hourglass_top_outlined;
+          break;
+      }
+    }
+
+    return Icon(icon, size: 36);
+  }
+
+  String getTooltip() {
+    String tooltip;
+
+    if (appState.zone == null) {
+      tooltip = "Select Zone";
+    } else {
+      switch (appState.zone!.state) {
+        case PlayState.playing:
+          tooltip = "Pause";
+          break;
+        case PlayState.paused:
+        case PlayState.stopped:
+          tooltip = "Play";
+          break;
+        case PlayState.loading:
+          tooltip = "Loading...";
+          break;
+      }
+    }
+
+    return tooltip;
+  }
+
+  takeAction() {
+    if (appState.zone == null) {
+    } else {
+      switch (appState.zone!.state) {
+        case PlayState.playing:
+          control(control: Control.pause);
+          break;
+        case PlayState.paused:
+        case PlayState.stopped:
+          control(control: Control.play);
+          break;
+        case PlayState.loading:
+          break;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: FloatingActionButton(
+        onPressed: () {
+          takeAction();
+        },
+        tooltip: getTooltip(),
+        child: getIcon(),
       ),
     );
   }
@@ -472,8 +555,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
               case BrowseItemHint.action:
                 break;
               case BrowseItemHint.actionList:
-                // Take "Play Now" as default action, at least for now
-                appState.pendingAction = "Play Now";
+                appState.takeDefaultAction = true;
                 break;
               default:
                 Navigator.pushNamed(context, appState.browseItems!.list.level.toString());

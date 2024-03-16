@@ -189,6 +189,42 @@ fn wire_browse_with_input_impl(
         },
     )
 }
+fn wire_control_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "control",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_control =
+                <crate::api::roon_transport_mirror::Control>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::control(api_control).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_image_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -420,6 +456,9 @@ pub struct mirror_BrowseList(crate::api::roon_browse_mirror::BrowseList);
 
 #[derive(Clone)]
 pub struct mirror_BrowseListHint(crate::api::roon_browse_mirror::BrowseListHint);
+
+#[derive(Clone)]
+pub struct mirror_Control(crate::api::roon_transport_mirror::Control);
 
 #[derive(Clone)]
 pub struct mirror_InputPrompt(crate::api::roon_browse_mirror::InputPrompt);
@@ -705,6 +744,22 @@ impl SseDecode for crate::api::roon_browse_mirror::BrowseListHint {
             0 => crate::api::roon_browse_mirror::BrowseListHint::None,
             1 => crate::api::roon_browse_mirror::BrowseListHint::ActionList,
             _ => unreachable!("Invalid variant for BrowseListHint: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::roon_transport_mirror::Control {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::roon_transport_mirror::Control::Play,
+            1 => crate::api::roon_transport_mirror::Control::Pause,
+            2 => crate::api::roon_transport_mirror::Control::PlayPause,
+            3 => crate::api::roon_transport_mirror::Control::Stop,
+            4 => crate::api::roon_transport_mirror::Control::Previous,
+            5 => crate::api::roon_transport_mirror::Control::Next,
+            _ => unreachable!("Invalid variant for Control: {}", inner),
         };
     }
 }
@@ -1329,6 +1384,7 @@ fn pde_ffi_dispatcher_primary_impl(
         8 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
         7 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_browse_with_input_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire_control_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
         10 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
@@ -1455,6 +1511,27 @@ impl flutter_rust_bridge::IntoIntoDart<mirror_BrowseListHint>
 {
     fn into_into_dart(self) -> mirror_BrowseListHint {
         mirror_BrowseListHint(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_Control {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::api::roon_transport_mirror::Control::Play => 0.into_dart(),
+            crate::api::roon_transport_mirror::Control::Pause => 1.into_dart(),
+            crate::api::roon_transport_mirror::Control::PlayPause => 2.into_dart(),
+            crate::api::roon_transport_mirror::Control::Stop => 3.into_dart(),
+            crate::api::roon_transport_mirror::Control::Previous => 4.into_dart(),
+            crate::api::roon_transport_mirror::Control::Next => 5.into_dart(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_Control {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_Control>
+    for crate::api::roon_transport_mirror::Control
+{
+    fn into_into_dart(self) -> mirror_Control {
+        mirror_Control(self)
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -1907,6 +1984,26 @@ impl SseEncode for crate::api::roon_browse_mirror::BrowseListHint {
             match self {
                 crate::api::roon_browse_mirror::BrowseListHint::None => 0,
                 crate::api::roon_browse_mirror::BrowseListHint::ActionList => 1,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::roon_transport_mirror::Control {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::roon_transport_mirror::Control::Play => 0,
+                crate::api::roon_transport_mirror::Control::Pause => 1,
+                crate::api::roon_transport_mirror::Control::PlayPause => 2,
+                crate::api::roon_transport_mirror::Control::Stop => 3,
+                crate::api::roon_transport_mirror::Control::Previous => 4,
+                crate::api::roon_transport_mirror::Control::Next => 5,
                 _ => {
                     unimplemented!("");
                 }

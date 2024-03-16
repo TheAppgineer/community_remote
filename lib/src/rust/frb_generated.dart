@@ -79,6 +79,8 @@ abstract class RustLibApi extends BaseApi {
       String? input,
       dynamic hint});
 
+  Future<void> control({required Control control, dynamic hint});
+
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -211,6 +213,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kBrowseWithInputConstMeta => const TaskConstMeta(
         debugName: "browse_with_input",
         argNames: ["category", "sessionId", "input"],
+      );
+
+  @override
+  Future<void> control({required Control control, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_control(control, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 11, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kControlConstMeta,
+      argValues: [control],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kControlConstMeta => const TaskConstMeta(
+        debugName: "control",
+        argNames: ["control"],
       );
 
   @override
@@ -556,6 +583,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BrowseListHint dco_decode_browse_list_hint(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return BrowseListHint.values[raw as int];
+  }
+
+  @protected
+  Control dco_decode_control(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return Control.values[raw as int];
   }
 
   @protected
@@ -1126,6 +1159,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return BrowseListHint.values[inner];
+  }
+
+  @protected
+  Control sse_decode_control(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return Control.values[inner];
   }
 
   @protected
@@ -1790,6 +1830,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_browse_list_hint(
       BrowseListHint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_control(Control self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
   }

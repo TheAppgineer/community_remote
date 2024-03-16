@@ -2,8 +2,18 @@ pub use roon_api::transport::Settings as ZoneSettings;
 pub use roon_api::transport::State as PlayState;
 pub use roon_api::transport::{
     volume::{Scale, Volume},
-    NowPlaying, OneLine, Output, Repeat, SourceControls, Status, ThreeLine, TwoLine, Zone,
+    Control, NowPlaying, OneLine, Output, Repeat, SourceControls, Status, ThreeLine, TwoLine, Zone,
 };
+
+#[flutter_rust_bridge::frb(mirror(Control))]
+pub enum _Control {
+    Play,
+    Pause,
+    PlayPause,
+    Stop,
+    Previous,
+    Next,
+}
 
 #[flutter_rust_bridge::frb(mirror(Scale))]
 pub enum _Scale {

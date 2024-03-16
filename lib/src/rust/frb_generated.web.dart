@@ -90,6 +90,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BrowseListHint dco_decode_browse_list_hint(dynamic raw);
 
   @protected
+  Control dco_decode_control(dynamic raw);
+
+  @protected
   double dco_decode_f_32(dynamic raw);
 
   @protected
@@ -286,6 +289,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BrowseListHint sse_decode_browse_list_hint(SseDeserializer deserializer);
+
+  @protected
+  Control sse_decode_control(SseDeserializer deserializer);
 
   @protected
   double sse_decode_f_32(SseDeserializer deserializer);
@@ -500,6 +506,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_browse_list_hint(
       BrowseListHint self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_control(Control self, SseSerializer serializer);
 
   @protected
   void sse_encode_f_32(double self, SseSerializer serializer);

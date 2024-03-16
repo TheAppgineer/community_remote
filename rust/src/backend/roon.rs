@@ -1,3 +1,4 @@
+use rand::Rng;
 use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
@@ -6,7 +7,7 @@ use roon_api::{
     browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
     info,
-    transport::{Transport, Zone},
+    transport::{Control, State, Transport, Zone},
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
 use serde_json::Value;
@@ -21,6 +22,10 @@ use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 const CONFIG_PATH: &str = "config.json";
 const BROWSE_PAGE_SIZE: usize = 20;
 
+const PLAY_NOW: &str = "Play Now";
+const ADD_NEXT: &str = "Add Next";
+const QUEUE: &str = "Queue";
+
 pub struct Roon {
     handler: Arc<Mutex<RoonHandler>>,
 }
@@ -28,17 +33,18 @@ pub struct Roon {
 struct RoonHandler {
     event_tx: Sender<RoonEvent>,
     browse: Option<Browse>,
-    browse_id: Option<String>,
-    browse_offset: usize,
-    browse_total: usize,
-    browse_level: u32,
     image: Option<Image>,
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
     zone_id: Option<String>,
+    browse_id: Option<String>,
     browse_path: HashMap<String, Vec<&'static str>>,
     browse_category: i32,
     browse_input: Option<String>,
+    browse_offset: usize,
+    browse_total: usize,
+    browse_level: u32,
+    pop_levels: Option<u32>,
 }
 
 impl Roon {
@@ -153,21 +159,27 @@ impl Roon {
     }
 
     pub async fn select_browse_item(&self, session_id: i32, item: BrowseItem) -> Option<()> {
+        let item_key = item.item_key.as_deref()?;
         let multi_session_key = Some(session_id.to_string());
-        let mut handler = self.handler.lock().await;
-        let mut opts = BrowseOpts {
-            item_key: item.item_key,
-            multi_session_key,
-            set_display_offset: Some(0),
-            ..Default::default()
-        };
 
-        if item.hint == Some(BrowseItemHint::Action) {
-            opts.zone_or_output_id = handler.zone_id.to_owned();
+        if item_key.contains("random") {
+            self.handle_random_item(multi_session_key, &item).await;
+        } else {
+            let mut handler = self.handler.lock().await;
+            let mut opts = BrowseOpts {
+                item_key: item.item_key,
+                multi_session_key,
+                set_display_offset: Some(0),
+                ..Default::default()
+            };
+
+            if item.hint == Some(BrowseItemHint::Action) {
+                opts.zone_or_output_id = handler.zone_id.to_owned();
+            }
+
+            handler.browse_offset = 0;
+            handler.browse.as_ref()?.browse(&opts).await;
         }
-
-        handler.browse_offset = 0;
-        handler.browse.as_ref()?.browse(&opts).await;
 
         Some(())
     }
@@ -181,7 +193,7 @@ impl Roon {
             let opts = LoadOpts {
                 count: Some(BROWSE_PAGE_SIZE),
                 offset: handler.browse_offset,
-                multi_session_key: handler.browse_id.clone(),
+                multi_session_key: handler.browse_id.to_owned(),
                 set_display_offset: handler.browse_offset,
                 ..Default::default()
             };
@@ -201,7 +213,7 @@ impl Roon {
         if handler.browse_level > 0 {
             handler.browse_offset = 0;
 
-            let browse = handler.browse.as_ref();
+            let browse = handler.browse.as_ref()?;
             let multi_session_key = Some(session_id.to_string());
             let opts = BrowseOpts {
                 multi_session_key,
@@ -210,7 +222,7 @@ impl Roon {
                 ..Default::default()
             };
 
-            browse.as_ref()?.browse(&opts).await;
+            browse.browse(&opts).await;
         }
 
         Some(())
@@ -229,6 +241,99 @@ impl Roon {
             .await
             .unwrap();
     }
+
+    pub async fn control(&self, control: &Control) -> Option<()> {
+        let handler = self.handler.lock().await;
+        let zone_id = handler.zone_id.as_deref()?;
+        let zone = handler.zone_map.get(zone_id)?;
+
+        let allowed = match control {
+            Control::Play => zone.is_play_allowed,
+            Control::Pause => zone.is_pause_allowed,
+            Control::PlayPause => {
+                zone.is_play_allowed || zone.is_pause_allowed || zone.state == State::Stopped
+            }
+            Control::Stop => zone.state == State::Playing || zone.state == State::Paused,
+            Control::Next => zone.is_next_allowed,
+            Control::Previous => zone.is_previous_allowed,
+        };
+
+        if allowed {
+            handler.transport.as_ref()?.control(zone_id, control).await;
+        }
+
+        Some(())
+    }
+
+    async fn handle_random_item(
+        &self,
+        multi_session_key: Option<String>,
+        item: &BrowseItem,
+    ) -> Option<()> {
+        let mut handler = self.handler.lock().await;
+        let item_key = item.item_key.as_deref()?;
+
+        if item.hint == Some(BrowseItemHint::ActionList) {
+            let actions = vec![
+                BrowseItem {
+                    title: "Play Now".to_owned(),
+                    item_key: Some(format!("{}_playnow", item_key)),
+                    hint: Some(BrowseItemHint::Action),
+                    ..Default::default()
+                },
+                BrowseItem {
+                    title: "Add Next".to_owned(),
+                    item_key: Some(format!("{}_addnext", item_key)),
+                    hint: Some(BrowseItemHint::Action),
+                    ..Default::default()
+                },
+                BrowseItem {
+                    title: "Queue".to_owned(),
+                    item_key: Some(format!("{}_queue", item_key)),
+                    hint: Some(BrowseItemHint::Action),
+                    ..Default::default()
+                },
+            ];
+
+            handler
+                .event_tx
+                .send(RoonEvent::BrowseActions(actions))
+                .await
+                .unwrap();
+        } else {
+            // random_item_key = "random_<type>_<item_key>_<action>"
+            let fields = item_key.split('_').collect::<Vec<_>>();
+
+            if fields.len() == 4 {
+                let item_key = fields.get(2).map(|item_key| item_key.to_string());
+                let mut path = vec![match *fields.get(3)? {
+                    "playnow" => PLAY_NOW,
+                    "addnext" => ADD_NEXT,
+                    "queue" => QUEUE,
+                    _ => PLAY_NOW,
+                }];
+
+                if fields[1] == "Album" {
+                    path.push("Play Album")
+                }
+
+                handler.browse_offset = 0;
+                handler
+                    .browse_path
+                    .insert(multi_session_key.as_ref()?.to_owned(), path);
+
+                let opts = BrowseOpts {
+                    item_key,
+                    multi_session_key,
+                    ..Default::default()
+                };
+
+                handler.browse.as_ref()?.browse(&opts).await;
+            }
+        }
+
+        Some(())
+    }
 }
 
 impl RoonHandler {
@@ -236,17 +341,18 @@ impl RoonHandler {
         Self {
             event_tx,
             browse: None,
-            browse_id: None,
-            browse_offset: 0,
-            browse_total: 0,
-            browse_level: 0,
             image: None,
             transport: None,
             zone_map: HashMap::new(),
             zone_id: None,
+            browse_id: None,
             browse_path: HashMap::new(),
             browse_category: 0,
             browse_input: None,
+            browse_offset: 0,
+            browse_total: 0,
+            browse_level: 0,
+            pop_levels: None,
         }
     }
 
@@ -310,21 +416,30 @@ impl RoonHandler {
                 }
                 Parsed::BrowseResult(result, multi_session_key) => match result.action {
                     BrowseAction::List => {
-                        let offset = self.browse_offset;
-                        let opts = LoadOpts {
-                            count: Some(20),
-                            offset,
-                            multi_session_key,
-                            set_display_offset: offset,
-                            ..Default::default()
-                        };
+                        if self.pop_levels.is_some() {
+                            let opts = BrowseOpts {
+                                multi_session_key,
+                                pop_levels: self.pop_levels.take(),
+                                ..Default::default()
+                            };
+                            self.browse.as_ref()?.browse(&opts).await;
+                        } else {
+                            let offset = self.browse_offset;
+                            let opts = LoadOpts {
+                                count: Some(20),
+                                offset,
+                                multi_session_key,
+                                set_display_offset: offset,
+                                ..Default::default()
+                            };
 
-                        if result.list.as_ref()?.title == "Explore" {
-                            self.browse_category = 0;
+                            if result.list.as_ref()?.title == "Explore" {
+                                self.browse_category = 0;
+                            }
+
+                            self.browse_level = result.list.as_ref()?.level;
+                            self.browse.as_ref()?.load(&opts).await;
                         }
-
-                        self.browse_level = result.list.as_ref()?.level;
-                        self.browse.as_ref()?.load(&opts).await;
                     }
                     _ => {}
                 },
@@ -338,19 +453,27 @@ impl RoonHandler {
                             } else {
                                 None
                             };
-                            let item_key = result.items.iter().find_map(|item| {
-                                if item.title == *category {
-                                    item.item_key.as_ref()
+                            let item = result.items.iter().find(|item| item.title == *category)?;
+                            let (zone_id, pop_levels) = if item.hint == Some(BrowseItemHint::Action)
+                            {
+                                if result.list.title == "Play Album" {
+                                    (self.zone_id.as_ref(), Some(1))
                                 } else {
-                                    None
+                                    (self.zone_id.as_ref(), None)
                                 }
-                            });
+                            } else {
+                                (None, None)
+                            };
+
                             self.browse_offset = 0;
+                            self.pop_levels = pop_levels;
+
                             let opts = BrowseOpts {
                                 input,
-                                item_key: item_key.cloned(),
+                                item_key: item.item_key.to_owned(),
                                 multi_session_key,
                                 set_display_offset: Some(self.browse_offset),
+                                zone_or_output_id: zone_id.cloned(),
                                 ..Default::default()
                             };
 
@@ -369,15 +492,25 @@ impl RoonHandler {
                             RoonEvent::BrowseActions(result.items)
                         } else {
                             let new_offset = result.offset + result.items.len();
+                            let title = result.list.title.to_owned();
 
                             self.browse_id = multi_session_key;
                             self.browse_offset = new_offset;
                             self.browse_total = result.list.count;
 
+                            let mut items = result.items;
+
+                            if result.offset == 0 && (title == "Albums" || title == "Tracks") {
+                                let len = title.len() - 1;
+                                let title = &title[..len];
+
+                                items = self.prepend_random_play_entry(title, &items)?;
+                            }
+
                             let browse_items = BrowseItems {
                                 list: result.list,
                                 offset: result.offset,
-                                items: result.items,
+                                items,
                             };
 
                             RoonEvent::BrowseItems(browse_items)
@@ -433,5 +566,24 @@ impl RoonHandler {
             .send(RoonEvent::ZonesChanged(zones))
             .await
             .unwrap();
+    }
+
+    fn prepend_random_play_entry(
+        &self,
+        title: &str,
+        items: &[BrowseItem],
+    ) -> Option<Vec<BrowseItem>> {
+        let offset = rand::thread_rng().gen_range(0..self.browse_total);
+        let item_key = items.get(0)?.item_key.as_deref()?.split(':').next()?;
+        let item_key = format!("{}:{}", item_key, offset);
+        let item = BrowseItem {
+            title: format!("Pick Random {title}"),
+            subtitle: Some(format!("From a Total of {}", self.browse_total)),
+            item_key: Some(format!("random_{}_{}", title, item_key)),
+            hint: Some(BrowseItemHint::ActionList),
+            ..Default::default()
+        };
+
+        Some([&[item], items].concat())
     }
 }

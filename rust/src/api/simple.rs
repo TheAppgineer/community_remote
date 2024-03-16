@@ -3,7 +3,7 @@ use once_cell::sync::Lazy;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::List as BrowseList;
 use roon_api::transport::State as PlayState;
-use roon_api::transport::Zone;
+use roon_api::transport::{Control, Zone};
 use tokio::sync::Mutex;
 
 use crate::backend::roon::Roon;
@@ -136,5 +136,13 @@ pub async fn save_settings(settings: String) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.save(settings).await;
+    }
+}
+
+pub async fn control(control: Control) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.control(&control).await;
     }
 }
