@@ -438,6 +438,16 @@ impl RoonHandler {
 
                     self.send_zone_list().await;
                 }
+                Parsed::ZonesSeek(seeks) => {
+                    let seek = seeks
+                        .iter()
+                        .find(|seek| Some(&seek.zone_id) == self.zone_id.as_ref())?;
+
+                    self.event_tx
+                        .send(RoonEvent::ZoneSeek(seek.to_owned()))
+                        .await
+                        .unwrap();
+                }
                 Parsed::BrowseResult(result, multi_session_key) => match result.action {
                     BrowseAction::List => {
                         if self.pop_levels.is_some() {
@@ -509,7 +519,7 @@ impl RoonHandler {
                         self.browse_path.remove(key);
                     }
 
-                    if result.list.title == "Explore" || result.list.title == "Library" {
+                    if result.list.title == "Explore" {
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
                         let event = if result.list.hint == Some(BrowseListHint::ActionList) {

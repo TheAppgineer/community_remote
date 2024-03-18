@@ -3,6 +3,7 @@ use once_cell::sync::Lazy;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::List as BrowseList;
 use roon_api::transport::State as PlayState;
+use roon_api::transport::ZoneSeek;
 use roon_api::transport::{Control, QueueItem, Zone};
 use simplelog::{format_description, ColorChoice, ConfigBuilder, TermLogger, TerminalMode};
 use time::UtcOffset;
@@ -17,6 +18,7 @@ pub enum RoonEvent {
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
     ZoneChanged(Zone),
+    ZoneSeek(ZoneSeek),
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,

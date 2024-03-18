@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/frontend/browse.dart';
+import 'package:community_remote/src/frontend/now_playing.dart';
 import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
@@ -66,7 +67,7 @@ class MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
-              flex: 8,
+              flex: 1,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -90,10 +91,7 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            const Expanded(
-              flex: 2,
-              child: NowPlayingWidget(),
-            ),
+            const NowPlayingWidget(),
           ],
         ),
       ),
@@ -278,7 +276,7 @@ class Zones extends StatelessWidget {
     if (zones != null) {
       ListTile itemBuilder(context, index) {
         var imageKey = zones[index].imageKey;
-        Image? image = getImageFromCache(imageKey, appState.imageCache);
+        Image? image = appState.getImageFromCache(imageKey);
         Icon? playState;
         Text? metaData;
 
@@ -328,76 +326,6 @@ class Zones extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(10),
       child: listView,
-    );
-  }
-}
-
-class NowPlayingWidget extends StatelessWidget {
-  const NowPlayingWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    ListTile child = const ListTile(
-      title: Text('Go find something to play'),
-    );
-
-    if (appState.zone != null && appState.zone!.nowPlaying != null) {
-      NowPlaying nowPlaying = appState.zone!.nowPlaying!;
-      Widget? leading;
-      Image? image = getImageFromCache(nowPlaying.imageKey, appState.imageCache);
-
-      if (image != null) {
-        leading = Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            image,
-            const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
-          ],
-        );
-      } else {
-        leading = const Padding(padding: EdgeInsets.fromLTRB(58, 0, 0, 0));
-      }
-
-      child = ListTile(
-        leading: leading,
-        title: Text(nowPlaying.threeLine.line1),
-        subtitle: Text('${nowPlaying.threeLine.line2}\n${nowPlaying.threeLine.line3}'),
-        isThreeLine: true,
-      );
-    }
-
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 1,
-              child: child,
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-
-              },
-              icon: const Icon(Icons.speaker_outlined),
-              label: const Text('Zones'),
-            ),
-            const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
-            ElevatedButton.icon(
-              onPressed: () {
-
-              },
-              icon: const Icon(Icons.volume_up),
-              label: const Text('Volume'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

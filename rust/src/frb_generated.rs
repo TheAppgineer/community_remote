@@ -540,6 +540,9 @@ pub struct mirror_Volume(crate::api::roon_transport_mirror::Volume);
 pub struct mirror_Zone(crate::api::roon_transport_mirror::Zone);
 
 #[derive(Clone)]
+pub struct mirror_ZoneSeek(crate::api::roon_transport_mirror::ZoneSeek);
+
+#[derive(Clone)]
 pub struct mirror_ZoneSettings(crate::api::roon_transport_mirror::ZoneSettings);
 
 // Section: static_checks
@@ -650,6 +653,12 @@ const _: fn() = || {
         let _: i64 = Zone.queue_time_remaining;
         let _: Option<crate::api::roon_transport_mirror::NowPlaying> = Zone.now_playing;
         let _: crate::api::roon_transport_mirror::ZoneSettings = Zone.settings;
+    }
+    {
+        let ZoneSeek = None::<crate::api::roon_transport_mirror::ZoneSeek>.unwrap();
+        let _: String = ZoneSeek.zone_id;
+        let _: i64 = ZoneSeek.queue_time_remaining;
+        let _: Option<i64> = ZoneSeek.seek_position;
     }
     {
         let ZoneSettings = None::<crate::api::roon_transport_mirror::ZoneSettings>.unwrap();
@@ -1240,27 +1249,32 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::ZoneChanged(var_field0);
             }
             4 => {
+                let mut var_field0 =
+                    <crate::api::roon_transport_mirror::ZoneSeek>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::ZoneSeek(var_field0);
+            }
+            5 => {
                 let mut var_field0 = <crate::api::simple::BrowseItems>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::BrowseItems(var_field0);
             }
-            5 => {
+            6 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::BrowseActions(var_field0);
             }
-            6 => {
+            7 => {
                 return crate::api::simple::RoonEvent::BrowseReset;
             }
-            7 => {
+            8 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::QueueItems(var_field0);
             }
-            8 => {
+            9 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            9 => {
+            10 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
             _ => {
@@ -1425,6 +1439,20 @@ impl SseDecode for crate::api::roon_transport_mirror::Zone {
             queue_time_remaining: var_queueTimeRemaining,
             now_playing: var_nowPlaying,
             settings: var_settings,
+        };
+    }
+}
+
+impl SseDecode for crate::api::roon_transport_mirror::ZoneSeek {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_zoneId = <String>::sse_decode(deserializer);
+        let mut var_queueTimeRemaining = <i64>::sse_decode(deserializer);
+        let mut var_seekPosition = <Option<i64>>::sse_decode(deserializer);
+        return crate::api::roon_transport_mirror::ZoneSeek {
+            zone_id: var_zoneId,
+            queue_time_remaining: var_queueTimeRemaining,
+            seek_position: var_seekPosition,
         };
     }
 }
@@ -1804,20 +1832,23 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::ZoneChanged(field0) => {
                 [3.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+            crate::api::simple::RoonEvent::ZoneSeek(field0) => {
                 [4.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseActions(field0) => {
+            crate::api::simple::RoonEvent::BrowseItems(field0) => {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseReset => [6.into_dart()].into_dart(),
-            crate::api::simple::RoonEvent::QueueItems(field0) => {
-                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            crate::api::simple::RoonEvent::BrowseActions(field0) => {
+                [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::BrowseReset => [7.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
                 [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [9.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Image(field0) => {
+                [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::SettingsSaved => [10.into_dart()].into_dart(),
         }
     }
 }
@@ -1971,6 +2002,25 @@ impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_Zone
 impl flutter_rust_bridge::IntoIntoDart<mirror_Zone> for crate::api::roon_transport_mirror::Zone {
     fn into_into_dart(self) -> mirror_Zone {
         mirror_Zone(self)
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for mirror_ZoneSeek {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.zone_id.into_into_dart().into_dart(),
+            self.0.queue_time_remaining.into_into_dart().into_dart(),
+            self.0.seek_position.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for mirror_ZoneSeek {}
+impl flutter_rust_bridge::IntoIntoDart<mirror_ZoneSeek>
+    for crate::api::roon_transport_mirror::ZoneSeek
+{
+    fn into_into_dart(self) -> mirror_ZoneSeek {
+        mirror_ZoneSeek(self)
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -2471,27 +2521,31 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(3, serializer);
                 <crate::api::roon_transport_mirror::Zone>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+            crate::api::simple::RoonEvent::ZoneSeek(field0) => {
                 <i32>::sse_encode(4, serializer);
+                <crate::api::roon_transport_mirror::ZoneSeek>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+                <i32>::sse_encode(5, serializer);
                 <crate::api::simple::BrowseItems>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseActions(field0) => {
-                <i32>::sse_encode(5, serializer);
+                <i32>::sse_encode(6, serializer);
                 <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseReset => {
-                <i32>::sse_encode(6, serializer);
+                <i32>::sse_encode(7, serializer);
             }
             crate::api::simple::RoonEvent::QueueItems(field0) => {
-                <i32>::sse_encode(7, serializer);
+                <i32>::sse_encode(8, serializer);
                 <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::Image(field0) => {
-                <i32>::sse_encode(8, serializer);
+                <i32>::sse_encode(9, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(9, serializer);
+                <i32>::sse_encode(10, serializer);
             }
         }
     }
@@ -2622,6 +2676,15 @@ impl SseEncode for crate::api::roon_transport_mirror::Zone {
             serializer,
         );
         <crate::api::roon_transport_mirror::ZoneSettings>::sse_encode(self.settings, serializer);
+    }
+}
+
+impl SseEncode for crate::api::roon_transport_mirror::ZoneSeek {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.zone_id, serializer);
+        <i64>::sse_encode(self.queue_time_remaining, serializer);
+        <Option<i64>>::sse_encode(self.seek_position, serializer);
     }
 }
 

@@ -75,6 +75,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Zone dco_decode_box_autoadd_zone(dynamic raw);
 
   @protected
+  ZoneSeek dco_decode_box_autoadd_zone_seek(dynamic raw);
+
+  @protected
   BrowseItem dco_decode_browse_item(dynamic raw);
 
   @protected
@@ -222,6 +225,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Zone dco_decode_zone(dynamic raw);
 
   @protected
+  ZoneSeek dco_decode_zone_seek(dynamic raw);
+
+  @protected
   ZoneSettings dco_decode_zone_settings(dynamic raw);
 
   @protected
@@ -280,6 +286,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Zone sse_decode_box_autoadd_zone(SseDeserializer deserializer);
+
+  @protected
+  ZoneSeek sse_decode_box_autoadd_zone_seek(SseDeserializer deserializer);
 
   @protected
   BrowseItem sse_decode_browse_item(SseDeserializer deserializer);
@@ -435,6 +444,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Zone sse_decode_zone(SseDeserializer deserializer);
 
   @protected
+  ZoneSeek sse_decode_zone_seek(SseDeserializer deserializer);
+
+  @protected
   ZoneSettings sse_decode_zone_settings(SseDeserializer deserializer);
 
   @protected
@@ -501,6 +513,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_zone(Zone self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_zone_seek(
+      ZoneSeek self, SseSerializer serializer);
 
   @protected
   void sse_encode_browse_item(BrowseItem self, SseSerializer serializer);
@@ -662,6 +678,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_zone(Zone self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_zone_seek(ZoneSeek self, SseSerializer serializer);
 
   @protected
   void sse_encode_zone_settings(ZoneSettings self, SseSerializer serializer);

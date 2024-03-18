@@ -555,6 +555,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ZoneSeek dco_decode_box_autoadd_zone_seek(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_zone_seek(raw);
+  }
+
+  @protected
   BrowseItem dco_decode_browse_item(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -875,24 +881,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_box_autoadd_zone(raw[1]),
         );
       case 4:
+        return RoonEvent_ZoneSeek(
+          dco_decode_box_autoadd_zone_seek(raw[1]),
+        );
+      case 5:
         return RoonEvent_BrowseItems(
           dco_decode_box_autoadd_browse_items(raw[1]),
         );
-      case 5:
+      case 6:
         return RoonEvent_BrowseActions(
           dco_decode_list_browse_item(raw[1]),
         );
-      case 6:
-        return RoonEvent_BrowseReset();
       case 7:
+        return RoonEvent_BrowseReset();
+      case 8:
         return RoonEvent_QueueItems(
           dco_decode_list_queue_item(raw[1]),
         );
-      case 8:
+      case 9:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 9:
+      case 10:
         return RoonEvent_SettingsSaved();
       default:
         throw Exception("unreachable");
@@ -1013,6 +1023,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       queueTimeRemaining: dco_decode_i_64(arr[10]),
       nowPlaying: dco_decode_opt_box_autoadd_now_playing(arr[11]),
       settings: dco_decode_zone_settings(arr[12]),
+    );
+  }
+
+  @protected
+  ZoneSeek dco_decode_zone_seek(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return ZoneSeek(
+      zoneId: dco_decode_String(arr[0]),
+      queueTimeRemaining: dco_decode_i_64(arr[1]),
+      seekPosition: dco_decode_opt_box_autoadd_i_64(arr[2]),
     );
   }
 
@@ -1151,6 +1174,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Zone sse_decode_box_autoadd_zone(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_zone(deserializer));
+  }
+
+  @protected
+  ZoneSeek sse_decode_box_autoadd_zone_seek(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_zone_seek(deserializer));
   }
 
   @protected
@@ -1585,20 +1614,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_box_autoadd_zone(deserializer);
         return RoonEvent_ZoneChanged(var_field0);
       case 4:
+        var var_field0 = sse_decode_box_autoadd_zone_seek(deserializer);
+        return RoonEvent_ZoneSeek(var_field0);
+      case 5:
         var var_field0 = sse_decode_box_autoadd_browse_items(deserializer);
         return RoonEvent_BrowseItems(var_field0);
-      case 5:
+      case 6:
         var var_field0 = sse_decode_list_browse_item(deserializer);
         return RoonEvent_BrowseActions(var_field0);
-      case 6:
-        return RoonEvent_BrowseReset();
       case 7:
+        return RoonEvent_BrowseReset();
+      case 8:
         var var_field0 = sse_decode_list_queue_item(deserializer);
         return RoonEvent_QueueItems(var_field0);
-      case 8:
+      case 9:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 9:
+      case 10:
         return RoonEvent_SettingsSaved();
       default:
         throw UnimplementedError('');
@@ -1727,6 +1759,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         queueTimeRemaining: var_queueTimeRemaining,
         nowPlaying: var_nowPlaying,
         settings: var_settings);
+  }
+
+  @protected
+  ZoneSeek sse_decode_zone_seek(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_zoneId = sse_decode_String(deserializer);
+    var var_queueTimeRemaining = sse_decode_i_64(deserializer);
+    var var_seekPosition = sse_decode_opt_box_autoadd_i_64(deserializer);
+    return ZoneSeek(
+        zoneId: var_zoneId,
+        queueTimeRemaining: var_queueTimeRemaining,
+        seekPosition: var_seekPosition);
   }
 
   @protected
@@ -1873,6 +1917,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_box_autoadd_zone(Zone self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_zone(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_zone_seek(
+      ZoneSeek self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_zone_seek(self, serializer);
   }
 
   @protected
@@ -2232,22 +2283,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_ZoneChanged(field0: final field0):
         sse_encode_i_32(3, serializer);
         sse_encode_box_autoadd_zone(field0, serializer);
-      case RoonEvent_BrowseItems(field0: final field0):
+      case RoonEvent_ZoneSeek(field0: final field0):
         sse_encode_i_32(4, serializer);
+        sse_encode_box_autoadd_zone_seek(field0, serializer);
+      case RoonEvent_BrowseItems(field0: final field0):
+        sse_encode_i_32(5, serializer);
         sse_encode_box_autoadd_browse_items(field0, serializer);
       case RoonEvent_BrowseActions(field0: final field0):
-        sse_encode_i_32(5, serializer);
+        sse_encode_i_32(6, serializer);
         sse_encode_list_browse_item(field0, serializer);
       case RoonEvent_BrowseReset():
-        sse_encode_i_32(6, serializer);
-      case RoonEvent_QueueItems(field0: final field0):
         sse_encode_i_32(7, serializer);
+      case RoonEvent_QueueItems(field0: final field0):
+        sse_encode_i_32(8, serializer);
         sse_encode_list_queue_item(field0, serializer);
       case RoonEvent_Image(field0: final field0):
-        sse_encode_i_32(8, serializer);
+        sse_encode_i_32(9, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
-        sse_encode_i_32(9, serializer);
+        sse_encode_i_32(10, serializer);
     }
   }
 
@@ -2341,6 +2395,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_64(self.queueTimeRemaining, serializer);
     sse_encode_opt_box_autoadd_now_playing(self.nowPlaying, serializer);
     sse_encode_zone_settings(self.settings, serializer);
+  }
+
+  @protected
+  void sse_encode_zone_seek(ZoneSeek self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.zoneId, serializer);
+    sse_encode_i_64(self.queueTimeRemaining, serializer);
+    sse_encode_opt_box_autoadd_i_64(self.seekPosition, serializer);
   }
 
   @protected

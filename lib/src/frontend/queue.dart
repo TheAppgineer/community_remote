@@ -19,7 +19,7 @@ class Queue extends StatelessWidget {
 
       ListTile itemBuilder(context, index) {
         Widget? leading;
-        Image? image = getImageFromCache(queue[index].imageKey, appState.imageCache);
+        Image? image = appState.getImageFromCache(queue[index].imageKey);
 
         if (image != null) {
           leading = Row(
@@ -37,6 +37,7 @@ class Queue extends StatelessWidget {
           leading: leading,
           title: Text(queue[index].twoLine.line1),
           subtitle: Text(queue[index].twoLine.line2),
+          trailing: Text(appState.getDuration(queue[index].length), style: const TextStyle(fontSize: 14)),
           onTap: () {
             selectQueueItem(queueItemId: queue[index].queueItemId);
           },

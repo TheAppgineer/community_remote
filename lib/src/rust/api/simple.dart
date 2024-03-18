@@ -119,6 +119,9 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.zoneChanged(
     Zone field0,
   ) = RoonEvent_ZoneChanged;
+  const factory RoonEvent.zoneSeek(
+    ZoneSeek field0,
+  ) = RoonEvent_ZoneSeek;
   const factory RoonEvent.browseItems(
     BrowseItems field0,
   ) = RoonEvent_BrowseItems;

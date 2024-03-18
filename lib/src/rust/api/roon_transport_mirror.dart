@@ -374,6 +374,31 @@ class Zone {
           settings == other.settings;
 }
 
+class ZoneSeek {
+  final String zoneId;
+  final int queueTimeRemaining;
+  final int? seekPosition;
+
+  const ZoneSeek({
+    required this.zoneId,
+    required this.queueTimeRemaining,
+    this.seekPosition,
+  });
+
+  @override
+  int get hashCode =>
+      zoneId.hashCode ^ queueTimeRemaining.hashCode ^ seekPosition.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ZoneSeek &&
+          runtimeType == other.runtimeType &&
+          zoneId == other.zoneId &&
+          queueTimeRemaining == other.queueTimeRemaining &&
+          seekPosition == other.seekPosition;
+}
+
 class ZoneSettings {
   final Repeat repeat;
   final bool shuffle;

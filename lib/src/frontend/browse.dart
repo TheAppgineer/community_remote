@@ -99,6 +99,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
         appState.settings["view"] = value;
         Navigator.of(context).popUntil(ModalRoute.withName('-'));
         saveSettings(settings: jsonEncode(appState.settings));
+        _controller.jumpTo(0);
       }
     }
 
@@ -110,21 +111,23 @@ class _BrowseLevelState extends State<BrowseLevel> {
       var subtitle = appState.browseItems!.list.subtitle;
       var imageKey = appState.browseItems!.list.imageKey;
 
-      if (subtitle != null) {
+      if (subtitle != null && subtitle.isNotEmpty) {
         browseTitle = ListTile(
           title: Text(appState.browseItems!.list.title),
           subtitle: Text(subtitle),
-          trailing: imageKey != null ? getImageFromCache(imageKey, appState.imageCache) : null,
+          trailing: imageKey != null ? appState.getImageFromCache(imageKey) : null,
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
         );
-      } else {
+      } else if (Navigator.of(context).canPop()) {
         browseTitle = Text(appState.browseItems!.list.title);
+      } else {
+        browseTitle = Text(appState.browseItems!.list.title.replaceFirst('My ', ''));
       }
 
       ListTile itemBuilder(context, index) {
         Widget? leading;
         Widget? trailing;
-        Image? image = getImageFromCache(browseList[index].imageKey, appState.imageCache);
+        Image? image = appState.getImageFromCache(browseList[index].imageKey);
         Text? subtitle;
 
         if (image != null) {
@@ -193,7 +196,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
                 appState.takeDefaultAction = true;
                 break;
               default:
-                Navigator.pushNamed(context, appState.browseItems!.list.level.toString());
+                Navigator.of(context).pushNamed(appState.browseItems!.list.level.toString());
                 break;
             }
 

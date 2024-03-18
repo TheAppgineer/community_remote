@@ -18,9 +18,45 @@ class MyAppState extends ChangeNotifier {
   Zone? zone;
   Map<String, Uint8List> imageCache = {};
   late Map<String, dynamic> settings;
+  Function? _progressCallback;
 
   setSettings(settings) {
     this.settings = settings;
+  }
+
+  setProgressCallback(Function(int, int?)? callback) {
+    _progressCallback = callback;
+  }
+
+  Image? getImageFromCache(String? imageKey) {
+    Image? image;
+
+    if (imageKey != null) {
+      var byteList = imageCache[imageKey];
+
+      if (byteList != null) {
+        image = Image.memory(byteList);
+      } else {
+        getImage(imageKey: imageKey, width: 100, height: 100);
+      }
+    }
+
+    return image;
+  }
+
+  String getDuration(int length) {
+    int hours = length ~/ 3600;
+    String minutes = ((length % 3600) ~/ 60).toString();
+    String seconds = (length % 60).toString().padLeft(2, '0');
+    String duration;
+
+    if (hours > 0) {
+      duration = '$hours:${minutes.padLeft(2, '0')}:$seconds';
+    } else {
+      duration = '$minutes:$seconds';
+    }
+
+    return duration;
   }
 
   void cb(event) {
@@ -36,6 +72,22 @@ class MyAppState extends ChangeNotifier {
       zoneList = event.field0;
     } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
+
+      if (_progressCallback != null && (zone!.nowPlaying == null || zone!.nowPlaying!.length == null)) {
+        _progressCallback!(0, null);
+      }
+    } else if (event is RoonEvent_ZoneSeek) {
+      ZoneSeek seek = event.field0;
+
+      if (_progressCallback != null) {
+        if (zone!.nowPlaying != null && zone!.nowPlaying!.length != null) {
+          _progressCallback!(zone!.nowPlaying!.length, seek.seekPosition);
+        } else if (seek.seekPosition != null) {
+          _progressCallback!(0, seek.seekPosition);
+        }
+      }
+
+      return;
     } else if (event is RoonEvent_BrowseItems) {
       if (browseItems == null || event.field0.offset == 0) {
         browseItems = event.field0;
@@ -60,20 +112,4 @@ class MyAppState extends ChangeNotifier {
 
     notifyListeners();
   }
-}
-
-Image? getImageFromCache(String? imageKey, Map<String, Uint8List> imageCache) {
-  Image? image;
-
-  if (imageKey != null) {
-    var byteList = imageCache[imageKey];
-
-    if (byteList != null) {
-      image = Image.memory(byteList);
-    } else {
-      getImage(imageKey: imageKey, width: 100, height: 100);
-    }
-  }
-
-  return image;
 }
