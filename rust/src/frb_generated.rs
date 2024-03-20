@@ -296,6 +296,40 @@ fn wire_init_app_impl(
         },
     )
 }
+fn wire_pause_on_track_end_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "pause_on_track_end",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::pause_on_track_end().await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_save_settings_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1271,10 +1305,14 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::QueueItems(var_field0);
             }
             9 => {
+                let mut var_field0 = <bool>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::PauseOnTrackEnd(var_field0);
+            }
+            10 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            10 => {
+            11 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
             _ => {
@@ -1506,6 +1544,7 @@ fn pde_ffi_dispatcher_primary_impl(
         12 => wire_control_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire_pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
         11 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
         9 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
         10 => wire_select_queue_item_impl(port, ptr, rust_vec_len, data_len),
@@ -1845,10 +1884,13 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::QueueItems(field0) => {
                 [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
                 [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [10.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Image(field0) => {
+                [10.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::SettingsSaved => [11.into_dart()].into_dart(),
         }
     }
 }
@@ -2540,12 +2582,16 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(8, serializer);
                 <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
                 <i32>::sse_encode(9, serializer);
+                <bool>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::Image(field0) => {
+                <i32>::sse_encode(10, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(10, serializer);
+                <i32>::sse_encode(11, serializer);
             }
         }
     }

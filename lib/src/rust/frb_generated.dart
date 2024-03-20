@@ -89,6 +89,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> initApp({dynamic hint});
 
+  Future<void> pauseOnTrackEnd({dynamic hint});
+
   Future<void> saveSettings({required String settings, dynamic hint});
 
   Future<void> selectBrowseItem(
@@ -294,6 +296,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
+        argNames: [],
+      );
+
+  @override
+  Future<void> pauseOnTrackEnd({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 13, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kPauseOnTrackEndConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kPauseOnTrackEndConstMeta => const TaskConstMeta(
+        debugName: "pause_on_track_end",
         argNames: [],
       );
 
@@ -899,10 +925,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_list_queue_item(raw[1]),
         );
       case 9:
+        return RoonEvent_PauseOnTrackEnd(
+          dco_decode_bool(raw[1]),
+        );
+      case 10:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 10:
+      case 11:
         return RoonEvent_SettingsSaved();
       default:
         throw Exception("unreachable");
@@ -1628,9 +1658,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_list_queue_item(deserializer);
         return RoonEvent_QueueItems(var_field0);
       case 9:
+        var var_field0 = sse_decode_bool(deserializer);
+        return RoonEvent_PauseOnTrackEnd(var_field0);
+      case 10:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 10:
+      case 11:
         return RoonEvent_SettingsSaved();
       default:
         throw UnimplementedError('');
@@ -2297,11 +2330,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_QueueItems(field0: final field0):
         sse_encode_i_32(8, serializer);
         sse_encode_list_queue_item(field0, serializer);
-      case RoonEvent_Image(field0: final field0):
+      case RoonEvent_PauseOnTrackEnd(field0: final field0):
         sse_encode_i_32(9, serializer);
+        sse_encode_bool(field0, serializer);
+      case RoonEvent_Image(field0: final field0):
+        sse_encode_i_32(10, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
-        sse_encode_i_32(10, serializer);
+        sse_encode_i_32(11, serializer);
     }
   }
 

@@ -23,6 +23,7 @@ pub enum RoonEvent {
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,
     QueueItems(Vec<QueueItem>),
+    PauseOnTrackEnd(bool),
     Image(ImageKeyValue),
     SettingsSaved,
 }
@@ -175,5 +176,13 @@ pub async fn control(control: Control) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.control(&control).await;
+    }
+}
+
+pub async fn pause_on_track_end() {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.pause_on_track_end().await;
     }
 }

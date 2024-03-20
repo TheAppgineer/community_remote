@@ -3,13 +3,13 @@ use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
 use roon_api::browse::ListHint as BrowseListHint;
-use roon_api::transport::QueueItem;
-use roon_api::transport::QueueOperation;
 use roon_api::{
     browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
     info,
-    transport::{Control, State, Transport, Zone},
+    transport::{
+        volume::Mute, Control, QueueItem, QueueOperation, State, Transport, Zone, ZoneSeek,
+    },
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
 use serde_json::Value;
@@ -48,6 +48,7 @@ struct RoonHandler {
     browse_level: u32,
     pop_levels: Option<u32>,
     queue: Option<Vec<QueueItem>>,
+    pause_on_track_end: bool,
 }
 
 impl Roon {
@@ -288,6 +289,19 @@ impl Roon {
         Some(())
     }
 
+    pub async fn pause_on_track_end(&self) -> Option<()> {
+        let mut handler = self.handler.lock().await;
+
+        handler.pause_on_track_end = true;
+        handler
+            .event_tx
+            .send(RoonEvent::PauseOnTrackEnd(true))
+            .await
+            .unwrap();
+
+        Some(())
+    }
+
     async fn handle_random_item(
         &self,
         multi_session_key: Option<String>,
@@ -377,6 +391,7 @@ impl RoonHandler {
             browse_level: 0,
             pop_levels: None,
             queue: None,
+            pause_on_track_end: false,
         }
     }
 
@@ -414,6 +429,17 @@ impl RoonHandler {
                 }
                 Parsed::Zones(zones) => {
                     let mut curr_zone = None;
+                    let prev_zone_state = if let Some(zone_id) = self.zone_id.as_deref() {
+                        self.zone_map.iter().find_map(|(_, zone)| {
+                            if zone.zone_id.as_str() == zone_id {
+                                Some(zone.to_owned())
+                            } else {
+                                None
+                            }
+                        })
+                    } else {
+                        None
+                    };
 
                     for zone in zones {
                         if Some(&zone.zone_id) == self.zone_id.as_ref() {
@@ -424,9 +450,30 @@ impl RoonHandler {
 
                     self.send_zone_list().await;
 
-                    if curr_zone.is_some() {
+                    if let Some(curr_zone) = curr_zone {
+                        if let Some(prev_zone_state) = prev_zone_state {
+                            if self.pause_on_track_end
+                                && prev_zone_state.state == State::Playing
+                                && curr_zone.state == State::Paused
+                            {
+                                self.pause_on_track_end = false;
+
+                                for output in &curr_zone.outputs {
+                                    self.transport
+                                        .as_ref()?
+                                        .mute(&output.output_id, &Mute::Unmute)
+                                        .await;
+                                }
+
+                                self.event_tx
+                                    .send(RoonEvent::PauseOnTrackEnd(false))
+                                    .await
+                                    .unwrap();
+                            }
+                        }
+
                         self.event_tx
-                            .send(RoonEvent::ZoneChanged(curr_zone?))
+                            .send(RoonEvent::ZoneChanged(curr_zone))
                             .await
                             .unwrap();
                     }
@@ -439,9 +486,10 @@ impl RoonHandler {
                     self.send_zone_list().await;
                 }
                 Parsed::ZonesSeek(seeks) => {
-                    let seek = seeks
-                        .iter()
-                        .find(|seek| Some(&seek.zone_id) == self.zone_id.as_ref())?;
+                    let zone_id = self.zone_id.as_ref()?;
+                    let seek = seeks.iter().find(|seek| &seek.zone_id == zone_id)?;
+
+                    self.handle_pause_on_track_end(seek).await;
 
                     self.event_tx
                         .send(RoonEvent::ZoneSeek(seek.to_owned()))
@@ -630,6 +678,36 @@ impl RoonHandler {
             .send(RoonEvent::ZonesChanged(zones))
             .await
             .unwrap();
+    }
+
+    async fn handle_pause_on_track_end(&mut self, seek: &ZoneSeek) -> Option<()> {
+        let zone_id = self.zone_id.as_deref()?;
+        let zone = self.zone_map.get(zone_id)?;
+
+        if self.pause_on_track_end && zone.state == State::Playing {
+            let now_playing = zone.now_playing.as_ref()?;
+            let length = now_playing.length? as i64;
+
+            if length > 0 {
+                let seek_position = seek.seek_position?;
+
+                if seek_position == length {
+                    for output in &zone.outputs {
+                        self.transport
+                            .as_ref()?
+                            .mute(&output.output_id, &Mute::Mute)
+                            .await;
+                    }
+                } else if seek.seek_position? == 0 {
+                    self.transport
+                        .as_ref()?
+                        .control(&zone.zone_id, &Control::Stop)
+                        .await;
+                }
+            }
+        }
+
+        Some(())
     }
 
     fn prepend_random_play_entry(

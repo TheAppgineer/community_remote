@@ -75,7 +75,11 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         );
 
         if (_length > 0) {
-          progress = '${appState.getDuration(_elapsed)} / ${appState.getDuration(_length)}';
+          if (appState.pauseOnTrackEnd) {
+            progress = appState.getDuration(_length - _elapsed);
+          } else {
+            progress = '${appState.getDuration(_elapsed)} / ${appState.getDuration(_length)}';
+          }
         } else {
           progress = appState.getDuration(_elapsed);
         }

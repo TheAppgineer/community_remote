@@ -60,6 +60,9 @@ Future<void> saveSettings({required String settings, dynamic hint}) =>
 Future<void> control({required Control control, dynamic hint}) =>
     RustLib.instance.api.control(control: control, hint: hint);
 
+Future<void> pauseOnTrackEnd({dynamic hint}) =>
+    RustLib.instance.api.pauseOnTrackEnd(hint: hint);
+
 class BrowseItems {
   final BrowseList list;
   final int offset;
@@ -132,6 +135,9 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.queueItems(
     List<QueueItem> field0,
   ) = RoonEvent_QueueItems;
+  const factory RoonEvent.pauseOnTrackEnd(
+    bool field0,
+  ) = RoonEvent_PauseOnTrackEnd;
   const factory RoonEvent.image(
     ImageKeyValue field0,
   ) = RoonEvent_Image;

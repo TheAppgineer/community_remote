@@ -19,6 +19,7 @@ class MyAppState extends ChangeNotifier {
   Map<String, Uint8List> imageCache = {};
   late Map<String, dynamic> settings;
   Function? _progressCallback;
+  bool pauseOnTrackEnd = false;
 
   setSettings(settings) {
     this.settings = settings;
@@ -73,8 +74,12 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
 
-      if (_progressCallback != null && (zone!.nowPlaying == null || zone!.nowPlaying!.length == null)) {
-        _progressCallback!(0, null);
+      if (_progressCallback != null) {
+        if (zone!.nowPlaying == null || zone!.nowPlaying!.length == null) {
+          _progressCallback!(0, null);
+        } else {
+          _progressCallback!(zone!.nowPlaying!.length!, 0);
+        }
       }
     } else if (event is RoonEvent_ZoneSeek) {
       ZoneSeek seek = event.field0;
@@ -106,6 +111,8 @@ class MyAppState extends ChangeNotifier {
       browse(category: settings["view"], sessionId: exploreId);
     } else if (event is RoonEvent_QueueItems) {
       queue = event.field0;
+    } else if (event is RoonEvent_PauseOnTrackEnd) {
+      pauseOnTrackEnd = event.field0;
     } else if (event is RoonEvent_Image) {
       imageCache[event.field0.imageKey] = event.field0.image;
     }

@@ -113,6 +113,8 @@ class QuickAccessButton extends StatelessWidget {
 
     if (appState.zone == null) {
       icon = Icons.speaker_outlined;
+    } else if (appState.pauseOnTrackEnd) {
+      icon = Icons.timelapse_outlined;
     } else {
       switch (appState.zone!.state) {
         case PlayState.playing:
@@ -136,6 +138,8 @@ class QuickAccessButton extends StatelessWidget {
 
     if (appState.zone == null) {
       tooltip = "Select Zone";
+    } else if (appState.pauseOnTrackEnd) {
+      tooltip = "Pausing at End of Track...";
     } else {
       switch (appState.zone!.state) {
         case PlayState.playing:
@@ -171,16 +175,32 @@ class QuickAccessButton extends StatelessWidget {
     }
   }
 
+  onLongPress() {
+    if (appState.zone != null && appState.zone!.nowPlaying != null) {
+      var zone = appState.zone!;
+      var nowPlaying = zone.nowPlaying!;
+
+      if (zone.state == PlayState.playing && nowPlaying.length != null && nowPlaying.length! > 0) {
+        pauseOnTrackEnd();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: FloatingActionButton(
-        onPressed: () {
-          takeAction();
+      child: GestureDetector(
+        onLongPress: () {
+          onLongPress();
         },
-        tooltip: getTooltip(),
-        child: getIcon(),
+        child: FloatingActionButton(
+          onPressed: () {
+            takeAction();
+          },
+          tooltip: getTooltip(),
+          child: getIcon(),
+        ),
       ),
     );
   }
