@@ -60,6 +60,14 @@ Future<void> saveSettings({required String settings, dynamic hint}) =>
 Future<void> control({required Control control, dynamic hint}) =>
     RustLib.instance.api.control(control: control, hint: hint);
 
+Future<void> controlByZoneId(
+        {required String zoneId, required Control control, dynamic hint}) =>
+    RustLib.instance.api
+        .controlByZoneId(zoneId: zoneId, control: control, hint: hint);
+
+Future<void> pauseAll({dynamic hint}) =>
+    RustLib.instance.api.pauseAll(hint: hint);
+
 Future<void> pauseOnTrackEnd({dynamic hint}) =>
     RustLib.instance.api.pauseOnTrackEnd(hint: hint);
 

@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/zones.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,12 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                   child: metadata,
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => const Dialog(
+                      child: Zones(),
+                    ),
+                  ),
                   icon: const Icon(Icons.speaker_outlined),
                   label: const Text('Zones'),
                 ),

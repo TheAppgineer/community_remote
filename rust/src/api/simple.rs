@@ -179,6 +179,22 @@ pub async fn control(control: Control) {
     }
 }
 
+pub async fn control_by_zone_id(zone_id: String, control: Control) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.control_by_zone_id(&zone_id, &control).await;
+    }
+}
+
+pub async fn pause_all() {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.pause_all().await;
+    }
+}
+
 pub async fn pause_on_track_end() {
     let api = API.lock().await;
 

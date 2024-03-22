@@ -225,6 +225,45 @@ fn wire_control_impl(
         },
     )
 }
+fn wire_control_by_zone_id_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "control_by_zone_id",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_zone_id = <String>::sse_decode(&mut deserializer);
+            let api_control =
+                <crate::api::roon_transport_mirror::Control>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::control_by_zone_id(api_zone_id, api_control).await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_image_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -291,6 +330,37 @@ fn wire_init_app_impl(
             move |context| async move {
                 transform_result_sse((move || async move {
                          Result::<_,()>::Ok(crate::api::simple::init_app().await)
+                    })().await)
+            }
+        },
+    )
+}
+fn wire_pause_all_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "pause_all",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse((move || async move {
+                         Result::<_,()>::Ok(crate::api::simple::pause_all().await)
                     })().await)
             }
         },
@@ -1542,9 +1612,11 @@ fn pde_ffi_dispatcher_primary_impl(
         7 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
         6 => wire_browse_with_input_impl(port, ptr, rust_vec_len, data_len),
         12 => wire_control_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire_control_by_zone_id_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire_pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire_pause_all_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire_pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
         11 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
         9 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
         10 => wire_select_queue_item_impl(port, ptr, rust_vec_len, data_len),

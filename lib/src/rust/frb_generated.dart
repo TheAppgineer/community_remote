@@ -81,6 +81,9 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> control({required Control control, dynamic hint});
 
+  Future<void> controlByZoneId(
+      {required String zoneId, required Control control, dynamic hint});
+
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -88,6 +91,8 @@ abstract class RustLibApi extends BaseApi {
       dynamic hint});
 
   Future<void> initApp({dynamic hint});
+
+  Future<void> pauseAll({dynamic hint});
 
   Future<void> pauseOnTrackEnd({dynamic hint});
 
@@ -245,6 +250,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> controlByZoneId(
+      {required String zoneId, required Control control, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(zoneId, serializer);
+        sse_encode_control(control, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 13, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kControlByZoneIdConstMeta,
+      argValues: [zoneId, control],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kControlByZoneIdConstMeta => const TaskConstMeta(
+        debugName: "control_by_zone_id",
+        argNames: ["zoneId", "control"],
+      );
+
+  @override
   Future<void> getImage(
       {required String imageKey,
       required int width,
@@ -300,12 +332,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> pauseAll({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 14, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kPauseAllConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kPauseAllConstMeta => const TaskConstMeta(
+        debugName: "pause_all",
+        argNames: [],
+      );
+
+  @override
   Future<void> pauseOnTrackEnd({dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 13, port: port_);
+            funcId: 15, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,

@@ -78,15 +78,7 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                   const Expanded(
                     flex: 5,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      clipBehavior: Clip.none,
-                      fit: StackFit.expand,
-                      children: [
-                        Queue(),
-                        //Zones(),
-                      ],
-                    ),
+                    child: Queue(),
                   ),
                 ],
               ),
@@ -278,74 +270,6 @@ class HamburgerMenu extends StatelessWidget {
           onDestinationSelected: onDestinationSelected,
         ),
       ),
-    );
-  }
-}
-
-class Zones extends StatelessWidget {
-  const Zones({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var zones = appState.zoneList;
-    ListView? listView;
-
-    if (zones != null) {
-      ListTile itemBuilder(context, index) {
-        var imageKey = zones[index].imageKey;
-        Image? image = appState.getImageFromCache(imageKey);
-        Icon? playState;
-        Text? metaData;
-
-        switch (zones[index].state) {
-          case PlayState.playing:
-            playState = const Icon(Icons.play_circle_outline);
-            break;
-          case PlayState.paused:
-            playState = const Icon(Icons.pause_circle_outline);
-            break;
-          case PlayState.loading:
-            playState = const Icon(Icons.hourglass_top_outlined);
-            break;
-          case PlayState.stopped:
-            playState = const Icon(Icons.stop_circle_outlined);
-            break;
-        }
-
-        if (zones[index].nowPlaying != null) {
-          metaData = Text(zones[index].nowPlaying!);
-        }
-
-        return ListTile(
-          leading: playState,
-          trailing: image,
-          title: Text(zones[index].displayName),
-          subtitle: metaData,
-          onTap: () {
-            var zoneId = zones[index].zoneId;
-
-            appState.settings["zoneId"] = zoneId;
-            selectZone(zoneId: zoneId);
-            saveSettings(settings: jsonEncode(appState.settings));
-          },
-        );
-      }
-
-      listView = ListView.separated(
-        controller: ScrollController(),
-        padding: const EdgeInsets.all(10),
-        itemBuilder: itemBuilder,
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: zones.length,
-      );
-    }
-
-    return Card(
-      margin: const EdgeInsets.all(10),
-      child: listView,
     );
   }
 }

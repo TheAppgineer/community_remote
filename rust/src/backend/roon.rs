@@ -267,8 +267,15 @@ impl Roon {
     }
 
     pub async fn control(&self, control: &Control) -> Option<()> {
+        let zone_id = self.handler.lock().await.zone_id.clone()?;
+
+        self.control_by_zone_id(&zone_id, control).await;
+
+        Some(())
+    }
+
+    pub async fn control_by_zone_id(&self, zone_id: &str, control: &Control) -> Option<()> {
         let handler = self.handler.lock().await;
-        let zone_id = handler.zone_id.as_deref()?;
         let zone = handler.zone_map.get(zone_id)?;
 
         let allowed = match control {
@@ -285,6 +292,14 @@ impl Roon {
         if allowed {
             handler.transport.as_ref()?.control(zone_id, control).await;
         }
+
+        Some(())
+    }
+
+    pub async fn pause_all(&self) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler.transport.as_ref()?.pause_all().await;
 
         Some(())
     }
