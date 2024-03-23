@@ -71,6 +71,21 @@ Future<void> pauseAll({dynamic hint}) =>
 Future<void> pauseOnTrackEnd({dynamic hint}) =>
     RustLib.instance.api.pauseOnTrackEnd(hint: hint);
 
+Future<void> mute(
+        {required String outputId, required Mute how, dynamic hint}) =>
+    RustLib.instance.api.mute(outputId: outputId, how: how, hint: hint);
+
+Future<void> muteAll({dynamic hint}) =>
+    RustLib.instance.api.muteAll(hint: hint);
+
+Future<void> changeVolume(
+        {required String outputId,
+        required ChangeMode how,
+        required int value,
+        dynamic hint}) =>
+    RustLib.instance.api
+        .changeVolume(outputId: outputId, how: how, value: value, hint: hint);
+
 class BrowseItems {
   final BrowseList list;
   final int offset;
@@ -127,9 +142,9 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.zonesChanged(
     List<ZoneSummary> field0,
   ) = RoonEvent_ZonesChanged;
-  const factory RoonEvent.zoneChanged(
-    Zone field0,
-  ) = RoonEvent_ZoneChanged;
+  const factory RoonEvent.zoneChanged([
+    Zone? field0,
+  ]) = RoonEvent_ZoneChanged;
   const factory RoonEvent.zoneSeek(
     ZoneSeek field0,
   ) = RoonEvent_ZoneSeek;

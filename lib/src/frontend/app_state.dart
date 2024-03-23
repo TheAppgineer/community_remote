@@ -74,7 +74,7 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
 
-      if (_progressCallback != null) {
+      if (_progressCallback != null && zone != null) {
         if (zone!.nowPlaying == null || zone!.nowPlaying!.length == null) {
           _progressCallback!(0, null);
         } else {

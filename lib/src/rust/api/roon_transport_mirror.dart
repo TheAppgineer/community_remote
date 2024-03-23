@@ -6,6 +6,12 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+enum ChangeMode {
+  absolute,
+  relative,
+  relativeStep,
+}
+
 enum Control {
   play,
   pause,
@@ -13,6 +19,11 @@ enum Control {
   stop,
   previous,
   next,
+}
+
+enum Mute {
+  mute,
+  unmute,
 }
 
 class NowPlaying {

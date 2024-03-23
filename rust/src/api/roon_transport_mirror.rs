@@ -1,7 +1,7 @@
 pub use roon_api::transport::Settings as ZoneSettings;
 pub use roon_api::transport::State as PlayState;
 pub use roon_api::transport::{
-    volume::{Scale, Volume},
+    volume::{ChangeMode, Mute, Scale, Volume},
     Control, NowPlaying, OneLine, Output, QueueItem, Repeat, SourceControls, Status, ThreeLine,
     TwoLine, Zone, ZoneSeek,
 };
@@ -21,6 +21,19 @@ pub enum _Scale {
     Number,
     Decibel,
     Incremental,
+}
+
+#[flutter_rust_bridge::frb(mirror(Mute))]
+pub enum _Mute {
+    Mute,
+    Unmute,
+}
+
+#[flutter_rust_bridge::frb(mirror(ChangeMode))]
+pub enum _ChangeMode {
+    Absolute,
+    Relative,
+    RelativeStep,
 }
 
 #[flutter_rust_bridge::frb(mirror(PlayState))]

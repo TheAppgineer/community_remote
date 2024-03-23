@@ -4,6 +4,7 @@ import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/frontend/browse.dart';
 import 'package:community_remote/src/frontend/now_playing.dart';
 import 'package:community_remote/src/frontend/queue.dart';
+import 'package:community_remote/src/frontend/zones.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
@@ -188,7 +189,16 @@ class QuickAccessButton extends StatelessWidget {
         },
         child: FloatingActionButton(
           onPressed: () {
-            takeAction();
+            if (appState.zone == null) {
+              showDialog(
+                context: context,
+                builder: (context) => const Dialog(
+                  child: Zones(),
+                ),
+              );
+            } else {
+              takeAction();
+            }
           },
           tooltip: getTooltip(),
           child: getIcon(),

@@ -94,6 +94,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BrowseListHint dco_decode_browse_list_hint(dynamic raw);
 
   @protected
+  ChangeMode dco_decode_change_mode(dynamic raw);
+
+  @protected
   Control dco_decode_control(dynamic raw);
 
   @protected
@@ -133,6 +136,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ZoneSummary> dco_decode_list_zone_summary(dynamic raw);
 
   @protected
+  Mute dco_decode_mute(dynamic raw);
+
+  @protected
   NowPlaying dco_decode_now_playing(dynamic raw);
 
   @protected
@@ -170,6 +176,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Volume? dco_decode_opt_box_autoadd_volume(dynamic raw);
+
+  @protected
+  Zone? dco_decode_opt_box_autoadd_zone(dynamic raw);
 
   @protected
   List<String>? dco_decode_opt_list_String(dynamic raw);
@@ -307,6 +316,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BrowseListHint sse_decode_browse_list_hint(SseDeserializer deserializer);
 
   @protected
+  ChangeMode sse_decode_change_mode(SseDeserializer deserializer);
+
+  @protected
   Control sse_decode_control(SseDeserializer deserializer);
 
   @protected
@@ -345,6 +357,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ZoneSummary> sse_decode_list_zone_summary(SseDeserializer deserializer);
+
+  @protected
+  Mute sse_decode_mute(SseDeserializer deserializer);
 
   @protected
   NowPlaying sse_decode_now_playing(SseDeserializer deserializer);
@@ -388,6 +403,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Volume? sse_decode_opt_box_autoadd_volume(SseDeserializer deserializer);
+
+  @protected
+  Zone? sse_decode_opt_box_autoadd_zone(SseDeserializer deserializer);
 
   @protected
   List<String>? sse_decode_opt_list_String(SseDeserializer deserializer);
@@ -537,6 +555,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       BrowseListHint self, SseSerializer serializer);
 
   @protected
+  void sse_encode_change_mode(ChangeMode self, SseSerializer serializer);
+
+  @protected
   void sse_encode_control(Control self, SseSerializer serializer);
 
   @protected
@@ -581,6 +602,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<ZoneSummary> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_mute(Mute self, SseSerializer serializer);
+
+  @protected
   void sse_encode_now_playing(NowPlaying self, SseSerializer serializer);
 
   @protected
@@ -623,6 +647,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_volume(
       Volume? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_zone(Zone? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer);

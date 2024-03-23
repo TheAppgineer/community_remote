@@ -8,7 +8,8 @@ use roon_api::{
     image::{Args, Image, Scale, Scaling},
     info,
     transport::{
-        volume::Mute, Control, QueueItem, QueueOperation, State, Transport, Zone, ZoneSeek,
+        volume::{ChangeMode, Mute},
+        Control, QueueItem, QueueOperation, State, Transport, Zone, ZoneSeek,
     },
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
@@ -106,7 +107,7 @@ impl Roon {
         let mut handler = self.handler.lock().await;
 
         if handler.zone_id.as_deref() != Some(zone_id) {
-            let zone = handler.zone_map.get(zone_id).cloned()?;
+            let zone = handler.zone_map.get(zone_id).cloned();
 
             handler.zone_id = Some(zone_id.to_owned());
             handler
@@ -317,6 +318,34 @@ impl Roon {
         Some(())
     }
 
+    pub async fn mute(&self, output_id: &str, how: &Mute) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler.transport.as_ref()?.mute(output_id, how).await;
+
+        Some(())
+    }
+
+    pub async fn mute_all(&self) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler.transport.as_ref()?.mute_all(&Mute::Mute).await;
+
+        Some(())
+    }
+
+    pub async fn change_volume(&self, output_id: &str, how: &ChangeMode, value: i32) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler
+            .transport
+            .as_ref()?
+            .change_volume(&output_id, &how, value)
+            .await;
+
+        Some(())
+    }
+
     async fn handle_random_item(
         &self,
         multi_session_key: Option<String>,
@@ -465,15 +494,15 @@ impl RoonHandler {
 
                     self.send_zone_list().await;
 
-                    if let Some(curr_zone) = curr_zone {
+                    if let Some(zone) = curr_zone.as_ref() {
                         if let Some(prev_zone_state) = prev_zone_state {
                             if self.pause_on_track_end
                                 && prev_zone_state.state == State::Playing
-                                && curr_zone.state == State::Paused
+                                && zone.state == State::Paused
                             {
                                 self.pause_on_track_end = false;
 
-                                for output in &curr_zone.outputs {
+                                for output in &zone.outputs {
                                     self.transport
                                         .as_ref()?
                                         .mute(&output.output_id, &Mute::Unmute)
@@ -499,6 +528,13 @@ impl RoonHandler {
                     }
 
                     self.send_zone_list().await;
+
+                    if zone_ids.contains(self.zone_id.as_ref()?) {
+                        self.event_tx
+                            .send(RoonEvent::ZoneChanged(None))
+                            .await
+                            .unwrap();
+                    }
                 }
                 Parsed::ZonesSeek(seeks) => {
                     let zone_id = self.zone_id.as_ref()?;

@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/volume.dart';
 import 'package:community_remote/src/frontend/zones.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
@@ -42,9 +43,12 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    ListTile metadata = const ListTile(title: Text('Go find something to play'));
-    Widget prev = const Icon(Icons.skip_previous, size: 32);
-    Widget next = const Icon(Icons.skip_next, size: 32);
+    List<Widget> zoneControl = [];
+    ListTile metadata = const ListTile(title: Text('No Zone Selected'));
+    Function()? onNextPressed;
+    Function()? onPrevPressed;
+    String? tooltipNext;
+    String? tooltipPrev;
     String progress = '';
 
     appState.setProgressCallback(setProgress);
@@ -84,35 +88,58 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         } else {
           progress = appState.getDuration(_elapsed);
         }
+      } else {
+        metadata = const ListTile(title: Text('Go find something to play'));
       }
 
-      Function()? onNextPressed;
-
       if (appState.zone!.isNextAllowed) {
+        tooltipNext = 'Next Track';
         onNextPressed = () {
           control(control: Control.next);
         };
       } else if (appState.queue != null && appState.queue!.isNotEmpty) {
+        tooltipNext = 'Play from Queue';
         onNextPressed = () {
           selectQueueItem(queueItemId: appState.queue![0].queueItemId);
         };
       }
 
-      prev = IconButton(
-        icon: prev,
-        tooltip: appState.zone!.isPreviousAllowed ? 'Previous Track' : null,
-        onPressed: appState.zone!.isPreviousAllowed ? () {
+      if (appState.zone!.isPreviousAllowed) {
+        tooltipPrev = 'Previous Track';
+        onPrevPressed = () {
           control(control: Control.previous);
-        } : null,
-      );
-      next = IconButton(
-        icon: next,
-        tooltip: onNextPressed != null
-          ? (appState.zone!.isNextAllowed ? 'Next Track' : 'Play from Queue')
-          : null,
-        onPressed: onNextPressed,
-      );
+        };
+      }
+
+      zoneControl.add(ElevatedButton.icon(
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => const Dialog(
+            child: Zones(),
+          ),
+        ),
+        icon: const Icon(Icons.speaker_outlined),
+        label: const Text('Zones'),
+      ));
+
+      zoneControl.add(const Padding(padding: EdgeInsets.only(left: 10)));
+
+      zoneControl.add(ElevatedButton.icon(
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => const Dialog(
+            child: VolumeDialog(),
+          ),
+        ),
+        icon: const Icon(Icons.volume_up),
+        label: const Text('Volume'),
+      ));
     }
+
+    zoneControl.insert(0, Expanded(
+      flex: 1,
+      child: metadata,
+    ));
 
     return Card(
       margin: const EdgeInsets.all(10),
@@ -122,28 +149,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: metadata,
-                ),
-                ElevatedButton.icon(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => const Dialog(
-                      child: Zones(),
-                    ),
-                  ),
-                  icon: const Icon(Icons.speaker_outlined),
-                  label: const Text('Zones'),
-                ),
-                const Padding(padding: EdgeInsets.only(left: 10)),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.volume_up),
-                  label: const Text('Volume'),
-                ),
-              ],
+              children: zoneControl,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 80, 0),
@@ -153,9 +159,17 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                   const Padding(padding: EdgeInsets.only(left: 10)),
                   Text(progress),
                   const Padding(padding: EdgeInsets.only(left: 20)),
-                  prev,
+                  IconButton(
+                    icon: const Icon(Icons.skip_previous, size: 32),
+                    tooltip: tooltipPrev,
+                    onPressed: onPrevPressed,
+                  ),
                   const Padding(padding: EdgeInsets.only(left: 10)),
-                  next,
+                  IconButton(
+                    icon: const Icon(Icons.skip_next, size: 32),
+                    tooltip: tooltipNext,
+                    onPressed: onNextPressed,
+                  ),
                 ],
               ),
             ),

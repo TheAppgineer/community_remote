@@ -79,6 +79,12 @@ abstract class RustLibApi extends BaseApi {
       String? input,
       dynamic hint});
 
+  Future<void> changeVolume(
+      {required String outputId,
+      required ChangeMode how,
+      required int value,
+      dynamic hint});
+
   Future<void> control({required Control control, dynamic hint});
 
   Future<void> controlByZoneId(
@@ -91,6 +97,11 @@ abstract class RustLibApi extends BaseApi {
       dynamic hint});
 
   Future<void> initApp({dynamic hint});
+
+  Future<void> mute(
+      {required String outputId, required Mute how, dynamic hint});
+
+  Future<void> muteAll({dynamic hint});
 
   Future<void> pauseAll({dynamic hint});
 
@@ -225,6 +236,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<void> changeVolume(
+      {required String outputId,
+      required ChangeMode how,
+      required int value,
+      dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(outputId, serializer);
+        sse_encode_change_mode(how, serializer);
+        sse_encode_i_32(value, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 18, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kChangeVolumeConstMeta,
+      argValues: [outputId, how, value],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kChangeVolumeConstMeta => const TaskConstMeta(
+        debugName: "change_volume",
+        argNames: ["outputId", "how", "value"],
+      );
+
+  @override
   Future<void> control({required Control control, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
@@ -328,6 +370,57 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
+        argNames: [],
+      );
+
+  @override
+  Future<void> mute(
+      {required String outputId, required Mute how, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(outputId, serializer);
+        sse_encode_mute(how, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 16, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kMuteConstMeta,
+      argValues: [outputId, how],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kMuteConstMeta => const TaskConstMeta(
+        debugName: "mute",
+        argNames: ["outputId", "how"],
+      );
+
+  @override
+  Future<void> muteAll({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 17, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kMuteAllConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kMuteAllConstMeta => const TaskConstMeta(
+        debugName: "mute_all",
         argNames: [],
       );
 
@@ -701,6 +794,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ChangeMode dco_decode_change_mode(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ChangeMode.values[raw as int];
+  }
+
+  @protected
   Control dco_decode_control(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Control.values[raw as int];
@@ -790,6 +889,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<ZoneSummary> dco_decode_list_zone_summary(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_zone_summary).toList();
+  }
+
+  @protected
+  Mute dco_decode_mute(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return Mute.values[raw as int];
   }
 
   @protected
@@ -887,6 +992,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  Zone? dco_decode_opt_box_autoadd_zone(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_zone(raw);
+  }
+
+  @protected
   List<String>? dco_decode_opt_list_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_list_String(raw);
@@ -960,7 +1071,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 3:
         return RoonEvent_ZoneChanged(
-          dco_decode_box_autoadd_zone(raw[1]),
+          dco_decode_opt_box_autoadd_zone(raw[1]),
         );
       case 4:
         return RoonEvent_ZoneSeek(
@@ -1330,6 +1441,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ChangeMode sse_decode_change_mode(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return ChangeMode.values[inner];
+  }
+
+  @protected
   Control sse_decode_control(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
@@ -1454,6 +1572,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       ans_.add(sse_decode_zone_summary(deserializer));
     }
     return ans_;
+  }
+
+  @protected
+  Mute sse_decode_mute(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return Mute.values[inner];
   }
 
   @protected
@@ -1609,6 +1734,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  Zone? sse_decode_opt_box_autoadd_zone(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_zone(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   List<String>? sse_decode_opt_list_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -1697,7 +1833,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_list_zone_summary(deserializer);
         return RoonEvent_ZonesChanged(var_field0);
       case 3:
-        var var_field0 = sse_decode_box_autoadd_zone(deserializer);
+        var var_field0 = sse_decode_opt_box_autoadd_zone(deserializer);
         return RoonEvent_ZoneChanged(var_field0);
       case 4:
         var var_field0 = sse_decode_box_autoadd_zone_seek(deserializer);
@@ -2061,6 +2197,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_change_mode(ChangeMode self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_control(Control self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
@@ -2165,6 +2307,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     for (final item in self) {
       sse_encode_zone_summary(item, serializer);
     }
+  }
+
+  @protected
+  void sse_encode_mute(Mute self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -2301,6 +2449,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_zone(Zone? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_zone(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_list_String(
       List<String>? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -2371,7 +2529,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_list_zone_summary(field0, serializer);
       case RoonEvent_ZoneChanged(field0: final field0):
         sse_encode_i_32(3, serializer);
-        sse_encode_box_autoadd_zone(field0, serializer);
+        sse_encode_opt_box_autoadd_zone(field0, serializer);
       case RoonEvent_ZoneSeek(field0: final field0):
         sse_encode_i_32(4, serializer);
         sse_encode_box_autoadd_zone_seek(field0, serializer);

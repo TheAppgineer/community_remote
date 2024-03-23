@@ -4,7 +4,10 @@ use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::List as BrowseList;
 use roon_api::transport::State as PlayState;
 use roon_api::transport::ZoneSeek;
-use roon_api::transport::{Control, QueueItem, Zone};
+use roon_api::transport::{
+    volume::{ChangeMode, Mute},
+    Control, QueueItem, Zone,
+};
 use simplelog::{format_description, ColorChoice, ConfigBuilder, TermLogger, TerminalMode};
 use time::UtcOffset;
 use tokio::sync::Mutex;
@@ -17,7 +20,7 @@ pub enum RoonEvent {
     CoreFound(String),
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
-    ZoneChanged(Zone),
+    ZoneChanged(Option<Zone>),
     ZoneSeek(ZoneSeek),
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
@@ -200,5 +203,29 @@ pub async fn pause_on_track_end() {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.pause_on_track_end().await;
+    }
+}
+
+pub async fn mute(output_id: String, how: Mute) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.mute(&output_id, &how).await;
+    }
+}
+
+pub async fn mute_all() {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.mute_all().await;
+    }
+}
+
+pub async fn change_volume(output_id: String, how: ChangeMode, value: i32) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.change_volume(&output_id, &how, value).await;
     }
 }

@@ -14,7 +14,7 @@ class Queue extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     ListView? listView;
 
-    if (appState.queue != null) {
+    if (appState.zone != null && appState.queue != null) {
       List<QueueItem> queue = appState.queue!;
 
       ListTile itemBuilder(context, index) {

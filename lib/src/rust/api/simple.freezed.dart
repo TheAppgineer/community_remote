@@ -21,7 +21,7 @@ mixin _$RoonEvent {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -37,7 +37,7 @@ mixin _$RoonEvent {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -53,7 +53,7 @@ mixin _$RoonEvent {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -201,7 +201,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -220,7 +220,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -239,7 +239,7 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -396,7 +396,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -415,7 +415,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -434,7 +434,7 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -600,7 +600,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -619,7 +619,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -638,7 +638,7 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -734,7 +734,7 @@ abstract class _$$RoonEvent_ZoneChangedImplCopyWith<$Res> {
           $Res Function(_$RoonEvent_ZoneChangedImpl) then) =
       __$$RoonEvent_ZoneChangedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Zone field0});
+  $Res call({Zone? field0});
 }
 
 /// @nodoc
@@ -748,13 +748,13 @@ class __$$RoonEvent_ZoneChangedImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? field0 = null,
+    Object? field0 = freezed,
   }) {
     return _then(_$RoonEvent_ZoneChangedImpl(
-      null == field0
+      freezed == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
-              as Zone,
+              as Zone?,
     ));
   }
 }
@@ -762,10 +762,10 @@ class __$$RoonEvent_ZoneChangedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
-  const _$RoonEvent_ZoneChangedImpl(this.field0);
+  const _$RoonEvent_ZoneChangedImpl([this.field0]);
 
   @override
-  final Zone field0;
+  final Zone? field0;
 
   @override
   String toString() {
@@ -796,7 +796,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -815,7 +815,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -834,7 +834,7 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -914,10 +914,10 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
 }
 
 abstract class RoonEvent_ZoneChanged implements RoonEvent {
-  const factory RoonEvent_ZoneChanged(final Zone field0) =
+  const factory RoonEvent_ZoneChanged([final Zone? field0]) =
       _$RoonEvent_ZoneChangedImpl;
 
-  Zone get field0;
+  Zone? get field0;
   @JsonKey(ignore: true)
   _$$RoonEvent_ZoneChangedImplCopyWith<_$RoonEvent_ZoneChangedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -991,7 +991,7 @@ class _$RoonEvent_ZoneSeekImpl implements RoonEvent_ZoneSeek {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -1010,7 +1010,7 @@ class _$RoonEvent_ZoneSeekImpl implements RoonEvent_ZoneSeek {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -1029,7 +1029,7 @@ class _$RoonEvent_ZoneSeekImpl implements RoonEvent_ZoneSeek {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -1187,7 +1187,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -1206,7 +1206,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -1225,7 +1225,7 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -1391,7 +1391,7 @@ class _$RoonEvent_BrowseActionsImpl implements RoonEvent_BrowseActions {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -1410,7 +1410,7 @@ class _$RoonEvent_BrowseActionsImpl implements RoonEvent_BrowseActions {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -1429,7 +1429,7 @@ class _$RoonEvent_BrowseActionsImpl implements RoonEvent_BrowseActions {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -1561,7 +1561,7 @@ class _$RoonEvent_BrowseResetImpl implements RoonEvent_BrowseReset {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -1580,7 +1580,7 @@ class _$RoonEvent_BrowseResetImpl implements RoonEvent_BrowseReset {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -1599,7 +1599,7 @@ class _$RoonEvent_BrowseResetImpl implements RoonEvent_BrowseReset {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -1758,7 +1758,7 @@ class _$RoonEvent_QueueItemsImpl implements RoonEvent_QueueItems {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -1777,7 +1777,7 @@ class _$RoonEvent_QueueItemsImpl implements RoonEvent_QueueItems {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -1796,7 +1796,7 @@ class _$RoonEvent_QueueItemsImpl implements RoonEvent_QueueItems {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -1955,7 +1955,7 @@ class _$RoonEvent_PauseOnTrackEndImpl implements RoonEvent_PauseOnTrackEnd {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -1974,7 +1974,7 @@ class _$RoonEvent_PauseOnTrackEndImpl implements RoonEvent_PauseOnTrackEnd {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -1993,7 +1993,7 @@ class _$RoonEvent_PauseOnTrackEndImpl implements RoonEvent_PauseOnTrackEnd {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -2150,7 +2150,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -2169,7 +2169,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -2188,7 +2188,7 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
@@ -2321,7 +2321,7 @@ class _$RoonEvent_SettingsSavedImpl implements RoonEvent_SettingsSaved {
     required TResult Function(String field0) coreFound,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone field0) zoneChanged,
+    required TResult Function(Zone? field0) zoneChanged,
     required TResult Function(ZoneSeek field0) zoneSeek,
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
@@ -2340,7 +2340,7 @@ class _$RoonEvent_SettingsSavedImpl implements RoonEvent_SettingsSaved {
     TResult? Function(String field0)? coreFound,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone field0)? zoneChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
     TResult? Function(ZoneSeek field0)? zoneSeek,
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
@@ -2359,7 +2359,7 @@ class _$RoonEvent_SettingsSavedImpl implements RoonEvent_SettingsSaved {
     TResult Function(String field0)? coreFound,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone field0)? zoneChanged,
+    TResult Function(Zone? field0)? zoneChanged,
     TResult Function(ZoneSeek field0)? zoneSeek,
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
