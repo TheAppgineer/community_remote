@@ -172,7 +172,9 @@ class _BrowseLevelState extends State<BrowseLevel> {
               Future.delayed(const Duration(milliseconds: 100), () {
                 if (appState.actionItems != null) {
                   appState.actionItems = null;
-                  browseBack(sessionId: exploreId);
+                  if (!browseList[index].itemKey!.contains('random_')) {
+                    browseBack(sessionId: exploreId);
+                  }
                 }
               });
             },

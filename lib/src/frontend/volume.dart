@@ -27,7 +27,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
 
       ListTile itemBuilder(context, index) {
         Output output = outputs[index];
-        Widget? leading;
+        List<Widget> leading = [];
         Widget? trailing;
         Widget? volumeSlider;
 
@@ -76,7 +76,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
           }
 
           if (volume.isMuted != null) {
-            leading = volume.isMuted!
+            leading.add(volume.isMuted!
               ? IconButton(
                 icon: const Icon(Icons.volume_off_outlined),
                 tooltip: 'Unmute',
@@ -86,7 +86,8 @@ class _VolumeDialogState extends State<VolumeDialog> {
                 icon: const Icon(Icons.volume_up_outlined),
                 tooltip: 'Mute',
                 onPressed: () => mute(outputId: output.outputId, how: Mute.mute),
-              );
+              )
+            );
           }
 
           var level = _levels[output.outputId];
@@ -105,10 +106,43 @@ class _VolumeDialogState extends State<VolumeDialog> {
                 break;
             }
           }
+        } else {
+          volumeSlider = const Text('Volume control is fixed');
+        }
+
+        if (output.sourceControls != null) {
+          for (var control in output.sourceControls!) {
+            if (control.supportsStandby && control.status != Status.standby) {
+              leading.insert(
+                0,
+                IconButton(
+                  icon: const Icon(Icons.power_settings_new_outlined),
+                  tooltip: 'Enter Standby',
+                  onPressed: () => standby(outputId: output.outputId),
+                )
+              );
+              break;
+            }
+          }
+        }
+
+        switch (leading.length) {
+          case 1:
+            leading.insert(0, const Padding(padding: EdgeInsets.fromLTRB(50, 0, 0, 0)));
+            break;
+          case 2:
+            leading.insert(0, const Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0)));
+            break;
+          default:
+            leading.insert(0, const Padding(padding: EdgeInsets.fromLTRB(90, 0, 0, 0)));
+            break;
         }
 
         return ListTile(
-          leading: leading,
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: leading,
+          ),
           trailing: trailing,
           title: volumeSlider,
         );
@@ -120,7 +154,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
         children: [
           ListView.separated(
             controller: ScrollController(),
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(10),
             itemBuilder: itemBuilder,
             separatorBuilder: (context, index) => const Divider(),
             itemCount: outputs.length,
@@ -131,7 +165,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
             child: ElevatedButton.icon(
               onPressed: () => muteAll(),
               icon: const Icon(Icons.volume_off_outlined),
-              label: const Text('Mute All'),
+              label: const Text('Mute All Zones'),
             ),
           ),
         ],

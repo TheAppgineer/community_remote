@@ -654,6 +654,41 @@ fn wire_select_zone_impl(
         },
     )
 }
+fn wire_standby_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "standby",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_output_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::standby(api_output_id).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_start_roon_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1776,6 +1811,7 @@ fn pde_ffi_dispatcher_primary_impl(
         9 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
         10 => wire_select_queue_item_impl(port, ptr, rust_vec_len, data_len),
         3 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire_standby_impl(port, ptr, rust_vec_len, data_len),
         2 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }

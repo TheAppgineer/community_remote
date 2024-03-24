@@ -119,10 +119,21 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           ),
         ),
         icon: const Icon(Icons.speaker_outlined),
-        label: const Text('Zones'),
+        label: Text(appState.zone!.displayName),
       ));
 
       zoneControl.add(const Padding(padding: EdgeInsets.only(left: 10)));
+
+      Output output = appState.zone!.outputs.elementAt(0);
+      String volumeLabel = 'Volume';
+
+      if (output.volume != null && output.volume!.value != null) {
+        volumeLabel = output.volume!.value!.toInt().toString();
+
+        if (output.volume!.scale == Scale.decibel) {
+          volumeLabel += ' dB';
+        }
+      }
 
       zoneControl.add(ElevatedButton.icon(
         onPressed: () => showDialog(
@@ -132,7 +143,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           ),
         ),
         icon: const Icon(Icons.volume_up),
-        label: const Text('Volume'),
+        label: Text(volumeLabel),
       ));
     }
 

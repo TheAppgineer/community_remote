@@ -116,6 +116,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> selectZone({required String zoneId, dynamic hint});
 
+  Future<void> standby({required String outputId, dynamic hint});
+
   Future<String> startRoon(
       {required FutureOr<void> Function(RoonEvent) cb, dynamic hint});
 }
@@ -572,6 +574,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kSelectZoneConstMeta => const TaskConstMeta(
         debugName: "select_zone",
         argNames: ["zoneId"],
+      );
+
+  @override
+  Future<void> standby({required String outputId, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(outputId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 19, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kStandbyConstMeta,
+      argValues: [outputId],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kStandbyConstMeta => const TaskConstMeta(
+        debugName: "standby",
+        argNames: ["outputId"],
       );
 
   @override

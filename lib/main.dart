@@ -17,7 +17,7 @@ Future<void> main() async {
   Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
     "expand": false,
     "theme": "light",
-    "view": 11,
+    "view": 2,
     "zoneId": null,
   };
 

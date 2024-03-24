@@ -35,6 +35,7 @@ pub struct Roon {
 
 struct RoonHandler {
     event_tx: Sender<RoonEvent>,
+    api_token: Option<String>,
     browse: Option<Browse>,
     image: Option<Image>,
     transport: Option<Transport>,
@@ -57,7 +58,7 @@ impl Roon {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
-        let get_roon_state = Box::new(|| RoonApi::load_config(CONFIG_PATH, "roonstate"));
+        let get_roon_state = Box::new(|| RoonApi::load_roon_state(CONFIG_PATH));
         let provided: HashMap<String, Svc> = HashMap::new();
         let services = Some(vec![
             Services::Browse(Browse::new()),
@@ -146,13 +147,7 @@ impl Roon {
                 (9, vec!["Playlists"]),
                 (11, vec!["Settings"]),
             ]);
-            let multi_session_key = Some(session_id.to_string());
-            let opts = BrowseOpts {
-                multi_session_key,
-                pop_all: true,
-                set_display_offset: Some(0),
-                ..Default::default()
-            };
+            let multi_session_key = handler.get_multi_session_key(session_id);
 
             handler.browse_offset = 0;
             handler.browse_level = 0;
@@ -160,8 +155,15 @@ impl Roon {
             if let Some(path) = category_paths.get(&category) {
                 handler
                     .browse_path
-                    .insert(session_id.to_string(), path.clone());
+                    .insert(multi_session_key.as_ref()?.to_owned(), path.clone());
             }
+
+            let opts = BrowseOpts {
+                multi_session_key,
+                pop_all: true,
+                set_display_offset: Some(0),
+                ..Default::default()
+            };
 
             handler.browse.as_ref()?.browse(&opts).await;
             handler.browse_category = category;
@@ -173,7 +175,7 @@ impl Roon {
 
     pub async fn select_browse_item(&self, session_id: i32, item: BrowseItem) -> Option<()> {
         let item_key = item.item_key.as_deref()?;
-        let multi_session_key = Some(session_id.to_string());
+        let multi_session_key = self.handler.lock().await.get_multi_session_key(session_id);
 
         if item_key.contains("random") {
             self.handle_random_item(multi_session_key, &item).await;
@@ -227,7 +229,7 @@ impl Roon {
             handler.browse_offset = 0;
 
             let browse = handler.browse.as_ref()?;
-            let multi_session_key = Some(session_id.to_string());
+            let multi_session_key = handler.get_multi_session_key(session_id);
             let opts = BrowseOpts {
                 multi_session_key,
                 pop_levels: Some(1),
@@ -346,6 +348,14 @@ impl Roon {
         Some(())
     }
 
+    pub async fn standby(&self, output_id: &str) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler.transport.as_ref()?.standby(output_id, None).await;
+
+        Some(())
+    }
+
     async fn handle_random_item(
         &self,
         multi_session_key: Option<String>,
@@ -421,6 +431,7 @@ impl RoonHandler {
     fn new(event_tx: Sender<RoonEvent>) -> Self {
         Self {
             event_tx,
+            api_token: None,
             browse: None,
             image: None,
             transport: None,
@@ -439,6 +450,10 @@ impl RoonHandler {
         }
     }
 
+    fn get_multi_session_key(&self, session_id: i32) -> Option<String> {
+        Some(format!("{}-{}", self.api_token.as_deref()?, session_id))
+    }
+
     async fn handle_core_event(&mut self, core_event: CoreEvent) -> Option<()> {
         match core_event {
             CoreEvent::Found(mut core) => {
@@ -454,6 +469,7 @@ impl RoonHandler {
                     .unwrap();
             }
             CoreEvent::Lost(core) => {
+                self.api_token = None;
                 self.event_tx
                     .send(RoonEvent::CoreLost(core.display_name))
                     .await
@@ -466,10 +482,15 @@ impl RoonHandler {
     }
 
     async fn handle_msg_event(&mut self, msg: Option<(Value, Parsed)>) -> Option<()> {
-        if let Some((raw, parsed)) = msg {
+        if let Some((_, parsed)) = msg {
             match parsed {
-                Parsed::RoonState => {
-                    RoonApi::save_config(CONFIG_PATH, "roonstate", raw).unwrap();
+                Parsed::RoonState(roon_state) => {
+                    self.api_token = roon_state
+                        .tokens
+                        .get(roon_state.paired_core_id.as_ref()?)
+                        .cloned();
+
+                    RoonApi::save_roon_state(CONFIG_PATH, roon_state).unwrap();
                 }
                 Parsed::Zones(zones) => {
                     let mut curr_zone = None;

@@ -229,3 +229,11 @@ pub async fn change_volume(output_id: String, how: ChangeMode, value: i32) {
         roon.change_volume(&output_id, &how, value).await;
     }
 }
+
+pub async fn standby(output_id: String) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.standby(&output_id).await;
+    }
+}

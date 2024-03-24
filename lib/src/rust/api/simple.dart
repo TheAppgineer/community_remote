@@ -86,6 +86,9 @@ Future<void> changeVolume(
     RustLib.instance.api
         .changeVolume(outputId: outputId, how: how, value: value, hint: hint);
 
+Future<void> standby({required String outputId, dynamic hint}) =>
+    RustLib.instance.api.standby(outputId: outputId, hint: hint);
+
 class BrowseItems {
   final BrowseList list;
   final int offset;
