@@ -345,6 +345,41 @@ fn wire_get_image_impl(
         },
     )
 }
+fn wire_group_outputs_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "group_outputs",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_output_ids = <Vec<String>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::group_outputs(api_output_ids).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_init_app_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -957,6 +992,14 @@ impl SseDecode for flutter_rust_bridge::DartOpaque {
     }
 }
 
+impl SseDecode for std::collections::HashMap<String, String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <Vec<(String, String)>>::sse_decode(deserializer);
+        return inner.into_iter().collect();
+    }
+}
+
 impl SseDecode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1198,6 +1241,18 @@ impl SseDecode for Vec<crate::api::roon_transport_mirror::QueueItem> {
             ans_.push(<crate::api::roon_transport_mirror::QueueItem>::sse_decode(
                 deserializer,
             ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<(String, String)> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<(String, String)>::sse_decode(deserializer));
         }
         return ans_;
     }
@@ -1503,6 +1558,15 @@ impl SseDecode for crate::api::roon_transport_mirror::QueueItem {
     }
 }
 
+impl SseDecode for (String, String) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_field0 = <String>::sse_decode(deserializer);
+        let mut var_field1 = <String>::sse_decode(deserializer);
+        return (var_field0, var_field1);
+    }
+}
+
 impl SseDecode for crate::api::roon_transport_mirror::Repeat {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1545,31 +1609,36 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::ZoneSeek(var_field0);
             }
             5 => {
+                let mut var_field0 =
+                    <std::collections::HashMap<String, String>>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::OutputsChanged(var_field0);
+            }
+            6 => {
                 let mut var_field0 = <crate::api::simple::BrowseItems>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::BrowseItems(var_field0);
             }
-            6 => {
+            7 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::BrowseActions(var_field0);
             }
-            7 => {
+            8 => {
                 return crate::api::simple::RoonEvent::BrowseReset;
             }
-            8 => {
+            9 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::QueueItems(var_field0);
             }
-            9 => {
+            10 => {
                 let mut var_field0 = <bool>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::PauseOnTrackEnd(var_field0);
             }
-            10 => {
+            11 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            11 => {
+            12 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
             _ => {
@@ -1770,6 +1839,7 @@ impl SseDecode for crate::api::simple::ZoneSummary {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_zoneId = <String>::sse_decode(deserializer);
+        let mut var_outputIds = <Vec<String>>::sse_decode(deserializer);
         let mut var_displayName = <String>::sse_decode(deserializer);
         let mut var_state =
             <crate::api::roon_transport_mirror::PlayState>::sse_decode(deserializer);
@@ -1777,6 +1847,7 @@ impl SseDecode for crate::api::simple::ZoneSummary {
         let mut var_imageKey = <Option<String>>::sse_decode(deserializer);
         return crate::api::simple::ZoneSummary {
             zone_id: var_zoneId,
+            output_ids: var_outputIds,
             display_name: var_displayName,
             state: var_state,
             now_playing: var_nowPlaying,
@@ -1802,6 +1873,7 @@ fn pde_ffi_dispatcher_primary_impl(
         12 => wire_control_impl(port, ptr, rust_vec_len, data_len),
         13 => wire_control_by_zone_id_impl(port, ptr, rust_vec_len, data_len),
         4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire_group_outputs_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
         16 => wire_mute_impl(port, ptr, rust_vec_len, data_len),
         17 => wire_mute_all_impl(port, ptr, rust_vec_len, data_len),
@@ -2170,23 +2242,26 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::ZoneSeek(field0) => {
                 [4.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+            crate::api::simple::RoonEvent::OutputsChanged(field0) => {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseActions(field0) => {
+            crate::api::simple::RoonEvent::BrowseItems(field0) => {
                 [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseReset => [7.into_dart()].into_dart(),
-            crate::api::simple::RoonEvent::QueueItems(field0) => {
-                [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            crate::api::simple::RoonEvent::BrowseActions(field0) => {
+                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
+            crate::api::simple::RoonEvent::BrowseReset => [8.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
                 [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
                 [10.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [11.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Image(field0) => {
+                [11.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::SettingsSaved => [12.into_dart()].into_dart(),
         }
     }
 }
@@ -2385,6 +2460,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::ZoneSummary {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.zone_id.into_into_dart().into_dart(),
+            self.output_ids.into_into_dart().into_dart(),
             self.display_name.into_into_dart().into_dart(),
             self.state.into_into_dart().into_dart(),
             self.now_playing.into_into_dart().into_dart(),
@@ -2409,6 +2485,13 @@ impl SseEncode for flutter_rust_bridge::DartOpaque {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <usize>::sse_encode(self.encode(), serializer);
+    }
+}
+
+impl SseEncode for std::collections::HashMap<String, String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<(String, String)>>::sse_encode(self.into_iter().collect(), serializer);
     }
 }
 
@@ -2620,6 +2703,16 @@ impl SseEncode for Vec<crate::api::roon_transport_mirror::QueueItem> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::roon_transport_mirror::QueueItem>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<(String, String)> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <(String, String)>::sse_encode(item, serializer);
         }
     }
 }
@@ -2865,6 +2958,14 @@ impl SseEncode for crate::api::roon_transport_mirror::QueueItem {
     }
 }
 
+impl SseEncode for (String, String) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.0, serializer);
+        <String>::sse_encode(self.1, serializer);
+    }
+}
+
 impl SseEncode for crate::api::roon_transport_mirror::Repeat {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2906,31 +3007,35 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(4, serializer);
                 <crate::api::roon_transport_mirror::ZoneSeek>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+            crate::api::simple::RoonEvent::OutputsChanged(field0) => {
                 <i32>::sse_encode(5, serializer);
+                <std::collections::HashMap<String, String>>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+                <i32>::sse_encode(6, serializer);
                 <crate::api::simple::BrowseItems>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseActions(field0) => {
-                <i32>::sse_encode(6, serializer);
+                <i32>::sse_encode(7, serializer);
                 <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseReset => {
-                <i32>::sse_encode(7, serializer);
+                <i32>::sse_encode(8, serializer);
             }
             crate::api::simple::RoonEvent::QueueItems(field0) => {
-                <i32>::sse_encode(8, serializer);
+                <i32>::sse_encode(9, serializer);
                 <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
-                <i32>::sse_encode(9, serializer);
+                <i32>::sse_encode(10, serializer);
                 <bool>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::Image(field0) => {
-                <i32>::sse_encode(10, serializer);
+                <i32>::sse_encode(11, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(11, serializer);
+                <i32>::sse_encode(12, serializer);
             }
         }
     }
@@ -3086,6 +3191,7 @@ impl SseEncode for crate::api::simple::ZoneSummary {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.zone_id, serializer);
+        <Vec<String>>::sse_encode(self.output_ids, serializer);
         <String>::sse_encode(self.display_name, serializer);
         <crate::api::roon_transport_mirror::PlayState>::sse_encode(self.state, serializer);
         <Option<String>>::sse_encode(self.now_playing, serializer);

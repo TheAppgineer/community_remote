@@ -11,6 +11,7 @@ const exploreId = 0;
 class MyAppState extends ChangeNotifier {
   String? serverName;
   List<ZoneSummary>? zoneList;
+  Map<String, String>? outputs;
   BrowseItems? browseItems;
   List<BrowseItem>? actionItems;
   List<QueueItem>? queue;
@@ -93,6 +94,8 @@ class MyAppState extends ChangeNotifier {
       }
 
       return;
+    } else if (event is RoonEvent_OutputsChanged) {
+      outputs = event.field0;
     } else if (event is RoonEvent_BrowseItems) {
       if (browseItems == null || event.field0.offset == 0) {
         browseItems = event.field0;

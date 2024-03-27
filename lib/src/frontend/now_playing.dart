@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/grouping.dart';
 import 'package:community_remote/src/frontend/volume.dart';
 import 'package:community_remote/src/frontend/zones.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
@@ -116,6 +117,12 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           context: context,
           builder: (context) => const Dialog(
             child: Zones(),
+          ),
+        ),
+        onLongPress: () => showDialog(
+          context: context,
+          builder: (context) => const Dialog(
+            child: Grouping(),
           ),
         ),
         icon: const Icon(Icons.speaker_outlined),

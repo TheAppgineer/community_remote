@@ -89,6 +89,9 @@ Future<void> changeVolume(
 Future<void> standby({required String outputId, dynamic hint}) =>
     RustLib.instance.api.standby(outputId: outputId, hint: hint);
 
+Future<void> groupOutputs({required List<String> outputIds, dynamic hint}) =>
+    RustLib.instance.api.groupOutputs(outputIds: outputIds, hint: hint);
+
 class BrowseItems {
   final BrowseList list;
   final int offset;
@@ -151,6 +154,9 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.zoneSeek(
     ZoneSeek field0,
   ) = RoonEvent_ZoneSeek;
+  const factory RoonEvent.outputsChanged(
+    Map<String, String> field0,
+  ) = RoonEvent_OutputsChanged;
   const factory RoonEvent.browseItems(
     BrowseItems field0,
   ) = RoonEvent_BrowseItems;
@@ -172,6 +178,7 @@ sealed class RoonEvent with _$RoonEvent {
 
 class ZoneSummary {
   final String zoneId;
+  final List<String> outputIds;
   final String displayName;
   final PlayState state;
   final String? nowPlaying;
@@ -179,6 +186,7 @@ class ZoneSummary {
 
   const ZoneSummary({
     required this.zoneId,
+    required this.outputIds,
     required this.displayName,
     required this.state,
     this.nowPlaying,
@@ -188,6 +196,7 @@ class ZoneSummary {
   @override
   int get hashCode =>
       zoneId.hashCode ^
+      outputIds.hashCode ^
       displayName.hashCode ^
       state.hashCode ^
       nowPlaying.hashCode ^
@@ -199,6 +208,7 @@ class ZoneSummary {
       other is ZoneSummary &&
           runtimeType == other.runtimeType &&
           zoneId == other.zoneId &&
+          outputIds == other.outputIds &&
           displayName == other.displayName &&
           state == other.state &&
           nowPlaying == other.nowPlaying &&

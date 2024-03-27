@@ -28,6 +28,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Object dco_decode_DartOpaque(dynamic raw);
 
   @protected
+  Map<String, String> dco_decode_Map_String_String(dynamic raw);
+
+  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
@@ -130,6 +133,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<QueueItem> dco_decode_list_queue_item(dynamic raw);
 
   @protected
+  List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
+
+  @protected
   List<SourceControls> dco_decode_list_source_controls(dynamic raw);
 
   @protected
@@ -196,6 +202,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   QueueItem dco_decode_queue_item(dynamic raw);
 
   @protected
+  (String, String) dco_decode_record_string_string(dynamic raw);
+
+  @protected
   Repeat dco_decode_repeat(dynamic raw);
 
   @protected
@@ -245,6 +254,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Object sse_decode_DartOpaque(SseDeserializer deserializer);
+
+  @protected
+  Map<String, String> sse_decode_Map_String_String(
+      SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
@@ -352,6 +365,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<QueueItem> sse_decode_list_queue_item(SseDeserializer deserializer);
 
   @protected
+  List<(String, String)> sse_decode_list_record_string_string(
+      SseDeserializer deserializer);
+
+  @protected
   List<SourceControls> sse_decode_list_source_controls(
       SseDeserializer deserializer);
 
@@ -424,6 +441,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   QueueItem sse_decode_queue_item(SseDeserializer deserializer);
 
   @protected
+  (String, String) sse_decode_record_string_string(
+      SseDeserializer deserializer);
+
+  @protected
   Repeat sse_decode_repeat(SseDeserializer deserializer);
 
   @protected
@@ -477,6 +498,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_DartOpaque(Object self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Map_String_String(
+      Map<String, String> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -594,6 +619,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<QueueItem> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_record_string_string(
+      List<(String, String)> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_source_controls(
       List<SourceControls> self, SseSerializer serializer);
 
@@ -666,6 +695,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_queue_item(QueueItem self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_string(
+      (String, String) self, SseSerializer serializer);
 
   @protected
   void sse_encode_repeat(Repeat self, SseSerializer serializer);

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use flutter_rust_bridge::DartFnFuture;
 use once_cell::sync::Lazy;
 use roon_api::browse::Item as BrowseItem;
@@ -22,6 +24,7 @@ pub enum RoonEvent {
     ZonesChanged(Vec<ZoneSummary>),
     ZoneChanged(Option<Zone>),
     ZoneSeek(ZoneSeek),
+    OutputsChanged(HashMap<String, String>),
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,
@@ -44,6 +47,7 @@ pub struct ImageKeyValue {
 
 pub struct ZoneSummary {
     pub zone_id: String,
+    pub output_ids: Vec<String>,
     pub display_name: String,
     pub state: PlayState,
     pub now_playing: Option<String>,
@@ -235,5 +239,13 @@ pub async fn standby(output_id: String) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.standby(&output_id).await;
+    }
+}
+
+pub async fn group_outputs(output_ids: Vec<String>) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.group_outputs(output_ids).await;
     }
 }

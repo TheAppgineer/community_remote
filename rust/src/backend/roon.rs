@@ -41,6 +41,7 @@ struct RoonHandler {
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
     zone_id: Option<String>,
+    outputs: HashMap<String, String>,
     browse_id: Option<String>,
     browse_path: HashMap<String, Vec<&'static str>>,
     browse_category: i32,
@@ -356,6 +357,44 @@ impl Roon {
         Some(())
     }
 
+    pub async fn group_outputs(&self, output_ids: Vec<String>) -> Option<()> {
+        let output_ids = output_ids
+            .iter()
+            .map(|output_id| output_id.as_str())
+            .collect::<Vec<_>>();
+        let handler = self.handler.lock().await;
+
+        for zone in handler.zone_map.values() {
+            let current_ids = zone
+                .outputs
+                .iter()
+                .map(|output| output.output_id.as_str())
+                .collect::<Vec<_>>();
+            let matches_all = output_ids.len() == current_ids.len()
+                && output_ids.first() == current_ids.first()
+                && output_ids
+                    .iter()
+                    .all(|output_id| current_ids.contains(output_id));
+            let overlaps = current_ids
+                .iter()
+                .any(|current_id| output_ids.contains(current_id));
+
+            if !matches_all && current_ids.len() > 1 && overlaps {
+                handler
+                    .transport
+                    .as_ref()?
+                    .ungroup_outputs(current_ids)
+                    .await;
+            }
+        }
+
+        if output_ids.len() > 1 {
+            handler.transport.as_ref()?.group_outputs(output_ids).await;
+        }
+
+        Some(())
+    }
+
     async fn handle_random_item(
         &self,
         multi_session_key: Option<String>,
@@ -437,6 +476,7 @@ impl RoonHandler {
             transport: None,
             zone_map: HashMap::new(),
             zone_id: None,
+            outputs: HashMap::new(),
             browse_id: None,
             browse_path: HashMap::new(),
             browse_category: 0,
@@ -462,6 +502,7 @@ impl RoonHandler {
                 self.image = core.get_image().cloned();
 
                 self.transport.as_ref()?.subscribe_zones().await;
+                self.transport.as_ref()?.subscribe_outputs().await;
 
                 self.event_tx
                     .send(RoonEvent::CoreFound(core.display_name))
@@ -565,6 +606,26 @@ impl RoonHandler {
 
                     self.event_tx
                         .send(RoonEvent::ZoneSeek(seek.to_owned()))
+                        .await
+                        .unwrap();
+                }
+                Parsed::Outputs(outputs) => {
+                    for output in outputs {
+                        self.outputs.insert(output.output_id, output.display_name);
+                    }
+
+                    self.event_tx
+                        .send(RoonEvent::OutputsChanged(self.outputs.to_owned()))
+                        .await
+                        .unwrap();
+                }
+                Parsed::OutputsRemoved(output_ids) => {
+                    for output_id in output_ids {
+                        self.outputs.remove(&output_id);
+                    }
+
+                    self.event_tx
+                        .send(RoonEvent::OutputsChanged(self.outputs.to_owned()))
                         .await
                         .unwrap();
                 }
@@ -734,8 +795,15 @@ impl RoonHandler {
                     (None, None)
                 };
 
+                let output_ids = zone
+                    .outputs
+                    .iter()
+                    .map(|output| output.output_id.to_owned())
+                    .collect::<Vec<_>>();
+
                 ZoneSummary {
                     zone_id: zone_id.to_owned(),
+                    output_ids,
                     display_name: zone.display_name.to_owned(),
                     state: zone.state.to_owned(),
                     now_playing,
