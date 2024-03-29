@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/grouping.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class Zones extends StatelessWidget {
     if (zones != null) {
       ListTile itemBuilder(context, index) {
         var imageKey = zones[index].imageKey;
-        Image? image = appState.getImageFromCache(imageKey);
+        Widget? trailing;
         Widget? playState;
         Text? metaData;
 
@@ -44,13 +45,55 @@ class Zones extends StatelessWidget {
             break;
         }
 
+        if (appState.zone != null && appState.zone!.zoneId == zones[index].zoneId) {
+          trailing = MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.more_vert),
+              );
+            },
+            menuChildren: List<MenuItemButton>.generate(
+              (zones[index].outputIds.length == 1 ? 1 : 2),
+              (index) => MenuItemButton(
+                child: Text(index > 0 ? 'Ungroup' : 'Group...'),
+                onPressed: () {
+                  if (index > 0) {
+                    groupOutputs(outputIds: [appState.zone!.outputs[0].outputId]);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const Dialog(
+                        child: Grouping(),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+            onClose: () {
+              // Delay the onClose handling to make sure onPressed can be handled first
+              Future.delayed(const Duration(milliseconds: 100), () {
+              });
+            },
+          );
+        } else {
+          trailing = appState.getImageFromCache(imageKey);
+        }
+
         if (zones[index].nowPlaying != null) {
           metaData = Text(zones[index].nowPlaying!);
         }
 
         return ListTile(
           leading: playState,
-          trailing: image,
+          trailing: trailing,
           title: Text(zones[index].displayName),
           subtitle: metaData,
           onTap: () {
