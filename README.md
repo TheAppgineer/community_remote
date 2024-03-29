@@ -1,5 +1,5 @@
 # community_remote
-The by Community for Community Roon Remote
+The for Community by Community Roon Remote
 
 ## Getting Started
 
