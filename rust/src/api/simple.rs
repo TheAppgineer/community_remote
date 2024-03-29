@@ -90,8 +90,11 @@ pub async fn init_app() {
     }
 }
 
-pub async fn start_roon(cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static) -> String {
-    let (roon, mut rx, settings) = Roon::start().await;
+pub async fn start_roon(
+    config_path: String,
+    cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static,
+) -> String {
+    let (roon, mut rx, settings) = Roon::start(config_path).await;
     let mut api = API.lock().await;
 
     api.roon = Some(roon);

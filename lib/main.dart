@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/frontend/home_page.dart';
@@ -10,9 +12,12 @@ import 'package:community_remote/src/rust/frb_generated.dart';
 Future<void> main() async {
   var appState = MyAppState();
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   await RustLib.init();
 
-  String jsonString = await startRoon(cb: appState.cb);
+  Directory configPath = await getApplicationSupportDirectory();
+  String jsonString = await startRoon(configPath: configPath.path, cb: appState.cb);
   Map<String, dynamic> stored = jsonDecode(jsonString) as Map<String, dynamic>;
   Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
     "expand": false,

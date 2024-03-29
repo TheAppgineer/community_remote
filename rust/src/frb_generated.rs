@@ -746,6 +746,7 @@ fn wire_start_roon_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_config_path = <String>::sse_decode(&mut deserializer);
             let api_cb = decode_DartFn_Inputs_roon_event_Output_unit(
                 <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
             );
@@ -753,7 +754,9 @@ fn wire_start_roon_impl(
             move |context| async move {
                 transform_result_sse(
                     (move || async move {
-                        Result::<_, ()>::Ok(crate::api::simple::start_roon(api_cb).await)
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::start_roon(api_config_path, api_cb).await,
+                        )
                     })()
                     .await,
                 )

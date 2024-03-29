@@ -1,4 +1,4 @@
-package com.example.community_remote
+package com.theappgineer.community_remote
 
 import io.flutter.embedding.android.FlutterActivity
 

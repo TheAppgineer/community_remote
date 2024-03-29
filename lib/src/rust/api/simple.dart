@@ -13,8 +13,10 @@ part 'simple.freezed.dart';
 // The type `InternalState` is not used by any `pub` functions, thus it is ignored.
 
 Future<String> startRoon(
-        {required FutureOr<void> Function(RoonEvent) cb, dynamic hint}) =>
-    RustLib.instance.api.startRoon(cb: cb, hint: hint);
+        {required String configPath,
+        required FutureOr<void> Function(RoonEvent) cb,
+        dynamic hint}) =>
+    RustLib.instance.api.startRoon(configPath: configPath, cb: cb, hint: hint);
 
 Future<void> selectZone({required String zoneId, dynamic hint}) =>
     RustLib.instance.api.selectZone(zoneId: zoneId, hint: hint);

@@ -99,7 +99,10 @@ class _BrowseLevelState extends State<BrowseLevel> {
         appState.settings["view"] = value;
         Navigator.of(context).popUntil(ModalRoute.withName('-'));
         saveSettings(settings: jsonEncode(appState.settings));
-        _controller.jumpTo(0);
+
+        if (_controller.positions.isNotEmpty) {
+          _controller.jumpTo(0);
+        }
       }
     }
 

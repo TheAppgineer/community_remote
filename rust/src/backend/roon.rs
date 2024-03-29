@@ -22,7 +22,6 @@ use tokio::sync::{
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
-const CONFIG_PATH: &str = "config.json";
 const BROWSE_PAGE_SIZE: usize = 20;
 
 const PLAY_NOW: &str = "Play Now";
@@ -30,12 +29,14 @@ const ADD_NEXT: &str = "Add Next";
 const QUEUE: &str = "Queue";
 
 pub struct Roon {
+    config_path: Arc<String>,
     handler: Arc<Mutex<RoonHandler>>,
 }
 
 struct RoonHandler {
     event_tx: Sender<RoonEvent>,
     api_token: Option<String>,
+    config_path: Arc<String>,
     browse: Option<Browse>,
     image: Option<Image>,
     transport: Option<Transport>,
@@ -55,18 +56,23 @@ struct RoonHandler {
 }
 
 impl Roon {
-    pub async fn start() -> (Roon, Receiver<RoonEvent>, String) {
+    pub async fn start(config_path: String) -> (Roon, Receiver<RoonEvent>, String) {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
-        let get_roon_state = Box::new(|| RoonApi::load_roon_state(CONFIG_PATH));
+        let path = Arc::new(config_path + "/config.json");
+        let config_path = path.clone();
+        let get_roon_state = Box::new(move || RoonApi::load_roon_state(&path));
         let provided: HashMap<String, Svc> = HashMap::new();
         let services = Some(vec![
             Services::Browse(Browse::new()),
             Services::Transport(Transport::new()),
             Services::Image(Image::new()),
         ]);
-        let handler = Arc::new(Mutex::new(RoonHandler::new(tx)));
+        let value = RoonApi::load_config(&config_path, "settings");
+        let handler = Arc::new(Mutex::new(RoonHandler::new(tx, config_path.clone())));
+
+        log::info!("Loading config from: {config_path}");
 
         let handler_clone = handler.clone();
         tokio::spawn(async move {
@@ -89,8 +95,10 @@ impl Roon {
             }
         });
 
-        let roon = Self { handler };
-        let value = RoonApi::load_config(CONFIG_PATH, "settings");
+        let roon = Self {
+            config_path,
+            handler,
+        };
 
         (roon, rx, value.to_string())
     }
@@ -259,7 +267,9 @@ impl Roon {
     pub async fn save(&self, settings: String) {
         let value = serde_json::from_str::<Value>(&settings).unwrap();
 
-        RoonApi::save_config(CONFIG_PATH, "settings", value).unwrap();
+        if let Err(err) = RoonApi::save_config(&self.config_path, "settings", value) {
+            log::warn!("Failed to save config: {err}");
+        }
 
         self.handler
             .lock()
@@ -467,10 +477,11 @@ impl Roon {
 }
 
 impl RoonHandler {
-    fn new(event_tx: Sender<RoonEvent>) -> Self {
+    fn new(event_tx: Sender<RoonEvent>, config_path: Arc<String>) -> Self {
         Self {
             event_tx,
             api_token: None,
+            config_path,
             browse: None,
             image: None,
             transport: None,
@@ -531,7 +542,9 @@ impl RoonHandler {
                         .get(roon_state.paired_core_id.as_ref()?)
                         .cloned();
 
-                    RoonApi::save_roon_state(CONFIG_PATH, roon_state).unwrap();
+                    if let Err(err) = RoonApi::save_roon_state(&self.config_path, roon_state) {
+                        log::warn!("Failed to save config: {err}");
+                    }
                 }
                 Parsed::Zones(zones) => {
                     let mut curr_zone = None;

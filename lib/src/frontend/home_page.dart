@@ -48,6 +48,9 @@ class MyHomePageState extends State<MyHomePage> {
     );
     ThemeMode theme = ThemeMode.values.byName(appState.settings["theme"]);
     IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
+    String subtitle = appState.serverName != null
+      ? 'Served by: ${appState.serverName}'
+      : 'Use Roon Remote to Enable Extension';
 
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +59,7 @@ class MyHomePageState extends State<MyHomePage> {
         title: ListTile(
           leading: const Icon(Icons.person_outline),
           title: Text(widget.title),
-          subtitle: Text('Served by: ${appState.serverName}'),
+          subtitle: Text(subtitle),
         ),
         actions: [
           themeModeButton,
@@ -104,7 +107,9 @@ class QuickAccessButton extends StatelessWidget {
   Widget getIcon() {
     IconData icon;
 
-    if (appState.zone == null) {
+    if (appState.serverName == null) {
+      icon = Icons.help_center_outlined;
+    } else if (appState.zone == null) {
       icon = Icons.speaker_outlined;
     } else if (appState.pauseOnTrackEnd) {
       icon = Icons.timelapse_outlined;
@@ -129,7 +134,9 @@ class QuickAccessButton extends StatelessWidget {
   String getTooltip() {
     String tooltip;
 
-    if (appState.zone == null) {
+    if (appState.serverName == null) {
+      tooltip = "How To Connect?";
+    } else if (appState.zone == null) {
       tooltip = "Select Zone";
     } else if (appState.pauseOnTrackEnd) {
       tooltip = "Pausing at End of Track...";
@@ -151,8 +158,15 @@ class QuickAccessButton extends StatelessWidget {
     return tooltip;
   }
 
-  takeAction() {
-    if (appState.zone == null) {
+  takeAction(context) {
+    if (appState.serverName == null) {
+    } else if (appState.zone == null) {
+      showDialog(
+        context: context,
+        builder: (context) => const Dialog(
+          child: Zones(),
+        ),
+      );
     } else {
       switch (appState.zone!.state) {
         case PlayState.playing:
@@ -188,18 +202,7 @@ class QuickAccessButton extends StatelessWidget {
           onLongPress();
         },
         child: FloatingActionButton(
-          onPressed: () {
-            if (appState.zone == null) {
-              showDialog(
-                context: context,
-                builder: (context) => const Dialog(
-                  child: Zones(),
-                ),
-              );
-            } else {
-              takeAction();
-            }
-          },
+          onPressed: () => takeAction(context),
           tooltip: getTooltip(),
           child: getIcon(),
         ),
