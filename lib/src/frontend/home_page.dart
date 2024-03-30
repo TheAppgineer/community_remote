@@ -131,8 +131,8 @@ class QuickAccessButton extends StatelessWidget {
     return Icon(icon, size: 36);
   }
 
-  String getTooltip() {
-    String tooltip;
+  String? getTooltip() {
+    String? tooltip;
 
     if (appState.serverName == null) {
       tooltip = "How To Connect?";
@@ -143,11 +143,8 @@ class QuickAccessButton extends StatelessWidget {
     } else {
       switch (appState.zone!.state) {
         case PlayState.playing:
-          tooltip = "Pause";
-          break;
         case PlayState.paused:
         case PlayState.stopped:
-          tooltip = "Play";
           break;
         case PlayState.loading:
           tooltip = "Loading...";
