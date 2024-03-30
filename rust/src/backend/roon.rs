@@ -60,7 +60,7 @@ impl Roon {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
-        let path = Arc::new(config_path + "/config.json");
+        let path = Arc::new(config_path);
         let config_path = path.clone();
         let get_roon_state = Box::new(move || RoonApi::load_roon_state(&path));
         let provided: HashMap<String, Svc> = HashMap::new();

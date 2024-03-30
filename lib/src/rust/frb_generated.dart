@@ -121,7 +121,7 @@ abstract class RustLibApi extends BaseApi {
   Future<void> standby({required String outputId, dynamic hint});
 
   Future<String> startRoon(
-      {required String configPath,
+      {required String supportPath,
       required FutureOr<void> Function(RoonEvent) cb,
       dynamic hint});
 }
@@ -632,13 +632,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<String> startRoon(
-      {required String configPath,
+      {required String supportPath,
       required FutureOr<void> Function(RoonEvent) cb,
       dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(configPath, serializer);
+        sse_encode_String(supportPath, serializer);
         sse_encode_DartFn_Inputs_roon_event_Output_unit(cb, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 2, port: port_);
@@ -648,7 +648,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kStartRoonConstMeta,
-      argValues: [configPath, cb],
+      argValues: [supportPath, cb],
       apiImpl: this,
       hint: hint,
     ));
@@ -656,7 +656,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kStartRoonConstMeta => const TaskConstMeta(
         debugName: "start_roon",
-        argNames: ["configPath", "cb"],
+        argNames: ["supportPath", "cb"],
       );
 
   Future<void> Function(int, dynamic)

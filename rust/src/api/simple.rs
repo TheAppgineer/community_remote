@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fs::File;
 
 use flutter_rust_bridge::DartFnFuture;
 use once_cell::sync::Lazy;
@@ -10,7 +11,9 @@ use roon_api::transport::{
     volume::{ChangeMode, Mute},
     Control, QueueItem, Zone,
 };
-use simplelog::{format_description, ColorChoice, ConfigBuilder, TermLogger, TerminalMode};
+use simplelog::{
+    format_description, ColorChoice, ConfigBuilder, TermLogger, TerminalMode, WriteLogger,
+};
 use time::UtcOffset;
 use tokio::sync::Mutex;
 
@@ -66,34 +69,16 @@ impl InternalState {
 
 #[flutter_rust_bridge::frb(init)]
 pub async fn init_app() {
-    let time_format = format_description!("[hour]:[minute]:[second].[subsecond]");
-    let seconds = chrono::Local::now().offset().local_minus_utc();
-    let utc_offset = UtcOffset::from_whole_seconds(seconds).unwrap_or(UtcOffset::UTC);
-    let config = ConfigBuilder::new()
-        .set_time_format_custom(time_format)
-        .set_time_offset(utc_offset)
-        .build();
-
     flutter_rust_bridge::setup_default_user_utils();
-    TermLogger::init(
-        log::LevelFilter::Info,
-        config,
-        TerminalMode::Stdout,
-        ColorChoice::Never,
-    )
-    .unwrap();
-
-    if utc_offset == UtcOffset::UTC {
-        log::warn!("Timestamps are UTC");
-    } else {
-        log::info!("Timestamps are local time");
-    }
 }
 
 pub async fn start_roon(
-    config_path: String,
+    support_path: String,
     cb: impl Fn(RoonEvent) -> DartFnFuture<()> + Send + 'static,
 ) -> String {
+    init_logger(&support_path, log::LevelFilter::Info);
+
+    let config_path = support_path + "/config.json";
     let (roon, mut rx, settings) = Roon::start(config_path).await;
     let mut api = API.lock().await;
 
@@ -108,6 +93,28 @@ pub async fn start_roon(
     });
 
     settings
+}
+
+fn init_logger(support_path: &str, log_level: log::LevelFilter) {
+    let log_path = format!("{support_path}/messages.log");
+    let time_format = format_description!("[hour]:[minute]:[second].[subsecond]");
+    let seconds = chrono::Local::now().offset().local_minus_utc();
+    let utc_offset = UtcOffset::from_whole_seconds(seconds).unwrap_or(UtcOffset::UTC);
+    let config = ConfigBuilder::new()
+        .set_time_format_custom(time_format)
+        .set_time_offset(utc_offset)
+        .build();
+
+    let _ = match File::create(log_path) {
+        Ok(log_path) => WriteLogger::init(log_level, config, log_path),
+        Err(_) => TermLogger::init(log_level, config, TerminalMode::Stdout, ColorChoice::Never),
+    };
+
+    if utc_offset == UtcOffset::UTC {
+        log::warn!("Timestamps are UTC");
+    } else {
+        log::info!("Timestamps are local time");
+    }
 }
 
 pub async fn select_zone(zone_id: String) {

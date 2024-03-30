@@ -16,8 +16,8 @@ Future<void> main() async {
 
   await RustLib.init();
 
-  Directory configPath = await getApplicationSupportDirectory();
-  String jsonString = await startRoon(configPath: configPath.path, cb: appState.cb);
+  Directory supportPath = await getApplicationSupportDirectory();
+  String jsonString = await startRoon(supportPath: supportPath.path, cb: appState.cb);
   Map<String, dynamic> stored = jsonDecode(jsonString) as Map<String, dynamic>;
   Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
     "expand": false,
