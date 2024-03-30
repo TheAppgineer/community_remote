@@ -15,9 +15,12 @@ use roon_api::{
 };
 use serde_json::Value;
 use std::{collections::HashMap, sync::Arc};
-use tokio::sync::{
-    mpsc::{channel, Receiver, Sender},
-    Mutex,
+use tokio::{
+    sync::{
+        mpsc::{channel, Receiver, Sender},
+        Mutex,
+    },
+    time::{sleep, Duration},
 };
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
@@ -60,38 +63,48 @@ impl Roon {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
-        let path = Arc::new(config_path);
-        let config_path = path.clone();
-        let get_roon_state = Box::new(move || RoonApi::load_roon_state(&path));
-        let provided: HashMap<String, Svc> = HashMap::new();
-        let services = Some(vec![
-            Services::Browse(Browse::new()),
-            Services::Transport(Transport::new()),
-            Services::Image(Image::new()),
-        ]);
+        let config_path = Arc::new(config_path);
         let value = RoonApi::load_config(&config_path, "settings");
         let handler = Arc::new(Mutex::new(RoonHandler::new(tx, config_path.clone())));
 
         log::info!("Loading config from: {config_path}");
 
         let handler_clone = handler.clone();
+        let config_path_clone = config_path.clone();
         tokio::spawn(async move {
-            if let Some((mut handlers, mut core_rx)) = roon
-                .start_discovery(get_roon_state, provided, services)
-                .await
-            {
-                handlers.spawn(async move {
-                    loop {
-                        if let Some((core_event, msg)) = core_rx.recv().await {
-                            let mut roon_handler = handler_clone.lock().await;
+            loop {
+                let services = Some(vec![
+                    Services::Browse(Browse::new()),
+                    Services::Transport(Transport::new()),
+                    Services::Image(Image::new()),
+                ]);
+                let provided: HashMap<String, Svc> = HashMap::new();
+                let config_path = config_path_clone.clone();
+                let get_roon_state = Box::new(move || RoonApi::load_roon_state(&config_path));
 
-                            roon_handler.handle_core_event(core_event).await;
-                            roon_handler.handle_msg_event(msg).await;
+                if let Some((mut handlers, mut core_rx)) = roon
+                    .start_discovery(get_roon_state, provided, services)
+                    .await
+                {
+                    let roon_handler = handler_clone.clone();
+
+                    roon_handler.lock().await.zone_id = None;
+
+                    handlers.spawn(async move {
+                        loop {
+                            if let Some((core_event, msg)) = core_rx.recv().await {
+                                let mut roon_handler = roon_handler.lock().await;
+
+                                roon_handler.handle_core_event(core_event).await;
+                                roon_handler.handle_msg_event(msg).await;
+                            }
                         }
-                    }
-                });
+                    });
 
-                handlers.join_next().await;
+                    handlers.join_next().await;
+                }
+
+                sleep(Duration::from_secs(1)).await;
             }
         });
 
@@ -543,7 +556,7 @@ impl RoonHandler {
                         .cloned();
 
                     if let Err(err) = RoonApi::save_roon_state(&self.config_path, roon_state) {
-                        log::warn!("Failed to save config: {err}");
+                        log::warn!("Failed to save state: {err}");
                     }
                 }
                 Parsed::Zones(zones) => {
