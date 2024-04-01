@@ -25,7 +25,7 @@ use tokio::{
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
-const BROWSE_PAGE_SIZE: usize = 20;
+const BROWSE_PAGE_SIZE: usize = 100;
 
 const PLAY_NOW: &str = "Play Now";
 const ADD_NEXT: &str = "Add Next";

@@ -54,8 +54,10 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
     appState.setProgressCallback(setProgress);
 
     if (appState.zone != null) {
-      if (appState.zone!.nowPlaying != null) {
-        NowPlaying nowPlaying = appState.zone!.nowPlaying!;
+      Zone zone = appState.zone!;
+
+      if (zone.nowPlaying != null) {
+        NowPlaying nowPlaying = zone.nowPlaying!;
         Widget? leading;
         Image? image = appState.getImageFromCache(nowPlaying.imageKey);
 
@@ -92,7 +94,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         metadata = const ListTile(title: Text('Go find something to play'));
       }
 
-      if (appState.zone!.isNextAllowed) {
+      if (zone.isNextAllowed) {
         tooltipNext = 'Next Track';
         onNextPressed = () {
           control(control: Control.next);
@@ -104,7 +106,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         };
       }
 
-      if (appState.zone!.isPreviousAllowed) {
+      if (zone.isPreviousAllowed) {
         tooltipPrev = 'Previous Track';
         onPrevPressed = () {
           control(control: Control.previous);
@@ -118,13 +120,13 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
             child: Zones(),
           ),
         ),
-        icon: const Icon(Icons.speaker_outlined),
-        label: Text(appState.zone!.displayName),
+        icon: Icon(zone.outputs.length > 1? Icons.speaker_group_outlined: Icons.speaker_outlined),
+        label: Text(zone.displayName),
       ));
 
       zoneControl.add(const Padding(padding: EdgeInsets.only(left: 10)));
 
-      Output output = appState.zone!.outputs.elementAt(0);
+      Output output = zone.outputs.elementAt(0);
       String volumeLabel = 'Volume';
 
       if (output.volume != null && output.volume!.value != null) {

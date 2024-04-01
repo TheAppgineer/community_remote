@@ -62,7 +62,9 @@ class MyAppState extends ChangeNotifier {
   }
 
   void cb(event) {
-    if (event is RoonEvent_CoreFound) {
+    if (event is RoonEvent_Image) {
+      imageCache[event.field0.imageKey] = event.field0.image;
+    } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
       browse(category: settings["view"], sessionId: exploreId);
@@ -116,8 +118,6 @@ class MyAppState extends ChangeNotifier {
       queue = event.field0;
     } else if (event is RoonEvent_PauseOnTrackEnd) {
       pauseOnTrackEnd = event.field0;
-    } else if (event is RoonEvent_Image) {
-      imageCache[event.field0.imageKey] = event.field0.image;
     }
 
     notifyListeners();

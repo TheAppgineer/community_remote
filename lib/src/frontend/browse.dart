@@ -70,16 +70,40 @@ class BrowseLevel extends StatefulWidget {
 }
 
 class _BrowseLevelState extends State<BrowseLevel> {
-  late ScrollController _controller;
+  late final ScrollController _controller;
+  bool isScrolling = false;
+
+  void _handleScrollChange() {
+    if (isScrolling != _controller.position.isScrollingNotifier.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          isScrolling = _controller.position.isScrollingNotifier.value;
+        });
+      });
+    }
+  }
+
+  void _handlePositionAttach(ScrollPosition position) {
+    position.isScrollingNotifier.addListener(_handleScrollChange);
+  }
+
+  void _handlePositionDetach(ScrollPosition position) {
+    position.isScrollingNotifier.removeListener(_handleScrollChange);
+  }
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController()..addListener(_loadMore);
+
+    _controller = ScrollController(
+      onAttach: _handlePositionAttach,
+      onDetach: _handlePositionDetach,
+    )
+    ..addListener(_loadMore);
   }
 
   Future<void> _loadMore() async {
-    if (_controller.position.extentAfter < 300) {
+    if (_controller.position.extentAfter < 500) {
       await browseNextPage();
     }
   }
@@ -118,7 +142,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
         browseTitle = ListTile(
           title: Text(appState.browseItems!.list.title),
           subtitle: Text(subtitle),
-          trailing: imageKey != null ? appState.getImageFromCache(imageKey) : null,
+          trailing: appState.getImageFromCache(imageKey),
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
         );
       } else if (Navigator.of(context).canPop()) {
@@ -130,7 +154,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
       ListTile itemBuilder(context, index) {
         Widget? leading;
         Widget? trailing;
-        Image? image = appState.getImageFromCache(browseList[index].imageKey);
+        Image? image = isScrolling ? null : appState.getImageFromCache(browseList[index].imageKey);
         Text? subtitle;
 
         if (image != null) {
