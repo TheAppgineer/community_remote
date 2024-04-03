@@ -56,6 +56,7 @@ struct RoonHandler {
     pop_levels: Option<u32>,
     queue: Option<Vec<QueueItem>>,
     pause_on_track_end: bool,
+    pause_after_item_ids: Option<Vec<u32>>,
 }
 
 impl Roon {
@@ -275,6 +276,12 @@ impl Roon {
             .await;
 
         Some(())
+    }
+
+    pub async fn pause_after_queue_items(&self, queue_item_ids: Vec<u32>) {
+        let mut handler = self.handler.lock().await;
+
+        handler.pause_after_item_ids = Some(queue_item_ids);
     }
 
     pub async fn save(&self, settings: String) {
@@ -511,6 +518,7 @@ impl RoonHandler {
             pop_levels: None,
             queue: None,
             pause_on_track_end: false,
+            pause_after_item_ids: None,
         }
     }
 
@@ -849,8 +857,15 @@ impl RoonHandler {
     async fn handle_pause_on_track_end(&mut self, seek: &ZoneSeek) -> Option<()> {
         let zone_id = self.zone_id.as_deref()?;
         let zone = self.zone_map.get(zone_id)?;
+        let queue_item_id = self.queue.as_ref()?.get(0)?.queue_item_id;
+        let pause_after_item_id =
+            if let Some(pause_after_item_ids) = self.pause_after_item_ids.as_ref() {
+                pause_after_item_ids.contains(&queue_item_id)
+            } else {
+                false
+            };
 
-        if self.pause_on_track_end && zone.state == State::Playing {
+        if (self.pause_on_track_end || pause_after_item_id) && zone.state == State::Playing {
             let now_playing = zone.now_playing.as_ref()?;
             let length = now_playing.length? as i64;
 
@@ -864,7 +879,9 @@ impl RoonHandler {
                             .mute(&output.output_id, &Mute::Mute)
                             .await;
                     }
-                } else if seek.seek_position? == 0 {
+
+                    self.pause_on_track_end = true
+                } else if self.pause_on_track_end && seek.seek_position? == 0 {
                     self.transport
                         .as_ref()?
                         .control(&zone.zone_id, &Control::Stop)

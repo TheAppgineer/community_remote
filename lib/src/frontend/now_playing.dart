@@ -128,12 +128,19 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
 
       Output output = zone.outputs.elementAt(0);
       String volumeLabel = 'Volume';
+      IconData volumeIcon = Icons.volume_up;
 
-      if (output.volume != null && output.volume!.value != null) {
-        volumeLabel = output.volume!.value!.toInt().toString();
+      if (output.volume != null) {
+        if (output.volume!.value != null) {
+          volumeLabel = output.volume!.value!.toInt().toString();
 
-        if (output.volume!.scale == Scale.decibel) {
-          volumeLabel += ' dB';
+          if (output.volume!.scale == Scale.decibel) {
+            volumeLabel += ' dB';
+          }
+        }
+
+        if (output.volume!.isMuted != null && output.volume!.isMuted!) {
+          volumeIcon = Icons.volume_off;
         }
       }
 
@@ -144,7 +151,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
             child: VolumeDialog(),
           ),
         ),
-        icon: const Icon(Icons.volume_up),
+        icon: Icon(volumeIcon),
         label: Text(volumeLabel),
       ));
     }

@@ -180,6 +180,14 @@ pub async fn select_queue_item(queue_item_id: u32) {
     }
 }
 
+pub async fn pause_after_queue_items(queue_item_ids: Vec<u32>) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.pause_after_queue_items(queue_item_ids).await;
+    }
+}
+
 pub async fn save_settings(settings: String) {
     let api = API.lock().await;
 

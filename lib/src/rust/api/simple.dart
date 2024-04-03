@@ -57,6 +57,11 @@ Future<void> selectBrowseItem(
 Future<void> selectQueueItem({required int queueItemId, dynamic hint}) =>
     RustLib.instance.api.selectQueueItem(queueItemId: queueItemId, hint: hint);
 
+Future<void> pauseAfterQueueItems(
+        {required List<int> queueItemIds, dynamic hint}) =>
+    RustLib.instance.api
+        .pauseAfterQueueItems(queueItemIds: queueItemIds, hint: hint);
+
 Future<void> saveSettings({required String settings, dynamic hint}) =>
     RustLib.instance.api.saveSettings(settings: settings, hint: hint);
 

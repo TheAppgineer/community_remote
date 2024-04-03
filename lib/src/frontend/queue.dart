@@ -4,10 +4,17 @@ import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Queue extends StatelessWidget {
+class Queue extends StatefulWidget {
   const Queue({
     super.key,
   });
+
+  @override
+  State<Queue> createState() => _QueueState();
+}
+
+class _QueueState extends State<Queue> {
+  List<int> stops = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +48,31 @@ class Queue extends StatelessWidget {
           onTap: () {
             selectQueueItem(queueItemId: queue[index].queueItemId);
           },
+          onLongPress: () {
+            if (index < queue.length - 1) {
+              setState(() {
+                if (stops.contains(queue[index].queueItemId)) {
+                  stops.remove(queue[index].queueItemId);
+                } else {
+                  stops.add(queue[index].queueItemId);
+                }
+              });
+
+              pauseAfterQueueItems(queueItemIds: stops);
+            }
+          },
         );
       }
 
       listView = ListView.separated(
         padding: const EdgeInsets.all(10),
         itemBuilder: itemBuilder,
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: appState.queue!.length,
+        separatorBuilder: (_, index) => Divider(
+          color: index < queue.length - 1 && stops.contains(queue[index].queueItemId)
+            ? Theme.of(context).colorScheme.primary
+            : null,
+        ),
+        itemCount: queue.length,
       );
     }
 
