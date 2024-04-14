@@ -172,8 +172,8 @@ class __$$RoonEvent_CoreFoundImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
-  const _$RoonEvent_CoreFoundImpl(this.field0);
+class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
+  const _$RoonEvent_CoreFoundImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -330,9 +330,10 @@ class _$RoonEvent_CoreFoundImpl implements RoonEvent_CoreFound {
   }
 }
 
-abstract class RoonEvent_CoreFound implements RoonEvent {
+abstract class RoonEvent_CoreFound extends RoonEvent {
   const factory RoonEvent_CoreFound(final String field0) =
       _$RoonEvent_CoreFoundImpl;
+  const RoonEvent_CoreFound._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -373,8 +374,8 @@ class __$$RoonEvent_CoreLostImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
-  const _$RoonEvent_CoreLostImpl(this.field0);
+class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
+  const _$RoonEvent_CoreLostImpl(this.field0) : super._();
 
   @override
   final String field0;
@@ -531,9 +532,10 @@ class _$RoonEvent_CoreLostImpl implements RoonEvent_CoreLost {
   }
 }
 
-abstract class RoonEvent_CoreLost implements RoonEvent {
+abstract class RoonEvent_CoreLost extends RoonEvent {
   const factory RoonEvent_CoreLost(final String field0) =
       _$RoonEvent_CoreLostImpl;
+  const RoonEvent_CoreLost._() : super._();
 
   String get field0;
   @JsonKey(ignore: true)
@@ -576,9 +578,10 @@ class __$$RoonEvent_ZonesChangedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
+class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   const _$RoonEvent_ZonesChangedImpl(final List<ZoneSummary> field0)
-      : _field0 = field0;
+      : _field0 = field0,
+        super._();
 
   final List<ZoneSummary> _field0;
   @override
@@ -741,9 +744,10 @@ class _$RoonEvent_ZonesChangedImpl implements RoonEvent_ZonesChanged {
   }
 }
 
-abstract class RoonEvent_ZonesChanged implements RoonEvent {
+abstract class RoonEvent_ZonesChanged extends RoonEvent {
   const factory RoonEvent_ZonesChanged(final List<ZoneSummary> field0) =
       _$RoonEvent_ZonesChangedImpl;
+  const RoonEvent_ZonesChanged._() : super._();
 
   List<ZoneSummary> get field0;
   @JsonKey(ignore: true)
@@ -785,8 +789,8 @@ class __$$RoonEvent_ZoneChangedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
-  const _$RoonEvent_ZoneChangedImpl([this.field0]);
+class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
+  const _$RoonEvent_ZoneChangedImpl([this.field0]) : super._();
 
   @override
   final Zone? field0;
@@ -943,9 +947,10 @@ class _$RoonEvent_ZoneChangedImpl implements RoonEvent_ZoneChanged {
   }
 }
 
-abstract class RoonEvent_ZoneChanged implements RoonEvent {
+abstract class RoonEvent_ZoneChanged extends RoonEvent {
   const factory RoonEvent_ZoneChanged([final Zone? field0]) =
       _$RoonEvent_ZoneChangedImpl;
+  const RoonEvent_ZoneChanged._() : super._();
 
   Zone? get field0;
   @JsonKey(ignore: true)
@@ -986,8 +991,8 @@ class __$$RoonEvent_ZoneSeekImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_ZoneSeekImpl implements RoonEvent_ZoneSeek {
-  const _$RoonEvent_ZoneSeekImpl(this.field0);
+class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
+  const _$RoonEvent_ZoneSeekImpl(this.field0) : super._();
 
   @override
   final ZoneSeek field0;
@@ -1144,9 +1149,10 @@ class _$RoonEvent_ZoneSeekImpl implements RoonEvent_ZoneSeek {
   }
 }
 
-abstract class RoonEvent_ZoneSeek implements RoonEvent {
+abstract class RoonEvent_ZoneSeek extends RoonEvent {
   const factory RoonEvent_ZoneSeek(final ZoneSeek field0) =
       _$RoonEvent_ZoneSeekImpl;
+  const RoonEvent_ZoneSeek._() : super._();
 
   ZoneSeek get field0;
   @JsonKey(ignore: true)
@@ -1189,9 +1195,10 @@ class __$$RoonEvent_OutputsChangedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_OutputsChangedImpl implements RoonEvent_OutputsChanged {
+class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   const _$RoonEvent_OutputsChangedImpl(final Map<String, String> field0)
-      : _field0 = field0;
+      : _field0 = field0,
+        super._();
 
   final Map<String, String> _field0;
   @override
@@ -1354,9 +1361,10 @@ class _$RoonEvent_OutputsChangedImpl implements RoonEvent_OutputsChanged {
   }
 }
 
-abstract class RoonEvent_OutputsChanged implements RoonEvent {
+abstract class RoonEvent_OutputsChanged extends RoonEvent {
   const factory RoonEvent_OutputsChanged(final Map<String, String> field0) =
       _$RoonEvent_OutputsChangedImpl;
+  const RoonEvent_OutputsChanged._() : super._();
 
   Map<String, String> get field0;
   @JsonKey(ignore: true)
@@ -1398,8 +1406,8 @@ class __$$RoonEvent_BrowseItemsImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
-  const _$RoonEvent_BrowseItemsImpl(this.field0);
+class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
+  const _$RoonEvent_BrowseItemsImpl(this.field0) : super._();
 
   @override
   final BrowseItems field0;
@@ -1556,9 +1564,10 @@ class _$RoonEvent_BrowseItemsImpl implements RoonEvent_BrowseItems {
   }
 }
 
-abstract class RoonEvent_BrowseItems implements RoonEvent {
+abstract class RoonEvent_BrowseItems extends RoonEvent {
   const factory RoonEvent_BrowseItems(final BrowseItems field0) =
       _$RoonEvent_BrowseItemsImpl;
+  const RoonEvent_BrowseItems._() : super._();
 
   BrowseItems get field0;
   @JsonKey(ignore: true)
@@ -1601,9 +1610,10 @@ class __$$RoonEvent_BrowseActionsImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_BrowseActionsImpl implements RoonEvent_BrowseActions {
+class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   const _$RoonEvent_BrowseActionsImpl(final List<BrowseItem> field0)
-      : _field0 = field0;
+      : _field0 = field0,
+        super._();
 
   final List<BrowseItem> _field0;
   @override
@@ -1766,9 +1776,10 @@ class _$RoonEvent_BrowseActionsImpl implements RoonEvent_BrowseActions {
   }
 }
 
-abstract class RoonEvent_BrowseActions implements RoonEvent {
+abstract class RoonEvent_BrowseActions extends RoonEvent {
   const factory RoonEvent_BrowseActions(final List<BrowseItem> field0) =
       _$RoonEvent_BrowseActionsImpl;
+  const RoonEvent_BrowseActions._() : super._();
 
   List<BrowseItem> get field0;
   @JsonKey(ignore: true)
@@ -1795,8 +1806,8 @@ class __$$RoonEvent_BrowseResetImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_BrowseResetImpl implements RoonEvent_BrowseReset {
-  const _$RoonEvent_BrowseResetImpl();
+class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
+  const _$RoonEvent_BrowseResetImpl() : super._();
 
   @override
   String toString() {
@@ -1942,8 +1953,9 @@ class _$RoonEvent_BrowseResetImpl implements RoonEvent_BrowseReset {
   }
 }
 
-abstract class RoonEvent_BrowseReset implements RoonEvent {
+abstract class RoonEvent_BrowseReset extends RoonEvent {
   const factory RoonEvent_BrowseReset() = _$RoonEvent_BrowseResetImpl;
+  const RoonEvent_BrowseReset._() : super._();
 }
 
 /// @nodoc
@@ -1979,9 +1991,10 @@ class __$$RoonEvent_QueueItemsImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_QueueItemsImpl implements RoonEvent_QueueItems {
+class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   const _$RoonEvent_QueueItemsImpl(final List<QueueItem> field0)
-      : _field0 = field0;
+      : _field0 = field0,
+        super._();
 
   final List<QueueItem> _field0;
   @override
@@ -2145,9 +2158,10 @@ class _$RoonEvent_QueueItemsImpl implements RoonEvent_QueueItems {
   }
 }
 
-abstract class RoonEvent_QueueItems implements RoonEvent {
+abstract class RoonEvent_QueueItems extends RoonEvent {
   const factory RoonEvent_QueueItems(final List<QueueItem> field0) =
       _$RoonEvent_QueueItemsImpl;
+  const RoonEvent_QueueItems._() : super._();
 
   List<QueueItem> get field0;
   @JsonKey(ignore: true)
@@ -2190,8 +2204,8 @@ class __$$RoonEvent_PauseOnTrackEndImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_PauseOnTrackEndImpl implements RoonEvent_PauseOnTrackEnd {
-  const _$RoonEvent_PauseOnTrackEndImpl(this.field0);
+class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
+  const _$RoonEvent_PauseOnTrackEndImpl(this.field0) : super._();
 
   @override
   final bool field0;
@@ -2348,9 +2362,10 @@ class _$RoonEvent_PauseOnTrackEndImpl implements RoonEvent_PauseOnTrackEnd {
   }
 }
 
-abstract class RoonEvent_PauseOnTrackEnd implements RoonEvent {
+abstract class RoonEvent_PauseOnTrackEnd extends RoonEvent {
   const factory RoonEvent_PauseOnTrackEnd(final bool field0) =
       _$RoonEvent_PauseOnTrackEndImpl;
+  const RoonEvent_PauseOnTrackEnd._() : super._();
 
   bool get field0;
   @JsonKey(ignore: true)
@@ -2391,8 +2406,8 @@ class __$$RoonEvent_ImageImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_ImageImpl implements RoonEvent_Image {
-  const _$RoonEvent_ImageImpl(this.field0);
+class _$RoonEvent_ImageImpl extends RoonEvent_Image {
+  const _$RoonEvent_ImageImpl(this.field0) : super._();
 
   @override
   final ImageKeyValue field0;
@@ -2549,9 +2564,10 @@ class _$RoonEvent_ImageImpl implements RoonEvent_Image {
   }
 }
 
-abstract class RoonEvent_Image implements RoonEvent {
+abstract class RoonEvent_Image extends RoonEvent {
   const factory RoonEvent_Image(final ImageKeyValue field0) =
       _$RoonEvent_ImageImpl;
+  const RoonEvent_Image._() : super._();
 
   ImageKeyValue get field0;
   @JsonKey(ignore: true)
@@ -2579,8 +2595,8 @@ class __$$RoonEvent_SettingsSavedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RoonEvent_SettingsSavedImpl implements RoonEvent_SettingsSaved {
-  const _$RoonEvent_SettingsSavedImpl();
+class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
+  const _$RoonEvent_SettingsSavedImpl() : super._();
 
   @override
   String toString() {
@@ -2726,6 +2742,7 @@ class _$RoonEvent_SettingsSavedImpl implements RoonEvent_SettingsSaved {
   }
 }
 
-abstract class RoonEvent_SettingsSaved implements RoonEvent {
+abstract class RoonEvent_SettingsSaved extends RoonEvent {
   const factory RoonEvent_SettingsSaved() = _$RoonEvent_SettingsSavedImpl;
+  const RoonEvent_SettingsSaved._() : super._();
 }
