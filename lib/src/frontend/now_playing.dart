@@ -19,6 +19,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
   int _length = 0;
   int _elapsed = 0;
   double _progress = 0;
+  final Map<String, Image> _imageCache = {};
 
   setProgress(int length, int? elapsed) {
     setState(() {
@@ -40,6 +41,14 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
     });
   }
 
+  void addToImageCache(ImageKeyValue keyValue) {
+    if (mounted) {
+      setState(() {
+        _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
@@ -59,7 +68,12 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
       if (zone.nowPlaying != null) {
         NowPlaying nowPlaying = zone.nowPlaying!;
         Widget? leading;
-        Image? image = appState.getImageFromCache(nowPlaying.imageKey);
+        Image? image;
+        var imageKey = nowPlaying.imageKey;
+
+        if (imageKey != null) {
+          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+        }
 
         if (image != null) {
           leading = Row(

@@ -25,6 +25,8 @@ use tokio::{
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
+use super::browse_helper::BrowseHelper;
+
 const BROWSE_PAGE_SIZE: usize = 100;
 
 const PLAY_NOW: &str = "Play Now";
@@ -40,7 +42,7 @@ struct RoonHandler {
     event_tx: Sender<RoonEvent>,
     api_token: Option<String>,
     config_path: Arc<String>,
-    browse: Option<Browse>,
+    browse: Option<BrowseHelper>,
     image: Option<Image>,
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
@@ -188,7 +190,7 @@ impl Roon {
                 ..Default::default()
             };
 
-            handler.browse.as_ref()?.browse(&opts).await;
+            handler.browse.as_mut()?.browse(opts).await;
             handler.browse_category = category;
             handler.browse_input = input;
         }
@@ -216,7 +218,7 @@ impl Roon {
             }
 
             handler.browse_offset = 0;
-            handler.browse.as_ref()?.browse(&opts).await;
+            handler.browse.as_mut()?.browse(opts).await;
         }
 
         Some(())
@@ -227,7 +229,6 @@ impl Roon {
 
         if handler.browse_offset < handler.browse_total {
             // There are more items to load
-            let browse = handler.browse.as_ref()?;
             let opts = LoadOpts {
                 count: Some(BROWSE_PAGE_SIZE),
                 offset: handler.browse_offset,
@@ -236,7 +237,8 @@ impl Roon {
                 ..Default::default()
             };
 
-            browse.load(&opts).await;
+            let browse = handler.browse.as_mut()?;
+            browse.load(opts).await;
 
             // Prevent additional loading till response is received
             handler.browse_offset = handler.browse_total;
@@ -249,18 +251,15 @@ impl Roon {
         let mut handler = self.handler.lock().await;
 
         if handler.browse_level > 0 {
-            handler.browse_offset = 0;
-
-            let browse = handler.browse.as_ref()?;
             let multi_session_key = handler.get_multi_session_key(session_id);
             let opts = BrowseOpts {
                 multi_session_key,
                 pop_levels: Some(1),
-                set_display_offset: Some(0),
                 ..Default::default()
             };
 
-            browse.browse(&opts).await;
+            let browse = handler.browse.as_mut()?;
+            browse.browse(opts).await;
         }
 
         Some(())
@@ -488,7 +487,7 @@ impl Roon {
                     ..Default::default()
                 };
 
-                handler.browse.as_ref()?.browse(&opts).await;
+                handler.browse.as_mut()?.browse(opts).await;
             }
         }
 
@@ -530,7 +529,7 @@ impl RoonHandler {
         match core_event {
             CoreEvent::Found(mut core) => {
                 self.transport = core.get_transport().cloned();
-                self.browse = core.get_browse().cloned();
+                self.browse = Some(BrowseHelper::new(core.get_browse().cloned()?));
                 self.image = core.get_image().cloned();
 
                 self.transport.as_ref()?.subscribe_zones().await;
@@ -665,35 +664,41 @@ impl RoonHandler {
                 }
                 Parsed::BrowseResult(result, multi_session_key) => match result.action {
                     BrowseAction::List => {
+                        self.browse.as_mut()?.browse_result().await;
+
                         if self.pop_levels.is_some() {
                             let opts = BrowseOpts {
                                 multi_session_key,
                                 pop_levels: self.pop_levels.take(),
                                 ..Default::default()
                             };
-                            self.browse.as_ref()?.browse(&opts).await;
+                            self.browse.as_mut()?.browse(opts).await;
                         } else {
                             let offset = self.browse_offset;
                             let opts = LoadOpts {
-                                count: Some(20),
+                                count: Some(BROWSE_PAGE_SIZE),
                                 offset,
                                 multi_session_key,
                                 set_display_offset: offset,
                                 ..Default::default()
                             };
 
-                            if result.list.as_ref()?.title == "Explore" {
+                            if result.list.as_ref()?.title == "Explore"
+                                || result.list.as_ref()?.title == "Library"
+                            {
                                 self.browse_category = 0;
                             }
 
                             self.browse_level = result.list.as_ref()?.level;
-                            self.browse.as_ref()?.load(&opts).await;
+                            self.browse.as_mut()?.load(opts).await;
                         }
                     }
                     _ => {}
                 },
                 Parsed::LoadResult(result, multi_session_key) => {
                     let key = multi_session_key.as_deref()?;
+
+                    self.browse.as_mut()?.browse_result().await;
 
                     if let Some(path) = self.browse_path.get_mut(key) {
                         if let Some(category) = path.pop() {
@@ -726,7 +731,7 @@ impl RoonHandler {
                                 ..Default::default()
                             };
 
-                            self.browse.as_ref()?.browse(&opts).await;
+                            self.browse.as_mut()?.browse(opts).await;
 
                             return Some(());
                         }
@@ -734,7 +739,7 @@ impl RoonHandler {
                         self.browse_path.remove(key);
                     }
 
-                    if result.list.title == "Explore" {
+                    if result.list.title == "Explore" || result.list.title == "Library" {
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
                         let event = if result.list.hint == Some(BrowseListHint::ActionList) {
@@ -749,16 +754,22 @@ impl RoonHandler {
 
                             let mut items = result.items;
 
-                            if result.offset == 0 && (title == "Albums" || title == "Tracks") {
-                                let len = title.len() - 1;
-                                let title = &title[..len];
+                            let offset = if title == "Albums" || title == "Tracks" {
+                                if result.offset == 0 {
+                                    let len = title.len() - 1;
+                                    let title = &title[..len];
 
-                                items = self.prepend_random_play_entry(title, &items)?;
-                            }
+                                    items = self.prepend_random_play_entry(title, &items)?;
+                                }
+
+                                result.offset + 1
+                            } else {
+                                result.offset
+                            };
 
                             let browse_items = BrowseItems {
                                 list: result.list,
-                                offset: result.offset,
+                                offset,
                                 items,
                             };
 
@@ -805,6 +816,11 @@ impl RoonHandler {
                         .send(RoonEvent::Image(image_key_value))
                         .await
                         .unwrap();
+                }
+                Parsed::Error(err) => {
+                    if err == "InvalidItemKey" {
+                        self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
+                    }
                 }
                 _ => (),
             }

@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:community_remote/src/frontend/app_state.dart';
-import 'package:community_remote/src/frontend/home_page.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+final MyNavigator _navigator = MyNavigator();
 
 class CustomRoute<T> extends MaterialPageRoute<T> {
   CustomRoute({ required super.builder, required RouteSettings super.settings });
@@ -25,6 +24,31 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     return CustomRoute(builder: (_) => const BrowseLevel(), settings: settings);
+  }
+}
+
+class MyNavigator {
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  dynamic pushNamed(String route, {dynamic arguments}) {
+    return navigatorKey.currentState?.pushNamed(route, arguments: arguments);
+  }
+
+  dynamic pop() {
+    return navigatorKey.currentState?.pop();
+  }
+
+  void popUntil(bool Function(Route<dynamic>) predicate) {
+    navigatorKey.currentState?.popUntil(predicate);
+  }
+
+  bool canPop() {
+    if (navigatorKey.currentState != null) {
+      return navigatorKey.currentState!.canPop();
+    } else {
+      return false;
+    }
   }
 }
 
@@ -56,6 +80,7 @@ class Browse extends StatelessWidget {
       themeMode: ThemeMode.values.byName(appState.settings["theme"]),
       onGenerateRoute: Router.generateRoute,
       initialRoute: "-",
+      navigatorKey: _navigator.navigatorKey,
     );
   }
 }
@@ -66,18 +91,29 @@ class BrowseLevel extends StatefulWidget {
   });
 
   @override
-  State<BrowseLevel> createState() => _BrowseLevelState();
+  State<BrowseLevel> createState() => BrowseLevelState();
 }
 
-class _BrowseLevelState extends State<BrowseLevel> {
+class BrowseLevelState extends State<BrowseLevel> {
+  static bool _viewChanged = false;
   late final ScrollController _controller;
-  bool isScrolling = false;
+  BrowseItems? _browseItems;
+  final Map<String, Image> _imageCache = {};
+  bool _isScrolling = false;
+
+  static void onDestinationSelected(value) {
+    _viewChanged = true;
+
+    _navigator.popUntil(ModalRoute.withName('-'));
+
+    browse(category: value, sessionId: exploreId);
+  }
 
   void _handleScrollChange() {
-    if (isScrolling != _controller.position.isScrollingNotifier.value) {
+    if (_isScrolling != _controller.position.isScrollingNotifier.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          isScrolling = _controller.position.isScrollingNotifier.value;
+          _isScrolling = _controller.position.isScrollingNotifier.value;
         });
       });
     }
@@ -89,6 +125,34 @@ class _BrowseLevelState extends State<BrowseLevel> {
 
   void _handlePositionDetach(ScrollPosition position) {
     position.isScrollingNotifier.removeListener(_handleScrollChange);
+  }
+
+  void _setBrowseItems(BrowseItems newItems) {
+    if (mounted) {
+      if (_browseItems == null || _viewChanged) {
+        _viewChanged = false;
+
+        if (_controller.positions.isNotEmpty) {
+          _controller.jumpTo(0);
+        }
+
+        setState(() {
+          _browseItems = newItems;
+        });
+      } else if (_browseItems!.list.level == newItems.list.level && _browseItems!.items.length == newItems.offset) {
+        setState(() {
+          _browseItems!.items.addAll(newItems.items);
+        });
+      }
+    }
+  }
+
+  void addToImageCache(ImageKeyValue keyValue) {
+    if (mounted) {
+      setState(() {
+        _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
+      });
+    }
   }
 
   @override
@@ -114,48 +178,42 @@ class _BrowseLevelState extends State<BrowseLevel> {
     ListView? listView;
     Widget? browseTitle;
 
-    void onDestinationSelected(value) {
-      if (value == 0) {
-        appState.settings["expand"] = !appState.settings["expand"];
-        saveSettings(settings: jsonEncode(appState.settings));
-      } else {
-        browse(category: value, sessionId: exploreId);
-        appState.settings["view"] = value;
-        Navigator.of(context).popUntil(ModalRoute.withName('-'));
-        saveSettings(settings: jsonEncode(appState.settings));
+    appState.setBrowseCallback(_setBrowseItems);
 
-        if (_controller.positions.isNotEmpty) {
-          _controller.jumpTo(0);
-        }
-      }
-    }
-
-    var home = context.findAncestorStateOfType<MyHomePageState>();
-    home!.setOnDestinationSelected(onDestinationSelected);
-
-    if (appState.browseItems != null) {
-      var browseList = appState.browseItems!.items;
-      var subtitle = appState.browseItems!.list.subtitle;
-      var imageKey = appState.browseItems!.list.imageKey;
+    if (_browseItems != null) {
+      var browseList = _browseItems!.items;
+      var subtitle = _browseItems!.list.subtitle;
 
       if (subtitle != null && subtitle.isNotEmpty) {
+        var imageKey = _browseItems!.list.imageKey;
+        Widget? trailing;
+
+        if (imageKey != null) {
+          trailing = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+        }
+
         browseTitle = ListTile(
-          title: Text(appState.browseItems!.list.title),
+          title: Text(_browseItems!.list.title),
           subtitle: Text(subtitle),
-          trailing: appState.getImageFromCache(imageKey),
+          trailing: trailing,
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
         );
-      } else if (Navigator.of(context).canPop()) {
-        browseTitle = Text(appState.browseItems!.list.title);
+      } else if (_navigator.canPop()) {
+        browseTitle = Text(_browseItems!.list.title);
       } else {
-        browseTitle = Text(appState.browseItems!.list.title.replaceFirst('My ', ''));
+        browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
       }
 
       ListTile itemBuilder(context, index) {
         Widget? leading;
         Widget? trailing;
-        Image? image = isScrolling ? null : appState.getImageFromCache(browseList[index].imageKey);
+        Image? image;
         Text? subtitle;
+        var imageKey = browseList[index].imageKey;
+
+        if (!_isScrolling && imageKey != null) {
+          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+        }
 
         if (image != null) {
           leading = Row(
@@ -194,17 +252,6 @@ class _BrowseLevelState extends State<BrowseLevel> {
                 },
               ),
             ),
-            onClose: () {
-              // Delay the onClose handling to make sure onPressed can be handled first
-              Future.delayed(const Duration(milliseconds: 100), () {
-                if (appState.actionItems != null) {
-                  appState.actionItems = null;
-                  if (!browseList[index].itemKey!.contains('random_')) {
-                    browseBack(sessionId: exploreId);
-                  }
-                }
-              });
-            },
           );
         }
 
@@ -225,7 +272,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
                 appState.takeDefaultAction = true;
                 break;
               default:
-                Navigator.of(context).pushNamed(appState.browseItems!.list.level.toString());
+                _navigator.pushNamed(_browseItems!.list.level.toString());
                 break;
             }
 
@@ -253,8 +300,10 @@ class _BrowseLevelState extends State<BrowseLevel> {
               icon: const Icon(Icons.search_outlined),
               tooltip: "Search",
               onPressed: () {
-                Navigator.of(context).popUntil(ModalRoute.withName('-'));
-                Navigator.of(context).pushNamed("search");
+                _viewChanged = true;
+                _navigator.popUntil(ModalRoute.withName('-'));
+                _navigator.pushNamed("search");
+
                 showSearch(
                   context: context,
                   delegate: LibSearchDelegate(),
@@ -272,8 +321,7 @@ class _BrowseLevelState extends State<BrowseLevel> {
         ) ,
       ),
       onPopInvoked: (didPop) {
-        if (didPop) {
-          appState.browseItems = null;
+        if (didPop && !_viewChanged) {
           browseBack(sessionId: exploreId);
         }
       },
@@ -291,7 +339,7 @@ class LibSearchDelegate extends SearchDelegate {
             query = '';
           } else {
             close(context, null);
-            Navigator.of(context).pop();
+            _navigator.pop();
           }
         },
         icon: const Icon(Icons.clear),
@@ -304,7 +352,7 @@ class LibSearchDelegate extends SearchDelegate {
     return IconButton(
       onPressed: () {
         close(context, null);
-        Navigator.of(context).pop();
+        _navigator.pop();
       },
       icon: const BackButtonIcon(),
     );
@@ -313,7 +361,11 @@ class LibSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     browseWithInput(category: 1, sessionId: exploreId, input: query);
-    close(context, null);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      close(context, null);
+    });
+
     return Container();
   }
 

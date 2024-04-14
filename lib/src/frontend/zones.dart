@@ -7,10 +7,25 @@ import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Zones extends StatelessWidget {
+class Zones extends StatefulWidget {
   const Zones({
     super.key,
   });
+
+  @override
+  State<Zones> createState() => _ZonesState();
+}
+
+class _ZonesState extends State<Zones> {
+  final Map<String, Image> _imageCache = {};
+
+  void addToImageCache(ImageKeyValue keyValue) {
+    if (mounted) {
+      setState(() {
+        _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +35,6 @@ class Zones extends StatelessWidget {
 
     if (zones != null) {
       ListTile itemBuilder(context, index) {
-        var imageKey = zones[index].imageKey;
         Widget? trailing;
         Widget? playState;
         Text? metaData;
@@ -84,7 +98,11 @@ class Zones extends StatelessWidget {
             },
           );
         } else {
-          trailing = appState.getImageFromCache(imageKey);
+          var imageKey = zones[index].imageKey;
+
+          if (imageKey != null) {
+            trailing = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+          }
         }
 
         if (zones[index].nowPlaying != null) {

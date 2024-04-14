@@ -15,6 +15,15 @@ class Queue extends StatefulWidget {
 
 class _QueueState extends State<Queue> {
   List<int> stops = [];
+  final Map<String, Image> _imageCache = {};
+
+  void addToImageCache(ImageKeyValue keyValue) {
+    if (mounted) {
+      setState(() {
+        _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +35,12 @@ class _QueueState extends State<Queue> {
 
       ListTile itemBuilder(context, index) {
         Widget? leading;
-        Image? image = appState.getImageFromCache(queue[index].imageKey);
+        Image? image;
+        var imageKey = queue[index].imageKey;
+
+        if (imageKey != null) {
+          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+        }
 
         if (image != null) {
           leading = Row(

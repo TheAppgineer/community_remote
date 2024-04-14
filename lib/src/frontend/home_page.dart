@@ -11,21 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
-
-  @override
-  State<MyHomePage> createState() => MyHomePageState();
-}
-
-class MyHomePageState extends State<MyHomePage> {
-  void Function(int)? _onDestinationSelected;
-
-  void setOnDestinationSelected(onDestinationSelected) {
-    _onDestinationSelected = onDestinationSelected;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +47,14 @@ class MyHomePageState extends State<MyHomePage> {
         scrolledUnderElevation: 0,
         title: ListTile(
           leading: const Icon(Icons.person_outline),
-          title: Text(widget.title),
+          title: Text(title),
           subtitle: Text(subtitle),
         ),
         actions: [
           themeModeButton,
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,19 +64,19 @@ class MyHomePageState extends State<MyHomePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  HamburgerMenu(onDestinationSelected: _onDestinationSelected),
-                  const Expanded(
+                  HamburgerMenu(),
+                  Expanded(
                     flex: 5,
                     child: Browse(),
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 5,
                     child: Queue(),
                   ),
                 ],
               ),
             ),
-            const NowPlayingWidget(),
+            NowPlayingWidget(),
           ],
         ),
       ),
@@ -209,9 +198,7 @@ class QuickAccessButton extends StatelessWidget {
 }
 
 class HamburgerMenu extends StatelessWidget {
-  const HamburgerMenu({super.key, this.onDestinationSelected});
-
-  final void Function(int)? onDestinationSelected;
+  const HamburgerMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +264,19 @@ class HamburgerMenu extends StatelessWidget {
             ),
           ],
           selectedIndex: appState.settings["view"],
-          onDestinationSelected: onDestinationSelected,
+          onDestinationSelected: (value) {
+            if (value == 0) {
+              appState.settings["expand"] = !appState.settings["expand"];
+              saveSettings(settings: jsonEncode(appState.settings));
+            } else {
+              if (value != appState.settings["view"]) {
+                appState.settings["view"] = value;
+                saveSettings(settings: jsonEncode(appState.settings));
+              }
+
+              BrowseLevelState.onDestinationSelected(value);
+            }
+          },
         ),
       ),
     );

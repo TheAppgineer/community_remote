@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:community_remote/src/frontend/browse.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
@@ -17,9 +16,10 @@ class MyAppState extends ChangeNotifier {
   List<QueueItem>? queue;
   bool takeDefaultAction = false;
   Zone? zone;
-  Map<String, Uint8List> imageCache = {};
   late Map<String, dynamic> settings;
   Function? _progressCallback;
+  Function? _browseCallback;
+  final Map<String, Function> _pendingImages = {};
   bool pauseOnTrackEnd = false;
 
   setSettings(settings) {
@@ -30,20 +30,16 @@ class MyAppState extends ChangeNotifier {
     _progressCallback = callback;
   }
 
-  Image? getImageFromCache(String? imageKey) {
-    Image? image;
+  setBrowseCallback(Function(BrowseItems)? callback) {
+    _browseCallback = callback;
+  }
 
+  requestImage(String? imageKey, Function callback) {
     if (imageKey != null) {
-      var byteList = imageCache[imageKey];
+      getImage(imageKey: imageKey, width: 100, height: 100);
 
-      if (byteList != null) {
-        image = Image.memory(byteList);
-      } else {
-        getImage(imageKey: imageKey, width: 100, height: 100);
-      }
+      _pendingImages[imageKey] = callback;
     }
-
-    return image;
   }
 
   String getDuration(int length) {
@@ -62,8 +58,32 @@ class MyAppState extends ChangeNotifier {
   }
 
   void cb(event) {
-    if (event is RoonEvent_Image) {
-      imageCache[event.field0.imageKey] = event.field0.image;
+    if (event is RoonEvent_ZoneSeek) {
+      ZoneSeek seek = event.field0;
+
+      if (_progressCallback != null) {
+        if (zone!.nowPlaying != null && zone!.nowPlaying!.length != null) {
+          _progressCallback!(zone!.nowPlaying!.length, seek.seekPosition);
+        } else if (seek.seekPosition != null) {
+          _progressCallback!(0, seek.seekPosition);
+        }
+      }
+
+      return;
+    } else if (event is RoonEvent_Image) {
+      var callback = _pendingImages.remove(event.field0.imageKey);
+
+      if (callback != null) {
+        callback(event.field0);
+      }
+
+      return;
+    } else if (event is RoonEvent_BrowseItems) {
+      if (_browseCallback != null) {
+        _browseCallback!(event.field0);
+      }
+
+      return;
     } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
@@ -84,26 +104,8 @@ class MyAppState extends ChangeNotifier {
           _progressCallback!(zone!.nowPlaying!.length!, 0);
         }
       }
-    } else if (event is RoonEvent_ZoneSeek) {
-      ZoneSeek seek = event.field0;
-
-      if (_progressCallback != null) {
-        if (zone!.nowPlaying != null && zone!.nowPlaying!.length != null) {
-          _progressCallback!(zone!.nowPlaying!.length, seek.seekPosition);
-        } else if (seek.seekPosition != null) {
-          _progressCallback!(0, seek.seekPosition);
-        }
-      }
-
-      return;
     } else if (event is RoonEvent_OutputsChanged) {
       outputs = event.field0;
-    } else if (event is RoonEvent_BrowseItems) {
-      if (browseItems == null || event.field0.offset == 0) {
-        browseItems = event.field0;
-      } else {
-        browseItems!.items.addAll(event.field0.items);
-      }
     } else if (event is RoonEvent_BrowseActions) {
       actionItems = event.field0;
 
@@ -113,7 +115,7 @@ class MyAppState extends ChangeNotifier {
         takeDefaultAction = false;
       }
     } else if (event is RoonEvent_BrowseReset) {
-      browse(category: settings["view"], sessionId: exploreId);
+      BrowseLevelState.onDestinationSelected(settings["view"]);
     } else if (event is RoonEvent_QueueItems) {
       queue = event.field0;
     } else if (event is RoonEvent_PauseOnTrackEnd) {
