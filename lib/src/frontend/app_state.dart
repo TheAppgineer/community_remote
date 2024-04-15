@@ -97,11 +97,13 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
 
-      if (_progressCallback != null && zone != null) {
-        if (zone!.nowPlaying == null || zone!.nowPlaying!.length == null) {
-          _progressCallback!(0, null);
-        } else {
-          _progressCallback!(zone!.nowPlaying!.length!, 0);
+      if (_progressCallback != null && zone != null && zone!.nowPlaying != null) {
+        var seekPosition = zone!.nowPlaying!.seekPosition;
+
+        if (zone!.nowPlaying!.length != null) {
+          _progressCallback!(zone!.nowPlaying!.length, seekPosition);
+        } else if (seekPosition != null) {
+          _progressCallback!(0, seekPosition);
         }
       }
     } else if (event is RoonEvent_OutputsChanged) {
