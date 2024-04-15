@@ -207,13 +207,9 @@ class BrowseLevelState extends State<BrowseLevel> {
       ListTile itemBuilder(context, index) {
         Widget? leading;
         Widget? trailing;
-        Image? image;
+        String? imageKey = browseList[index].imageKey;
+        Image? image = _imageCache[imageKey];
         Text? subtitle;
-        var imageKey = browseList[index].imageKey;
-
-        if (!_isScrolling && imageKey != null) {
-          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
-        }
 
         if (image != null) {
           leading = Row(
@@ -224,6 +220,10 @@ class BrowseLevelState extends State<BrowseLevel> {
             ],
           );
         } else {
+          if (!_isScrolling && imageKey != null) {
+            appState.requestImage(imageKey, addToImageCache);
+          }
+
           leading = const Padding(padding: EdgeInsets.fromLTRB(58, 0, 0, 0));
         }
 
