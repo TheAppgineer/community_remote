@@ -27,9 +27,28 @@ class _VolumeDialogState extends State<VolumeDialog> {
 
       ListTile itemBuilder(context, index) {
         Output output = outputs[index];
-        List<Widget> leading = [];
-        Widget? trailing;
+        Widget? title;
+        List<Widget> subtitle = [];
         Widget? volumeSlider;
+
+        if (output.sourceControls != null) {
+          for (var control in output.sourceControls!) {
+            if (control.supportsStandby && control.status != Status.standby) {
+              subtitle.add(
+                IconButton(
+                  icon: const Icon(Icons.power_settings_new_outlined),
+                  tooltip: 'Enter Standby',
+                  onPressed: () => standby(outputId: output.outputId),
+                )
+              );
+              break;
+            }
+          }
+        }
+
+        if (subtitle.isEmpty) {
+          subtitle.add(const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0)));
+        }
 
         if (output.volume != null) {
           var volume = output.volume!;
@@ -76,75 +95,59 @@ class _VolumeDialogState extends State<VolumeDialog> {
           }
 
           if (volume.isMuted != null) {
-            leading.add(volume.isMuted!
+            subtitle.add(volume.isMuted!
               ? IconButton(
                 icon: const Icon(Icons.volume_off_outlined),
-                tooltip: 'Unmute',
                 onPressed: () => mute(outputId: output.outputId, how: Mute.unmute),
               )
               : IconButton(
                 icon: const Icon(Icons.volume_up_outlined),
-                tooltip: 'Mute',
                 onPressed: () => mute(outputId: output.outputId, how: Mute.mute),
               )
             );
+            subtitle.add(const Padding(padding: EdgeInsets.only(left: 15)));
           }
 
           var level = _levels[output.outputId];
 
           if (level != null) {
-            var current = level.toInt().toString();
+            var levelInt = level.toInt();
+            var maxInt = max.toInt();
 
             switch (volume.scale) {
               case Scale.number:
-                  trailing = Text('$current / $max', style: const TextStyle(fontSize: 14));
+                  subtitle.add(Text('$levelInt / $maxInt', style: const TextStyle(fontSize: 15)));
                 break;
               case Scale.decibel:
-                  trailing = Text('$current / $max dB', style: const TextStyle(fontSize: 14));
+                  subtitle.add(Text('$levelInt / $maxInt dB', style: const TextStyle(fontSize: 15)));
                 break;
               case Scale.incremental:
                 break;
             }
+
+            subtitle.add(Expanded(child: volumeSlider));
+            subtitle.add(IconButton(
+              onPressed: () => changeVolume(outputId: output.outputId, how: ChangeMode.relativeStep, value: -1),
+              icon: const Icon(Icons.remove),
+            ));
+            subtitle.add(IconButton(
+              onPressed: () => changeVolume(outputId: output.outputId, how: ChangeMode.relativeStep, value: 1),
+              icon: const Icon(Icons.add),
+            ));
           }
         } else {
-          volumeSlider = const Text('Volume control is fixed');
+          subtitle.add(const Text('Volume control is fixed'));
         }
 
-        if (output.sourceControls != null) {
-          for (var control in output.sourceControls!) {
-            if (control.supportsStandby && control.status != Status.standby) {
-              leading.insert(
-                0,
-                IconButton(
-                  icon: const Icon(Icons.power_settings_new_outlined),
-                  tooltip: 'Enter Standby',
-                  onPressed: () => standby(outputId: output.outputId),
-                )
-              );
-              break;
-            }
-          }
-        }
-
-        switch (leading.length) {
-          case 1:
-            leading.insert(0, const Padding(padding: EdgeInsets.fromLTRB(50, 0, 0, 0)));
-            break;
-          case 2:
-            leading.insert(0, const Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0)));
-            break;
-          default:
-            leading.insert(0, const Padding(padding: EdgeInsets.fromLTRB(90, 0, 0, 0)));
-            break;
+        if (outputs.length > 1) {
+          title = Text(outputs[index].displayName);
         }
 
         return ListTile(
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: leading,
+          title: title,
+          subtitle: Row(
+            children: subtitle,
           ),
-          trailing: trailing,
-          title: volumeSlider,
         );
       }
 
@@ -152,11 +155,10 @@ class _VolumeDialogState extends State<VolumeDialog> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListView.separated(
+          ListView.builder(
             controller: ScrollController(),
             padding: const EdgeInsets.all(10),
             itemBuilder: itemBuilder,
-            separatorBuilder: (context, index) => const Divider(),
             itemCount: outputs.length,
             shrinkWrap: true,
           ),
