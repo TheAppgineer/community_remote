@@ -244,11 +244,27 @@ pub async fn mute_all() {
     }
 }
 
+pub async fn mute_zone() {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.mute_zone().await;
+    }
+}
+
 pub async fn change_volume(output_id: String, how: ChangeMode, value: i32) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
         roon.change_volume(&output_id, &how, value).await;
+    }
+}
+
+pub async fn change_zone_volume(how: &ChangeMode, value: i32) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.change_zone_volume(&how, value).await;
     }
 }
 

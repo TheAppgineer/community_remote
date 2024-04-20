@@ -129,16 +129,6 @@ class QuickAccessButton extends StatelessWidget {
       tooltip = "Select Zone";
     } else if (appState.pauseOnTrackEnd) {
       tooltip = "Pausing at End of Track...";
-    } else {
-      switch (appState.zone!.state) {
-        case PlayState.playing:
-        case PlayState.paused:
-        case PlayState.stopped:
-          break;
-        case PlayState.loading:
-          tooltip = "Loading...";
-          break;
-      }
     }
 
     return tooltip;

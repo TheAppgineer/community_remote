@@ -57,6 +57,18 @@ class MyAppState extends ChangeNotifier {
     return duration;
   }
 
+  incVolume() {
+    if (zone != null) {
+      changeZoneVolume(how: ChangeMode.relativeStep, value: 1);
+    }
+  }
+
+  decVolume() {
+    if (zone != null) {
+      changeZoneVolume(how: ChangeMode.relativeStep, value: -1);
+    }
+  }
+
   void cb(event) {
     if (event is RoonEvent_ZoneSeek) {
       ZoneSeek seek = event.field0;

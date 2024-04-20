@@ -58,7 +58,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.0.0-dev.32';
 
   @override
-  int get rustContentHash => 23999183;
+  int get rustContentHash => -1783252242;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -88,6 +88,9 @@ abstract class RustLibApi extends BaseApi {
       required int value,
       dynamic hint});
 
+  Future<void> changeZoneVolume(
+      {required ChangeMode how, required int value, dynamic hint});
+
   Future<void> control({required Control control, dynamic hint});
 
   Future<void> controlByZoneId(
@@ -107,6 +110,8 @@ abstract class RustLibApi extends BaseApi {
       {required String outputId, required Mute how, dynamic hint});
 
   Future<void> muteAll({dynamic hint});
+
+  Future<void> muteZone({dynamic hint});
 
   Future<void> pauseAfterQueueItems(
       {required List<int> queueItemIds, dynamic hint});
@@ -260,7 +265,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_change_mode(how, serializer);
         sse_encode_i_32(value, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 19, port: port_);
+            funcId: 20, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -276,6 +281,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kChangeVolumeConstMeta => const TaskConstMeta(
         debugName: "change_volume",
         argNames: ["outputId", "how", "value"],
+      );
+
+  @override
+  Future<void> changeZoneVolume(
+      {required ChangeMode how, required int value, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_change_mode(how, serializer);
+        sse_encode_i_32(value, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 21, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kChangeZoneVolumeConstMeta,
+      argValues: [how, value],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kChangeZoneVolumeConstMeta => const TaskConstMeta(
+        debugName: "change_zone_volume",
+        argNames: ["how", "value"],
       );
 
   @override
@@ -368,7 +400,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_list_String(outputIds, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 21, port: port_);
+            funcId: 23, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -458,6 +490,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kMuteAllConstMeta => const TaskConstMeta(
         debugName: "mute_all",
+        argNames: [],
+      );
+
+  @override
+  Future<void> muteZone({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 19, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kMuteZoneConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kMuteZoneConstMeta => const TaskConstMeta(
+        debugName: "mute_zone",
         argNames: [],
       );
 
@@ -644,7 +700,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(outputId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 20, port: port_);
+            funcId: 22, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,

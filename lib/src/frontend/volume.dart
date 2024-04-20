@@ -27,7 +27,6 @@ class _VolumeDialogState extends State<VolumeDialog> {
 
       ListTile itemBuilder(context, index) {
         Output output = outputs[index];
-        Widget? title;
         List<Widget> subtitle = [];
         Widget? volumeSlider;
 
@@ -79,10 +78,10 @@ class _VolumeDialogState extends State<VolumeDialog> {
                 onChangeStart: (value) {
                   _changing[output.outputId] = true;
                 },
-                onChangeEnd: (value) async {
+                onChangeEnd: (value) {
                   var level = value.toInt();
 
-                  await changeVolume(outputId: output.outputId, how: ChangeMode.absolute, value: level);
+                  changeVolume(outputId: output.outputId, how: ChangeMode.absolute, value: level);
 
                   _changing[output.outputId] = false;
                 },
@@ -97,11 +96,11 @@ class _VolumeDialogState extends State<VolumeDialog> {
           if (volume.isMuted != null) {
             subtitle.add(volume.isMuted!
               ? IconButton(
-                icon: const Icon(Icons.volume_off_outlined),
+                icon: const Icon(Icons.volume_off),
                 onPressed: () => mute(outputId: output.outputId, how: Mute.unmute),
               )
               : IconButton(
-                icon: const Icon(Icons.volume_up_outlined),
+                icon: const Icon(Icons.volume_up),
                 onPressed: () => mute(outputId: output.outputId, how: Mute.mute),
               )
             );
@@ -139,16 +138,40 @@ class _VolumeDialogState extends State<VolumeDialog> {
           subtitle.add(const Text('Volume control is fixed'));
         }
 
-        if (outputs.length > 1) {
-          title = Text(outputs[index].displayName);
-        }
-
         return ListTile(
-          title: title,
+          title: Text(outputs[index].displayName),
           subtitle: Row(
             children: subtitle,
           ),
         );
+      }
+
+      List<Widget> buttonRow = [];
+      int volumeCount = 0;
+
+      for (var output in outputs) {
+        if (output.volume != null && output.volume!.value != null) {
+          volumeCount++;
+        }
+      }
+
+      if (volumeCount > 1) {
+        buttonRow = [
+          ElevatedButton.icon(
+            onPressed: () => muteZone(),
+            icon: const Icon(Icons.volume_off),
+            label: const Text('Mute All'),
+          ),
+          const Padding(padding: EdgeInsets.only(left: 10)),
+          IconButton(
+            onPressed: () => changeZoneVolume(how: ChangeMode.relativeStep, value: -1),
+            icon: const Icon(Icons.remove),
+          ),
+          IconButton(
+            onPressed: () => changeZoneVolume(how: ChangeMode.relativeStep, value: 1),
+            icon: const Icon(Icons.add),
+          ),
+        ];
       }
 
       child = Column(
@@ -157,17 +180,16 @@ class _VolumeDialogState extends State<VolumeDialog> {
         children: [
           ListView.builder(
             controller: ScrollController(),
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(6),
             itemBuilder: itemBuilder,
             itemCount: outputs.length,
             shrinkWrap: true,
           ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: ElevatedButton.icon(
-              onPressed: () => muteAll(),
-              icon: const Icon(Icons.volume_off_outlined),
-              label: const Text('Mute All Zones'),
+            padding: const EdgeInsets.fromLTRB(20, 20, 30, 20),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: buttonRow,
             ),
           ),
         ],

@@ -86,6 +86,9 @@ Future<void> mute(
 Future<void> muteAll({dynamic hint}) =>
     RustLib.instance.api.muteAll(hint: hint);
 
+Future<void> muteZone({dynamic hint}) =>
+    RustLib.instance.api.muteZone(hint: hint);
+
 Future<void> changeVolume(
         {required String outputId,
         required ChangeMode how,
@@ -93,6 +96,10 @@ Future<void> changeVolume(
         dynamic hint}) =>
     RustLib.instance.api
         .changeVolume(outputId: outputId, how: how, value: value, hint: hint);
+
+Future<void> changeZoneVolume(
+        {required ChangeMode how, required int value, dynamic hint}) =>
+    RustLib.instance.api.changeZoneVolume(how: how, value: value, hint: hint);
 
 Future<void> standby({required String outputId, dynamic hint}) =>
     RustLib.instance.api.standby(outputId: outputId, hint: hint);

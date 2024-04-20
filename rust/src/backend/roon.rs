@@ -14,6 +14,7 @@ use roon_api::{
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
 use serde_json::Value;
+use std::collections::VecDeque;
 use std::{collections::HashMap, sync::Arc};
 use tokio::{
     sync::{
@@ -47,6 +48,7 @@ struct RoonHandler {
     transport: Option<Transport>,
     zone_map: HashMap<String, Zone>,
     zone_id: Option<String>,
+    mute_list: VecDeque<String>,
     outputs: HashMap<String, String>,
     browse_id: Option<String>,
     browse_path: HashMap<String, Vec<&'static str>>,
@@ -366,6 +368,23 @@ impl Roon {
         Some(())
     }
 
+    pub async fn mute_zone(&self) -> Option<()> {
+        let mut handler = self.handler.lock().await;
+        let zone_id = handler.zone_id.as_ref()?;
+        let outputs = &handler.zone_map.get(zone_id)?.outputs;
+        let mut mute_list = VecDeque::new();
+
+        for output in outputs {
+            mute_list.push_back(output.output_id.clone());
+        }
+
+        handler.mute_list = mute_list;
+
+        handler.handle_mute_list().await;
+
+        Some(())
+    }
+
     pub async fn change_volume(&self, output_id: &str, how: &ChangeMode, value: i32) -> Option<()> {
         let handler = self.handler.lock().await;
 
@@ -374,6 +393,21 @@ impl Roon {
             .as_ref()?
             .change_volume(&output_id, &how, value)
             .await;
+
+        Some(())
+    }
+
+    pub async fn change_zone_volume(&self, how: &ChangeMode, value: i32) -> Option<()> {
+        let handler = self.handler.lock().await;
+        let zone_id = handler.zone_id.as_ref()?;
+        let outputs = &handler.zone_map.get(zone_id)?.outputs;
+        let transport = handler.transport.as_ref()?;
+
+        for output in outputs {
+            transport
+                .change_volume(output.output_id.as_str(), &how, value)
+                .await;
+        }
 
         Some(())
     }
@@ -506,6 +540,7 @@ impl RoonHandler {
             transport: None,
             zone_map: HashMap::new(),
             zone_id: None,
+            mute_list: VecDeque::new(),
             outputs: HashMap::new(),
             browse_id: None,
             browse_path: HashMap::new(),
@@ -646,6 +681,8 @@ impl RoonHandler {
                     for output in outputs {
                         self.outputs.insert(output.output_id, output.display_name);
                     }
+
+                    self.handle_mute_list().await;
 
                     self.event_tx
                         .send(RoonEvent::OutputsChanged(self.outputs.to_owned()))
@@ -868,6 +905,35 @@ impl RoonHandler {
             .send(RoonEvent::ZonesChanged(zones))
             .await
             .unwrap();
+    }
+
+    async fn handle_mute_list(&mut self) -> Option<()> {
+        let zone_id = self.zone_id.as_ref()?;
+        let outputs = &self.zone_map.get(zone_id)?.outputs;
+
+        loop {
+            let output_id = self.mute_list.get(0)?;
+
+            for output in outputs {
+                if output.output_id == *output_id {
+                    if let Some(volume) = output.volume.as_ref() {
+                        let is_muted = volume.is_muted.unwrap_or(true);
+
+                        if is_muted {
+                            self.mute_list.pop_front();
+                        } else {
+                            self.transport.as_ref()?.mute(&output_id, &Mute::Mute).await;
+
+                            return Some(());
+                        }
+                    } else {
+                        self.mute_list.pop_front();
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
     async fn handle_pause_on_track_end(&mut self, seek: &ZoneSeek) -> Option<()> {
