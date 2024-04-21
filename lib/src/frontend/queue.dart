@@ -16,6 +16,7 @@ class Queue extends StatefulWidget {
 class _QueueState extends State<Queue> {
   List<int> stops = [];
   final Map<String, Image> _imageCache = {};
+  int _remaining = 0;
 
   void addToImageCache(ImageKeyValue keyValue) {
     if (mounted) {
@@ -25,12 +26,22 @@ class _QueueState extends State<Queue> {
     }
   }
 
+  setQueueRemaining(int remaining) {
+    if (mounted) {
+      setState(() {
+        _remaining = remaining;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    ListView? listView;
+    Widget? widget;
 
-    if (appState.zone != null && appState.queue != null) {
+    appState.setQueueRemainingCallback(setQueueRemaining);
+
+    if (appState.zone != null && appState.queue != null && appState.queue!.isNotEmpty) {
       List<QueueItem> queue = appState.queue!;
 
       ListTile itemBuilder(context, index) {
@@ -78,7 +89,7 @@ class _QueueState extends State<Queue> {
         );
       }
 
-      listView = ListView.separated(
+      ListView listView = ListView.separated(
         padding: const EdgeInsets.all(10),
         itemBuilder: itemBuilder,
         separatorBuilder: (_, index) => Divider(
@@ -87,6 +98,23 @@ class _QueueState extends State<Queue> {
             : null,
         ),
         itemCount: queue.length,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+      );
+
+      widget = Column(
+        children: [
+          ListTile(
+            title: const Text('Queue'),
+            trailing: _remaining > 0 ? Text(appState.getDuration(_remaining)) : null,
+          ),
+          listView,
+        ],
+      );
+    } else {
+      widget = const ListTile(
+        title: Text('Queue'),
+        subtitle: Text('Use the Browser to add tracks'),
       );
     }
 
@@ -94,7 +122,7 @@ class _QueueState extends State<Queue> {
       margin: const EdgeInsets.all(10),
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: listView,
+        child: widget,
       ),
     );
   }

@@ -18,6 +18,7 @@ class MyAppState extends ChangeNotifier {
   Zone? zone;
   late Map<String, dynamic> settings;
   Function? _progressCallback;
+  Function? _queueRemainingCallback;
   Function? _browseCallback;
   final Map<String, Function> _pendingImages = {};
   bool pauseOnTrackEnd = false;
@@ -28,6 +29,10 @@ class MyAppState extends ChangeNotifier {
 
   setProgressCallback(Function(int, int?)? callback) {
     _progressCallback = callback;
+  }
+
+  setQueueRemainingCallback(Function(int)? callback) {
+    _queueRemainingCallback = callback;
   }
 
   setBrowseCallback(Function(BrowseItems)? callback) {
@@ -81,6 +86,10 @@ class MyAppState extends ChangeNotifier {
         }
       }
 
+      if (_queueRemainingCallback != null && seek.queueTimeRemaining > 0) {
+        _queueRemainingCallback!(seek.queueTimeRemaining);
+      }
+
       return;
     } else if (event is RoonEvent_Image) {
       var callback = _pendingImages.remove(event.field0.imageKey);
@@ -118,6 +127,11 @@ class MyAppState extends ChangeNotifier {
           _progressCallback!(0, seekPosition);
         }
       }
+
+      if (_queueRemainingCallback != null && zone != null && zone!.queueTimeRemaining > 0) {
+        _queueRemainingCallback!(zone!.queueTimeRemaining);
+      }
+
     } else if (event is RoonEvent_OutputsChanged) {
       outputs = event.field0;
     } else if (event is RoonEvent_BrowseActions) {
