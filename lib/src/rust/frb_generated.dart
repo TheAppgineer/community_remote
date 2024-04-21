@@ -96,11 +96,7 @@ abstract class RustLibApi extends BaseApi {
   Future<void> controlByZoneId(
       {required String zoneId, required Control control, dynamic hint});
 
-  Future<void> getImage(
-      {required String imageKey,
-      required int width,
-      required int height,
-      dynamic hint});
+  Future<void> getImage({required String imageKey, dynamic hint});
 
   Future<void> groupOutputs({required List<String> outputIds, dynamic hint});
 
@@ -363,17 +359,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> getImage(
-      {required String imageKey,
-      required int width,
-      required int height,
-      dynamic hint}) {
+  Future<void> getImage({required String imageKey, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(imageKey, serializer);
-        sse_encode_u_32(width, serializer);
-        sse_encode_u_32(height, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 4, port: port_);
       },
@@ -382,7 +372,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kGetImageConstMeta,
-      argValues: [imageKey, width, height],
+      argValues: [imageKey],
       apiImpl: this,
       hint: hint,
     ));
@@ -390,7 +380,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kGetImageConstMeta => const TaskConstMeta(
         debugName: "get_image",
-        argNames: ["imageKey", "width", "height"],
+        argNames: ["imageKey"],
       );
 
   @override

@@ -3,6 +3,7 @@ use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
 use roon_api::browse::ListHint as BrowseListHint;
+use roon_api::RoonApiError;
 use roon_api::{
     browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
@@ -121,9 +122,9 @@ impl Roon {
         (roon, rx, value.to_string())
     }
 
-    pub async fn get_image(&self, image_key: String, width: u32, height: u32) -> Option<()> {
+    pub async fn get_image(&self, image_key: String) -> Option<()> {
         let handler = self.handler.lock().await;
-        let scaling = Some(Scaling::new(Scale::Fill, width, height));
+        let scaling = Some(Scaling::new(Scale::Fill, 100, 100));
         let args = Args::new(scaling, None);
 
         handler.image.as_ref()?.get_image(&image_key, args).await;
@@ -854,11 +855,17 @@ impl RoonHandler {
                         .await
                         .unwrap();
                 }
-                Parsed::Error(err) => {
-                    if err == "InvalidItemKey" {
+                Parsed::Error(err) => match err {
+                    RoonApiError::BrowseInvalidItemKey(_) => {
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     }
-                }
+                    RoonApiError::ImageUnexpectedError((_, image_key)) => {
+                        let scaling = Some(Scaling::new(Scale::Stretch, 100, 100));
+                        let args = Args::new(scaling, None);
+
+                        self.image.as_ref()?.get_image(&image_key, args).await;
+                    }
+                },
                 _ => (),
             }
         }

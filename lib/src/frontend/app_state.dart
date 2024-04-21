@@ -35,10 +35,10 @@ class MyAppState extends ChangeNotifier {
   }
 
   requestImage(String? imageKey, Function callback) {
-    if (imageKey != null) {
-      getImage(imageKey: imageKey, width: 100, height: 100);
-
+    if (imageKey != null && _pendingImages[imageKey] == null) {
       _pendingImages[imageKey] = callback;
+
+      getImage(imageKey: imageKey);
     }
   }
 

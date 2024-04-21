@@ -125,11 +125,11 @@ pub async fn select_zone(zone_id: String) {
     }
 }
 
-pub async fn get_image(image_key: String, width: u32, height: u32) {
+pub async fn get_image(image_key: String) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.get_image(image_key, width, height).await;
+        roon.get_image(image_key).await;
     }
 }
 

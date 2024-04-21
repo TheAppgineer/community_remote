@@ -368,16 +368,11 @@ fn wire_get_image_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_image_key = <String>::sse_decode(&mut deserializer);
-            let api_width = <u32>::sse_decode(&mut deserializer);
-            let api_height = <u32>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse(
                     (move || async move {
-                        Result::<_, ()>::Ok(
-                            crate::api::simple::get_image(api_image_key, api_width, api_height)
-                                .await,
-                        )
+                        Result::<_, ()>::Ok(crate::api::simple::get_image(api_image_key).await)
                     })()
                     .await,
                 )

@@ -22,13 +22,8 @@ Future<String> startRoon(
 Future<void> selectZone({required String zoneId, dynamic hint}) =>
     RustLib.instance.api.selectZone(zoneId: zoneId, hint: hint);
 
-Future<void> getImage(
-        {required String imageKey,
-        required int width,
-        required int height,
-        dynamic hint}) =>
-    RustLib.instance.api
-        .getImage(imageKey: imageKey, width: width, height: height, hint: hint);
+Future<void> getImage({required String imageKey, dynamic hint}) =>
+    RustLib.instance.api.getImage(imageKey: imageKey, hint: hint);
 
 Future<void> browse(
         {required int category, required int sessionId, dynamic hint}) =>
