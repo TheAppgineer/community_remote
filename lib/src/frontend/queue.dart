@@ -105,10 +105,12 @@ class _QueueState extends State<Queue> {
       widget = Column(
         children: [
           ListTile(
-            title: const Text('Queue'),
-            trailing: _remaining > 0 ? Text(appState.getDuration(_remaining)) : null,
+            title: const Text('Queue', style: TextStyle(fontSize: 20)),
+            trailing: _remaining > 0
+              ? Text(appState.getDuration(_remaining), style: const TextStyle(fontSize: 14))
+              : null,
           ),
-          listView,
+          Expanded(child: listView),
         ],
       );
     } else {

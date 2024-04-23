@@ -20,7 +20,7 @@ class MyAppState extends ChangeNotifier {
   Function? _progressCallback;
   Function? _queueRemainingCallback;
   Function? _browseCallback;
-  final Map<String, Function> _pendingImages = {};
+  final Map<String, List<Function>> _pendingImages = {};
   bool pauseOnTrackEnd = false;
 
   setSettings(settings) {
@@ -40,10 +40,14 @@ class MyAppState extends ChangeNotifier {
   }
 
   requestImage(String? imageKey, Function callback) {
-    if (imageKey != null && _pendingImages[imageKey] == null) {
-      _pendingImages[imageKey] = callback;
+    if (imageKey != null) {
+      if (_pendingImages[imageKey] == null) {
+        _pendingImages[imageKey] = [callback];
 
-      getImage(imageKey: imageKey);
+        getImage(imageKey: imageKey);
+      } else {
+        _pendingImages[imageKey]!.add(callback);
+      }
     }
   }
 
@@ -92,10 +96,12 @@ class MyAppState extends ChangeNotifier {
 
       return;
     } else if (event is RoonEvent_Image) {
-      var callback = _pendingImages.remove(event.field0.imageKey);
+      var callbacks = _pendingImages.remove(event.field0.imageKey);
 
-      if (callback != null) {
-        callback(event.field0);
+      if (callbacks != null) {
+        for (var callback in callbacks) {
+          callback(event.field0);
+        }
       }
 
       return;
@@ -123,7 +129,7 @@ class MyAppState extends ChangeNotifier {
 
         if (zone!.nowPlaying!.length != null) {
           _progressCallback!(zone!.nowPlaying!.length, seekPosition);
-        } else if (seekPosition != null) {
+        } else {
           _progressCallback!(0, seekPosition);
         }
       }

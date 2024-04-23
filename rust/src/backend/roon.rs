@@ -261,6 +261,8 @@ impl Roon {
                 ..Default::default()
             };
 
+            handler.browse_offset = 0;
+
             let browse = handler.browse.as_mut()?;
             browse.browse(opts).await;
         }
