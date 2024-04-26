@@ -165,6 +165,14 @@ pub async fn browse_back(session_id: i32) {
     }
 }
 
+pub async fn search_artist(session_id: i32, artist: String) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.search_artist(session_id, artist).await;
+    }
+}
+
 pub async fn select_browse_item(session_id: i32, item: BrowseItem) {
     let api = API.lock().await;
 

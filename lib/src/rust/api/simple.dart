@@ -44,6 +44,11 @@ Future<void> browseNextPage({dynamic hint}) =>
 Future<void> browseBack({required int sessionId, dynamic hint}) =>
     RustLib.instance.api.browseBack(sessionId: sessionId, hint: hint);
 
+Future<void> searchArtist(
+        {required int sessionId, required String artist, dynamic hint}) =>
+    RustLib.instance.api
+        .searchArtist(sessionId: sessionId, artist: artist, hint: hint);
+
 Future<void> selectBrowseItem(
         {required int sessionId, required BrowseItem item, dynamic hint}) =>
     RustLib.instance.api

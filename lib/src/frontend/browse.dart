@@ -2,6 +2,7 @@ import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 final MyNavigator _navigator = MyNavigator();
@@ -177,6 +178,22 @@ class BrowseLevelState extends State<BrowseLevel> {
     var appState = context.watch<MyAppState>();
     ListView? listView;
     Widget? browseTitle;
+    List<Widget> actions = [
+      IconButton(
+        icon: const Icon(Icons.search_outlined),
+        tooltip: "Search",
+        onPressed: () {
+          _viewChanged = true;
+          _navigator.popUntil(ModalRoute.withName('-'));
+          _navigator.pushNamed("search");
+
+          showSearch(
+            context: context,
+            delegate: LibSearchDelegate(),
+          );
+        },
+      ),
+    ];
 
     appState.setBrowseCallback(_setBrowseItems);
 
@@ -198,6 +215,21 @@ class BrowseLevelState extends State<BrowseLevel> {
           trailing: trailing,
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
         );
+
+        if (appState.settings["view"] == 3 && _browseItems!.list.level == 3) {
+          actions.insert(
+            0,
+            IconButton(
+              onPressed: () {
+                _navigator.pushNamed("more");
+
+                searchArtist(sessionId: exploreId, artist: subtitle);
+              },
+              tooltip: 'More by $subtitle',
+              icon: const Icon(Symbols.artist_rounded),
+            )
+          );
+        }
       } else if (_navigator.canPop()) {
         browseTitle = Text(_browseItems!.list.title);
       } else {
@@ -295,22 +327,7 @@ class BrowseLevelState extends State<BrowseLevel> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           title: browseTitle,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search_outlined),
-              tooltip: "Search",
-              onPressed: () {
-                _viewChanged = true;
-                _navigator.popUntil(ModalRoute.withName('-'));
-                _navigator.pushNamed("search");
-
-                showSearch(
-                  context: context,
-                  delegate: LibSearchDelegate(),
-                );
-              },
-            ),
-          ],
+          actions: actions,
         ),
         body: Card(
           margin: const EdgeInsets.all(10),
@@ -318,7 +335,7 @@ class BrowseLevelState extends State<BrowseLevel> {
             padding: const EdgeInsets.all(10),
             child: listView,
           ),
-        ) ,
+        ),
       ),
       onPopInvoked: (didPop) {
         if (didPop && !_viewChanged) {

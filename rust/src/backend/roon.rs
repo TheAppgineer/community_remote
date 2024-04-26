@@ -52,13 +52,14 @@ struct RoonHandler {
     mute_list: VecDeque<String>,
     outputs: HashMap<String, String>,
     browse_id: Option<String>,
-    browse_path: HashMap<String, Vec<&'static str>>,
+    browse_path: HashMap<String, Vec<String>>,
     browse_category: i32,
     browse_input: Option<String>,
     browse_offset: usize,
     browse_total: usize,
     browse_level: u32,
     pop_levels: Option<u32>,
+    artist_search: bool,
     queue: Option<Vec<QueueItem>>,
     pause_on_track_end: bool,
     pause_after_item_ids: Option<Vec<u32>>,
@@ -181,9 +182,13 @@ impl Roon {
             handler.browse_level = 0;
 
             if let Some(path) = category_paths.get(&category) {
+                let path = path
+                    .iter()
+                    .map(|str| String::from(*str))
+                    .collect::<Vec<_>>();
                 handler
                     .browse_path
-                    .insert(multi_session_key.as_ref()?.to_owned(), path.clone());
+                    .insert(multi_session_key.as_ref()?.to_owned(), path);
             }
 
             let opts = BrowseOpts {
@@ -266,6 +271,36 @@ impl Roon {
             let browse = handler.browse.as_mut()?;
             browse.browse(opts).await;
         }
+
+        Some(())
+    }
+
+    pub async fn search_artist(&self, session_id: i32, artist: String) -> Option<()> {
+        let path = vec![
+            artist.to_owned(),
+            "Artists".to_owned(),
+            "Search".to_owned(),
+            "Library".to_owned(),
+        ];
+        let mut handler = self.handler.lock().await;
+        let multi_session_key = handler.get_multi_session_key(session_id);
+
+        handler
+            .browse_path
+            .insert(multi_session_key.as_ref()?.to_owned(), path.clone());
+
+        let opts = BrowseOpts {
+            multi_session_key,
+            pop_all: true,
+            set_display_offset: Some(0),
+            ..Default::default()
+        };
+
+        handler.browse.as_mut()?.browse(opts).await;
+        handler.browse_offset = 0;
+        handler.browse_level = 0;
+        handler.artist_search = true;
+        handler.browse_input = Some(artist);
 
         Some(())
     }
@@ -513,6 +548,11 @@ impl Roon {
                     path.push("Play Album")
                 }
 
+                let path = path
+                    .iter()
+                    .map(|str| String::from(*str))
+                    .collect::<Vec<_>>();
+
                 handler.browse_offset = 0;
                 handler
                     .browse_path
@@ -553,6 +593,7 @@ impl RoonHandler {
             browse_total: 0,
             browse_level: 0,
             pop_levels: None,
+            artist_search: false,
             queue: None,
             pause_on_track_end: false,
             pause_after_item_ids: None,
@@ -779,7 +820,11 @@ impl RoonHandler {
                         self.browse_path.remove(key);
                     }
 
-                    if result.list.title == "Explore" || result.list.title == "Library" {
+                    if result.list.title == "Explore"
+                        || result.list.title == "Library"
+                        || self.artist_search && result.list.title == "Artists"
+                    {
+                        self.artist_search = false;
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
                         let event = if result.list.hint == Some(BrowseListHint::ActionList) {
