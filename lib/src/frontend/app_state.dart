@@ -90,7 +90,11 @@ class MyAppState extends ChangeNotifier {
         }
       }
 
-      if (_queueRemainingCallback != null && seek.queueTimeRemaining > 0) {
+      if (_queueRemainingCallback != null
+        && seek.queueTimeRemaining > 0
+        && zone!.nowPlaying != null
+        && zone!.nowPlaying!.length != null)
+      {
         _queueRemainingCallback!(seek.queueTimeRemaining);
       }
 
@@ -124,17 +128,26 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
 
-      if (_progressCallback != null && zone != null && zone!.nowPlaying != null) {
-        var seekPosition = zone!.nowPlaying!.seekPosition;
+      if (_progressCallback != null && zone != null) {
+        if (zone!.nowPlaying != null) {
+          var seekPosition = zone!.nowPlaying!.seekPosition;
 
-        if (zone!.nowPlaying!.length != null) {
-          _progressCallback!(zone!.nowPlaying!.length, seekPosition);
+          if (zone!.nowPlaying!.length != null) {
+            _progressCallback!(zone!.nowPlaying!.length, seekPosition);
+          } else {
+            _progressCallback!(0, seekPosition);
+          }
         } else {
-          _progressCallback!(0, seekPosition);
+            _progressCallback!(0, null);
         }
       }
 
-      if (_queueRemainingCallback != null && zone != null && zone!.queueTimeRemaining > 0) {
+      if (_queueRemainingCallback != null
+        && zone != null
+        && zone!.queueTimeRemaining >= 0
+        && zone!.nowPlaying != null
+        && zone!.nowPlaying!.length != null)
+      {
         _queueRemainingCallback!(zone!.queueTimeRemaining);
       }
 
