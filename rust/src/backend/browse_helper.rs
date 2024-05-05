@@ -68,4 +68,8 @@ impl BrowseHelper {
 
         finished
     }
+
+    pub fn browse_clear(&mut self) {
+        self.fifo.clear();
+    }
 }

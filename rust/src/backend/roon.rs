@@ -180,6 +180,7 @@ impl Roon {
 
             handler.browse_offset = 0;
             handler.browse_level = 0;
+            handler.browse_total = 0;
 
             if let Some(path) = category_paths.get(&category) {
                 let path = path
@@ -614,6 +615,10 @@ impl RoonHandler {
                 self.transport.as_ref()?.subscribe_zones().await;
                 self.transport.as_ref()?.subscribe_outputs().await;
 
+                self.browse_category = 0;
+                self.browse_total = 0;
+                self.browse.as_mut()?.browse_clear();
+
                 self.event_tx
                     .send(RoonEvent::CoreFound(core.display_name))
                     .await
@@ -825,6 +830,8 @@ impl RoonHandler {
                         || self.artist_search && result.list.title == "Artists"
                     {
                         self.artist_search = false;
+                        self.browse_category = 0;
+                        self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
                         let event = if result.list.hint == Some(BrowseListHint::ActionList) {
@@ -845,9 +852,11 @@ impl RoonHandler {
                                     let title = &title[..len];
 
                                     items = self.prepend_random_play_entry(title, &items)?;
-                                }
 
-                                result.offset + 1
+                                    result.offset
+                                } else {
+                                    result.offset + 1
+                                }
                             } else {
                                 result.offset
                             };
@@ -904,6 +913,8 @@ impl RoonHandler {
                 }
                 Parsed::Error(err) => match err {
                     RoonApiError::BrowseInvalidItemKey(_) => {
+                        self.browse_category = 0;
+                        self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     }
                     RoonApiError::ImageUnexpectedError((_, image_key)) => {

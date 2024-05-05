@@ -95,7 +95,7 @@ class BrowseLevel extends StatefulWidget {
   State<BrowseLevel> createState() => BrowseLevelState();
 }
 
-class BrowseLevelState extends State<BrowseLevel> {
+class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   static bool _viewChanged = false;
   late final ScrollController _controller;
   BrowseItems? _browseItems;
@@ -108,6 +108,14 @@ class BrowseLevelState extends State<BrowseLevel> {
     _navigator.popUntil(ModalRoute.withName('-'));
 
     browse(category: value, sessionId: exploreId);
+  }
+
+  void addToImageCache(ImageKeyValue keyValue) {
+    if (mounted) {
+      setState(() {
+        _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
+      });
+    }
   }
 
   void _handleScrollChange() {
@@ -129,7 +137,6 @@ class BrowseLevelState extends State<BrowseLevel> {
   }
 
   void _setBrowseItems(BrowseItems newItems) {
-    if (mounted) {
       if (_browseItems == null || _viewChanged) {
         _viewChanged = false;
 
@@ -137,28 +144,42 @@ class BrowseLevelState extends State<BrowseLevel> {
           _controller.jumpTo(0);
         }
 
-        setState(() {
-          _browseItems = newItems;
-        });
-      } else if (_browseItems!.list.level == newItems.list.level && _browseItems!.items.length == newItems.offset) {
-        setState(() {
+        _browseItems = newItems;
+
+        if (mounted) {
+          setState(() {});
+        }
+      } else if (_browseItems!.list.level == newItems.list.level) {
+        if (_browseItems!.items.length == newItems.offset) {
           _browseItems!.items.addAll(newItems.items);
-        });
+
+          if (mounted) {
+            setState(() {});
+          }
+        } else {
+          int end = newItems.offset + newItems.items.length;
+
+          _browseItems!.items.removeRange(newItems.offset, end);
+          _browseItems!.items.insertAll(newItems.offset, newItems.items);
+
+          if (mounted) {
+            setState(() {});
+          }
+        }
       }
-    }
   }
 
-  void addToImageCache(ImageKeyValue keyValue) {
-    if (mounted) {
-      setState(() {
-        _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
-      });
+  Future<void> _loadMore() async {
+    if (_controller.position.extentAfter < 500) {
+      await browseNextPage();
     }
   }
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     _controller = ScrollController(
       onAttach: _handlePositionAttach,
@@ -167,9 +188,16 @@ class BrowseLevelState extends State<BrowseLevel> {
     ..addListener(_loadMore);
   }
 
-  Future<void> _loadMore() async {
-    if (_controller.position.extentAfter < 500) {
-      await browseNextPage();
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _viewChanged = true;
     }
   }
 

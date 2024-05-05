@@ -118,7 +118,7 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
-      browse(category: settings["view"], sessionId: exploreId);
+      BrowseLevelState.onDestinationSelected(settings["view"]);
 
       if (settings["zoneId"] != null) {
         selectZone(zoneId: settings["zoneId"]!);
