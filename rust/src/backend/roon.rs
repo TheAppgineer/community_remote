@@ -612,6 +612,9 @@ impl RoonHandler {
                 self.browse = Some(BrowseHelper::new(core.get_browse().cloned()?));
                 self.image = core.get_image().cloned();
 
+                self.zone_map.clear();
+                self.outputs.clear();
+
                 self.transport.as_ref()?.subscribe_zones().await;
                 self.transport.as_ref()?.subscribe_outputs().await;
 
