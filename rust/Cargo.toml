@@ -9,7 +9,7 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 chrono = { version = "0.4", features = ["clock"], default-features = false }
-flutter_rust_bridge = "=2.0.0-dev.32"
+flutter_rust_bridge = "=2.0.0-dev.33"
 log = "0.4"
 once_cell = "1.19"
 rand = "0.8.5"
