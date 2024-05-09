@@ -306,6 +306,28 @@ impl Roon {
         Some(())
     }
 
+    pub async fn query_profile(&self, session_id: i32) -> Option<()> {
+        let path = vec!["Settings".to_owned()];
+        let mut handler = self.handler.lock().await;
+        let multi_session_key = handler.get_multi_session_key(session_id);
+
+        handler
+            .browse_path
+            .insert(multi_session_key.as_ref()?.to_owned(), path.clone());
+
+        let opts = BrowseOpts {
+            multi_session_key,
+            pop_all: true,
+            set_display_offset: Some(0),
+            ..Default::default()
+        };
+
+        handler.browse_category = 0;
+        handler.browse.as_mut()?.browse(opts).await;
+
+        Some(())
+    }
+
     pub async fn select_queue_item(&self, queue_item_id: u32) -> Option<()> {
         let handler = self.handler.lock().await;
 
@@ -772,8 +794,9 @@ impl RoonHandler {
                                 ..Default::default()
                             };
 
-                            if result.list.as_ref()?.title == "Explore"
-                                || result.list.as_ref()?.title == "Library"
+                            if self.browse_path.is_empty()
+                                && (result.list.as_ref()?.title == "Explore"
+                                    || result.list.as_ref()?.title == "Library")
                             {
                                 self.browse_category = 0;
                             }
@@ -830,50 +853,66 @@ impl RoonHandler {
 
                     if result.list.title == "Explore"
                         || result.list.title == "Library"
-                        || self.artist_search && result.list.title == "Artists"
+                        || (self.artist_search && result.list.title == "Artists")
                     {
                         self.artist_search = false;
                         self.browse_category = 0;
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
-                        let event = if result.list.hint == Some(BrowseListHint::ActionList) {
-                            RoonEvent::BrowseActions(result.items)
-                        } else {
-                            let new_offset = result.offset + result.items.len();
-                            let title = result.list.title.to_owned();
-
-                            self.browse_id = multi_session_key;
-                            self.browse_offset = new_offset;
-                            self.browse_total = result.list.count;
-
-                            let mut items = result.items;
-
-                            let offset = if title == "Albums" || title == "Tracks" {
-                                if result.offset == 0 {
-                                    let len = title.len() - 1;
-                                    let title = &title[..len];
-
-                                    items = self.prepend_random_play_entry(title, &items)?;
-
-                                    result.offset
-                                } else {
-                                    result.offset + 1
+                        if result.list.title == "Settings" {
+                            for item in result.items.iter() {
+                                if item.title == "Profile" {
+                                    if let Some(subtitle) = item.subtitle.as_ref() {
+                                        self.event_tx
+                                            .send(RoonEvent::Profile(subtitle.to_owned()))
+                                            .await
+                                            .unwrap();
+                                        break;
+                                    }
                                 }
+                            }
+                        }
+
+                        if self.browse_category != 0 {
+                            let event = if result.list.hint == Some(BrowseListHint::ActionList) {
+                                RoonEvent::BrowseActions(result.items)
                             } else {
-                                result.offset
+                                let new_offset = result.offset + result.items.len();
+                                let title = result.list.title.to_owned();
+
+                                self.browse_id = multi_session_key;
+                                self.browse_offset = new_offset;
+                                self.browse_total = result.list.count;
+
+                                let mut items = result.items;
+
+                                let offset = if title == "Albums" || title == "Tracks" {
+                                    if result.offset == 0 {
+                                        let len = title.len() - 1;
+                                        let title = &title[..len];
+
+                                        items = self.prepend_random_play_entry(title, &items)?;
+
+                                        result.offset
+                                    } else {
+                                        result.offset + 1
+                                    }
+                                } else {
+                                    result.offset
+                                };
+
+                                let browse_items = BrowseItems {
+                                    list: result.list,
+                                    offset,
+                                    items,
+                                };
+
+                                RoonEvent::BrowseItems(browse_items)
                             };
 
-                            let browse_items = BrowseItems {
-                                list: result.list,
-                                offset,
-                                items,
-                            };
-
-                            RoonEvent::BrowseItems(browse_items)
-                        };
-
-                        self.event_tx.send(event).await.unwrap();
+                            self.event_tx.send(event).await.unwrap();
+                        }
                     }
                 }
                 Parsed::Queue(queue) => {

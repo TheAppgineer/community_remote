@@ -9,12 +9,91 @@ import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:mdi/mdi.dart';
 import 'package:provider/provider.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
+
+  @override
+  State<MyHomePage> createState() => MyHomePageState();
+}
+
+class MyHomePageState extends State<MyHomePage> {
+  Icon? _profileIcon;
+
+  _setProfileIcon(String profileName) {
+    IconData icon;
+
+    switch (profileName[0].toLowerCase()) {
+      case 'a':
+        icon = Mdi.alphaACircleOutline;
+      case 'b':
+        icon = Mdi.alphaBCircleOutline;
+      case 'c':
+        icon = Mdi.alphaCCircleOutline;
+      case 'd':
+        icon = Mdi.alphaDCircleOutline;
+      case 'e':
+        icon = Mdi.alphaECircleOutline;
+      case 'f':
+        icon = Mdi.alphaFCircleOutline;
+      case 'g':
+        icon = Mdi.alphaGCircleOutline;
+      case 'h':
+        icon = Mdi.alphaHCircleOutline;
+      case 'i':
+        icon = Mdi.alphaICircleOutline;
+      case 'j':
+        icon = Mdi.alphaJCircleOutline;
+      case 'k':
+        icon = Mdi.alphaKCircleOutline;
+      case 'l':
+        icon = Mdi.alphaLCircleOutline;
+      case 'm':
+        icon = Mdi.alphaMCircleOutline;
+      case 'n':
+        icon = Mdi.alphaNCircleOutline;
+      case 'o':
+        icon = Mdi.alphaOCircleOutline;
+      case 'p':
+        icon = Mdi.alphaPCircleOutline;
+      case 'q':
+        icon = Mdi.alphaQCircleOutline;
+      case 'r':
+        icon = Mdi.alphaRCircleOutline;
+      case 's':
+        icon = Mdi.alphaSCircleOutline;
+      case 't':
+        icon = Mdi.alphaTCircleOutline;
+      case 'u':
+        icon = Mdi.alphaUCircleOutline;
+      case 'v':
+        icon = Mdi.alphaVCircleOutline;
+      case 'w':
+        icon = Mdi.alphaWCircleOutline;
+      case 'x':
+        icon = Mdi.alphaXCircleOutline;
+      case 'y':
+        icon = Mdi.alphaYCircleOutline;
+      case 'z':
+        icon = Mdi.alphaZCircleOutline;
+      default:
+        icon = Mdi.alphaPCircleOutline;
+    }
+
+    setState(() {
+      _profileIcon = Icon(icon, size: 32);
+    });
+  }
+
+  @override void initState() {
+    super.initState();
+
+    MyAppState.setProfileCallback(_setProfileIcon);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +125,8 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         scrolledUnderElevation: 0,
         title: ListTile(
-          leading: const Icon(Icons.person_outline),
-          title: Text(title),
+          leading: _profileIcon,
+          title: Text(widget.title),
           subtitle: Text(subtitle),
         ),
         actions: [

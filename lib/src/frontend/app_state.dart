@@ -8,10 +8,11 @@ const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
 const exploreId = 0;
 
 class MyAppState extends ChangeNotifier {
+  static final Map<String, Function(BrowseItems)> _browseCallbacks = {};
+  static Function? _profileCallback;
   String? serverName;
   List<ZoneSummary>? zoneList;
   Map<String, String>? outputs;
-  BrowseItems? browseItems;
   List<BrowseItem>? actionItems;
   List<QueueItem>? queue;
   bool takeDefaultAction = false;
@@ -19,9 +20,21 @@ class MyAppState extends ChangeNotifier {
   late Map<String, dynamic> settings;
   Function? _progressCallback;
   Function? _queueRemainingCallback;
-  Function? _browseCallback;
   final Map<String, List<Function>> _pendingImages = {};
   bool pauseOnTrackEnd = false;
+  bool initialized = false;
+
+  static setBrowseCallback(String route, Function(BrowseItems) callback) {
+    _browseCallbacks[route] = callback;
+  }
+
+  static removeBrowseCallback(String route) {
+    _browseCallbacks.remove(route);
+  }
+
+  static setProfileCallback(Function? callback) {
+    _profileCallback = callback;
+  }
 
   setSettings(settings) {
     this.settings = settings;
@@ -33,10 +46,6 @@ class MyAppState extends ChangeNotifier {
 
   setQueueRemainingCallback(Function(int)? callback) {
     _queueRemainingCallback = callback;
-  }
-
-  setBrowseCallback(Function(BrowseItems)? callback) {
-    _browseCallback = callback;
   }
 
   requestImage(String? imageKey, Function callback) {
@@ -110,18 +119,30 @@ class MyAppState extends ChangeNotifier {
 
       return;
     } else if (event is RoonEvent_BrowseItems) {
-      if (_browseCallback != null) {
-        _browseCallback!(event.field0);
+      String route = Uri.encodeComponent(event.field0.list.title);
+      Function(BrowseItems)? callback = _browseCallbacks[route] ?? _browseCallbacks['-'];
+
+      if (callback != null) {
+        callback(event.field0);
       }
 
       return;
     } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
-      BrowseLevelState.onDestinationSelected(settings["view"]);
+      queryProfile(sessionId: exploreId);
 
       if (settings["zoneId"] != null) {
         selectZone(zoneId: settings["zoneId"]!);
+      }
+    } else if (event is RoonEvent_Profile) {
+      if (_profileCallback != null) {
+        _profileCallback!(event.field0);
+      }
+
+      if (!initialized) {
+        initialized = true;
+        BrowseLevelState.onDestinationSelected(settings["view"]);
       }
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;

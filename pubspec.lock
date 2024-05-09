@@ -386,6 +386,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2719.3"
+  mdi:
+    dependency: "direct main"
+    description:
+      name: mdi
+      sha256: "2b03a2279a0e122b7e8df0c9f22238697fe4788e8b317a2ed5554dee755b8d99"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0-nullsafety.0"
   meta:
     dependency: transitive
     description:

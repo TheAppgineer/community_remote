@@ -29,19 +29,31 @@ class Router {
 }
 
 class MyNavigator {
-
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  List<String> routes = ['-'];
 
   dynamic pushNamed(String route, {dynamic arguments}) {
+    routes.add(route);
     return navigatorKey.currentState?.pushNamed(route, arguments: arguments);
   }
 
   dynamic pop() {
+    routes.removeLast();
     return navigatorKey.currentState?.pop();
   }
 
-  void popUntil(bool Function(Route<dynamic>) predicate) {
-    navigatorKey.currentState?.popUntil(predicate);
+  void popUntil(String name) {
+    if (_isAncestor(name)) {
+      int start = routes.indexOf(name) + 1;
+      routes.removeRange(start, routes.length);
+    }
+
+    navigatorKey.currentState?.popUntil(ModalRoute.withName(name));
+  }
+
+  void popUntilRoot() {
+    routes = ['-'];
+    navigatorKey.currentState?.popUntil(ModalRoute.withName('-'));
   }
 
   bool canPop() {
@@ -50,6 +62,14 @@ class MyNavigator {
     } else {
       return false;
     }
+  }
+
+  String get currentRoute {
+    return routes[routes.length - 1];
+  }
+
+  bool _isAncestor(String name) {
+    return (currentRoute != name && routes.contains(name));
   }
 }
 
@@ -98,6 +118,7 @@ class BrowseLevel extends StatefulWidget {
 class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   static bool _viewChanged = false;
   late final ScrollController _controller;
+  late String _route;
   BrowseItems? _browseItems;
   final Map<String, Image> _imageCache = {};
   bool _isScrolling = false;
@@ -105,7 +126,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   static void onDestinationSelected(value) {
     _viewChanged = true;
 
-    _navigator.popUntil(ModalRoute.withName('-'));
+    _navigator.popUntilRoot();
 
     browse(category: value, sessionId: exploreId);
   }
@@ -137,36 +158,41 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   }
 
   void _setBrowseItems(BrowseItems newItems) {
-      if (_browseItems == null || _viewChanged) {
-        _viewChanged = false;
+    if (_browseItems == null || _viewChanged) {
+      _viewChanged = false;
 
-        if (_controller.positions.isNotEmpty) {
-          _controller.jumpTo(0);
-        }
+      if (_controller.positions.isNotEmpty) {
+        _controller.jumpTo(0);
+      }
 
-        _browseItems = newItems;
+      _browseItems = newItems;
+
+      if (mounted) {
+        setState(() {});
+      }
+    } else if (_browseItems!.list.level == newItems.list.level) {
+      if (_browseItems!.items.length == newItems.offset) {
+        _browseItems!.items.addAll(newItems.items);
 
         if (mounted) {
           setState(() {});
         }
-      } else if (_browseItems!.list.level == newItems.list.level) {
-        if (_browseItems!.items.length == newItems.offset) {
-          _browseItems!.items.addAll(newItems.items);
+      } else {
+        int end = newItems.offset + newItems.items.length;
 
-          if (mounted) {
-            setState(() {});
-          }
-        } else {
-          int end = newItems.offset + newItems.items.length;
+        _browseItems!.items.removeRange(newItems.offset, end);
+        _browseItems!.items.insertAll(newItems.offset, newItems.items);
 
-          _browseItems!.items.removeRange(newItems.offset, end);
-          _browseItems!.items.insertAll(newItems.offset, newItems.items);
+        // Roon API sometimes jumps up in the hierarchy, pop if we are not the current route
+        if (_navigator.canPop() && _navigator.currentRoute != _route) {
+          _navigator.popUntil(_route);
+        }
 
-          if (mounted) {
-            setState(() {});
-          }
+        if (mounted) {
+          setState(() {});
         }
       }
+    }
   }
 
   Future<void> _loadMore() async {
@@ -179,6 +205,8 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
+    _route = _navigator.currentRoute;
+    MyAppState.setBrowseCallback(_route, _setBrowseItems);
     WidgetsBinding.instance.addObserver(this);
 
     _controller = ScrollController(
@@ -190,7 +218,9 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    MyAppState.removeBrowseCallback(_route);
     WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
   }
 
@@ -212,8 +242,8 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         tooltip: "Search",
         onPressed: () {
           _viewChanged = true;
-          _navigator.popUntil(ModalRoute.withName('-'));
-          _navigator.pushNamed("search");
+          _navigator.popUntilRoot();
+          _navigator.pushNamed("Search");
 
           showSearch(
             context: context,
@@ -222,8 +252,6 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         },
       ),
     ];
-
-    appState.setBrowseCallback(_setBrowseItems);
 
     if (_browseItems != null) {
       var browseList = _browseItems!.items;
@@ -249,7 +277,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
             0,
             IconButton(
               onPressed: () {
-                _navigator.pushNamed("more");
+                _navigator.pushNamed(Uri.encodeComponent(subtitle));
 
                 searchArtist(sessionId: exploreId, artist: subtitle);
               },
@@ -332,11 +360,15 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
                 appState.takeDefaultAction = true;
                 break;
               default:
-                _navigator.pushNamed(_browseItems!.list.level.toString());
+                String name = Uri.encodeComponent(browseList[index].title);
+                _navigator.pushNamed(name);
                 break;
             }
 
-            selectBrowseItem(sessionId: exploreId, item: browseList[index]);
+            // Delay the browse request to give the pushed route time to register its callback
+            Future.delayed(const Duration(milliseconds: 20), () {
+              selectBrowseItem(sessionId: exploreId, item: browseList[index]);
+            });
           },
         );
       }

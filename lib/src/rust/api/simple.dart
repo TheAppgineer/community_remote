@@ -49,6 +49,9 @@ Future<void> searchArtist(
     RustLib.instance.api
         .searchArtist(sessionId: sessionId, artist: artist, hint: hint);
 
+Future<void> queryProfile({required int sessionId, dynamic hint}) =>
+    RustLib.instance.api.queryProfile(sessionId: sessionId, hint: hint);
+
 Future<void> selectBrowseItem(
         {required int sessionId, required BrowseItem item, dynamic hint}) =>
     RustLib.instance.api
@@ -181,6 +184,9 @@ sealed class RoonEvent with _$RoonEvent {
     List<BrowseItem> field0,
   ) = RoonEvent_BrowseActions;
   const factory RoonEvent.browseReset() = RoonEvent_BrowseReset;
+  const factory RoonEvent.profile(
+    String field0,
+  ) = RoonEvent_Profile;
   const factory RoonEvent.queueItems(
     List<QueueItem> field0,
   ) = RoonEvent_QueueItems;

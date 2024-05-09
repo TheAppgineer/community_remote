@@ -31,6 +31,7 @@ pub enum RoonEvent {
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,
+    Profile(String),
     QueueItems(Vec<QueueItem>),
     PauseOnTrackEnd(bool),
     Image(ImageKeyValue),
@@ -170,6 +171,14 @@ pub async fn search_artist(session_id: i32, artist: String) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.search_artist(session_id, artist).await;
+    }
+}
+
+pub async fn query_profile(session_id: i32) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.query_profile(session_id).await;
     }
 }
 
