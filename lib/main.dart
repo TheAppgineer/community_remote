@@ -24,7 +24,7 @@ Future<void> main() async {
   Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
     "expand": false,
     "theme": "light",
-    "view": 2,
+    "view": 0,
     "zoneId": null,
   };
 
@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.values.byName(appState.settings["theme"]),
+      themeMode: ThemeMode.values.byName(appState.settings['theme']),
       home: const MyHomePage(title: 'Community Remote'),
     );
   }

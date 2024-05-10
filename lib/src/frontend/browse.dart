@@ -5,6 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
+enum Category {
+  search,
+  artists,
+  albums,
+  tracks,
+  genres,
+  composers,
+  tags,
+  liveRadio,
+  playlists,
+  settings,
+}
+
 final MyNavigator _navigator = MyNavigator();
 
 class CustomRoute<T> extends MaterialPageRoute<T> {
@@ -98,7 +111,7 @@ class Browse extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.values.byName(appState.settings["theme"]),
+      themeMode: ThemeMode.values.byName(appState.settings['theme']),
       onGenerateRoute: Router.generateRoute,
       initialRoute: "-",
       navigatorKey: _navigator.navigatorKey,
@@ -123,12 +136,12 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   final Map<String, Image> _imageCache = {};
   bool _isScrolling = false;
 
-  static void onDestinationSelected(value) {
+  static void onDestinationSelected(int category) {
     _viewChanged = true;
 
     _navigator.popUntilRoot();
 
-    browse(category: value, sessionId: exploreId);
+    browse(category: category, sessionId: exploreId);
   }
 
   void addToImageCache(ImageKeyValue keyValue) {
@@ -272,7 +285,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
         );
 
-        if (appState.settings["view"] == 3 && _browseItems!.list.level == 3) {
+        if (appState.settings['view'] == Category.albums.index && _browseItems!.list.level == 3) {
           actions.insert(
             0,
             IconButton(
@@ -437,7 +450,7 @@ class LibSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    browseWithInput(category: 1, sessionId: exploreId, input: query);
+    browseWithInput(category: Category.search.index, sessionId: exploreId, input: query);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       close(context, null);

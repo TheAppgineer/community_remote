@@ -53,7 +53,7 @@ struct RoonHandler {
     outputs: HashMap<String, String>,
     browse_id: Option<String>,
     browse_path: HashMap<String, Vec<String>>,
-    browse_category: i32,
+    browse_category: Option<i32>,
     browse_input: Option<String>,
     browse_offset: usize,
     browse_total: usize,
@@ -163,18 +163,18 @@ impl Roon {
     ) -> Option<()> {
         let mut handler = self.handler.lock().await;
 
-        if category != handler.browse_category {
+        if Some(category) != handler.browse_category {
             let category_paths = HashMap::from([
-                (1, vec!["Search", "Library"]),
-                (2, vec!["Artists", "Library"]),
-                (3, vec!["Albums", "Library"]),
-                (4, vec!["Tracks", "Library"]),
-                (5, vec!["Genres"]),
-                (6, vec!["Composers", "Library"]),
-                (7, vec!["Tags", "Library"]),
-                (8, vec!["My Live Radio"]),
-                (9, vec!["Playlists"]),
-                (11, vec!["Settings"]),
+                (0, vec!["Search", "Library"]),
+                (1, vec!["Artists", "Library"]),
+                (2, vec!["Albums", "Library"]),
+                (3, vec!["Tracks", "Library"]),
+                (4, vec!["Genres"]),
+                (5, vec!["Composers", "Library"]),
+                (6, vec!["Tags", "Library"]),
+                (7, vec!["My Live Radio"]),
+                (8, vec!["Playlists"]),
+                (9, vec!["Settings"]),
             ]);
             let multi_session_key = handler.get_multi_session_key(session_id);
 
@@ -200,7 +200,7 @@ impl Roon {
             };
 
             handler.browse.as_mut()?.browse(opts).await;
-            handler.browse_category = category;
+            handler.browse_category = Some(category);
             handler.browse_input = input;
         }
 
@@ -322,7 +322,7 @@ impl Roon {
             ..Default::default()
         };
 
-        handler.browse_category = 0;
+        handler.browse_category = None;
         handler.browse.as_mut()?.browse(opts).await;
 
         Some(())
@@ -610,7 +610,7 @@ impl RoonHandler {
             outputs: HashMap::new(),
             browse_id: None,
             browse_path: HashMap::new(),
-            browse_category: 0,
+            browse_category: None,
             browse_input: None,
             browse_offset: 0,
             browse_total: 0,
@@ -640,7 +640,7 @@ impl RoonHandler {
                 self.transport.as_ref()?.subscribe_zones().await;
                 self.transport.as_ref()?.subscribe_outputs().await;
 
-                self.browse_category = 0;
+                self.browse_category = None;
                 self.browse_total = 0;
                 self.browse.as_mut()?.browse_clear();
 
@@ -798,7 +798,7 @@ impl RoonHandler {
                                 && (result.list.as_ref()?.title == "Explore"
                                     || result.list.as_ref()?.title == "Library")
                             {
-                                self.browse_category = 0;
+                                self.browse_category = None;
                             }
 
                             self.browse_level = result.list.as_ref()?.level;
@@ -856,7 +856,7 @@ impl RoonHandler {
                         || (self.artist_search && result.list.title == "Artists")
                     {
                         self.artist_search = false;
-                        self.browse_category = 0;
+                        self.browse_category = None;
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
@@ -874,7 +874,7 @@ impl RoonHandler {
                             }
                         }
 
-                        if self.browse_category != 0 {
+                        if self.browse_category.is_some() {
                             let event = if result.list.hint == Some(BrowseListHint::ActionList) {
                                 RoonEvent::BrowseActions(result.items)
                             } else {
@@ -955,7 +955,7 @@ impl RoonHandler {
                 }
                 Parsed::Error(err) => match err {
                     RoonApiError::BrowseInvalidItemKey(_) => {
-                        self.browse_category = 0;
+                        self.browse_category = None;
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     }

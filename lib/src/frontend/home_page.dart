@@ -102,7 +102,7 @@ class MyHomePageState extends State<MyHomePage> {
       icon: const Icon(Icons.dark_mode_outlined),
       tooltip: 'Dark Mode',
       onPressed: () {
-        appState.settings["theme"] = ThemeMode.dark.name;
+        appState.settings['theme'] = ThemeMode.dark.name;
         saveSettings(settings: jsonEncode(appState.settings));
       },
     );
@@ -110,11 +110,11 @@ class MyHomePageState extends State<MyHomePage> {
       icon: const Icon(Icons.light_mode_outlined),
       tooltip: 'Light Mode',
       onPressed: () {
-        appState.settings["theme"] = ThemeMode.light.name;
+        appState.settings['theme'] = ThemeMode.light.name;
         saveSettings(settings: jsonEncode(appState.settings));
       },
     );
-    ThemeMode theme = ThemeMode.values.byName(appState.settings["theme"]);
+    ThemeMode theme = ThemeMode.values.byName(appState.settings['theme']);
     IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
     String subtitle = appState.serverName != null
       ? 'Served by: ${appState.serverName}'
@@ -266,86 +266,175 @@ class QuickAccessButton extends StatelessWidget {
   }
 }
 
-class HamburgerMenu extends StatelessWidget {
+class HamburgerMenu extends StatefulWidget {
   const HamburgerMenu({super.key});
+
+  @override
+  State<HamburgerMenu> createState() => _HamburgerMenuState();
+}
+
+class _HamburgerMenuState extends State<HamburgerMenu> {
+  bool _setup = false;
+
+  NavigationRailDestination _getDivider({String? label}) {
+    return NavigationRailDestination(
+      icon: const Divider(indent: 10, endIndent: 10),
+      label: Text(label ?? "", style: const TextStyle(fontSize: 18)),
+      disabled: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    Icon icon = Icon(appState.settings["expand"] ? Icons.arrow_circle_left_outlined : Icons.arrow_circle_right_outlined);
+    Icon icon = Icon(appState.settings['expand'] || _setup ? Icons.arrow_circle_left_outlined : Icons.arrow_circle_right_outlined);
+    Map<int, Category> browsePath = {};
+    var destinations = [
+      NavigationRailDestination(
+        icon: icon,
+        label: const Text(""),
+      ),
+      _getDivider(label: "Library"),
+    ];
+
+    NavigationRailDestination getDestination(Category category) {
+      IconData icon;
+      String name;
+
+      switch (category) {
+        case Category.search:
+          icon = Icons.search_outlined;
+          name = "Search";
+          break;
+        case Category.artists:
+          icon = Symbols.artist_rounded;
+          name = 'Artists';
+          break;
+        case Category.albums:
+          icon = Icons.album_outlined;
+          name = 'Albums';
+          break;
+        case Category.tracks:
+          icon = Icons.music_note_outlined;
+          name = 'Tracks';
+          break;
+        case Category.genres:
+          icon = Symbols.genres_rounded;
+          name = 'Genres';
+          break;
+        case Category.composers:
+          icon = Icons.person_3_outlined;
+          name = 'Composers';
+          break;
+        case Category.tags:
+          icon = Icons.label_outlined;
+          name = 'Tags';
+          break;
+        case Category.liveRadio:
+          icon = Icons.radio_outlined;
+          name = 'Live Radio';
+          break;
+        case Category.playlists:
+          icon = Icons.playlist_play_outlined;
+          name = 'Playlists';
+          break;
+        case Category.settings:
+          icon = Icons.settings_outlined;
+          name = 'Settings';
+          break;
+      }
+
+      List hidden = appState.settings['hidden'] ?? [];
+      Icon stateIcon = _setup
+        ? hidden.contains(category.index) ? const Icon(Icons.toggle_off_outlined) : const Icon(Icons.toggle_on_outlined)
+        : Icon(icon);
+
+      return NavigationRailDestination(
+        icon: stateIcon,
+        label: Text(name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+      );
+    }
+
+    for (var category in Category.values) {
+      if (category == Category.search) {
+        continue;
+      }
+
+      List hidden = appState.settings['hidden'] ?? [];
+      bool visible = _setup || !hidden.contains(category.index);
+
+      if (visible) {
+        if (category == Category.settings) {
+          destinations.add(_getDivider());
+        }
+
+        browsePath[destinations.length] = category;
+        destinations.add(getDestination(category));
+      }
+    }
+
+    int? selectedIndex;
+
+    for (var entry in browsePath.entries) {
+      if (entry.value.index == appState.settings['view']) {
+        selectedIndex = entry.key;
+      }
+    }
 
     return SingleChildScrollView(
       child: IntrinsicHeight(
-        child: NavigationRail(
-          extended: appState.settings["expand"],
-          minWidth: 72,
-          minExtendedWidth: 192,
-          destinations: [
-            NavigationRailDestination(
-              icon: icon,
-              label: const Text(""),
-            ),
-            const NavigationRailDestination(
-              icon: Divider(indent: 10, endIndent: 10),
-              label: Text("Library", style: TextStyle(fontSize: 18)),
-              disabled: true,
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Symbols.artist_rounded),
-              label: Text("Artists", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.album_outlined),
-              label: Text("Albums", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.music_note_outlined),
-              label: Text("Tracks", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Symbols.genres_rounded),
-              label: Text("Genres", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.person_3_outlined),
-              label: Text("Composers", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.label_outlined),
-              label: Text("Tags", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.radio_outlined),
-              label: Text("Live Radio", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.playlist_play_outlined),
-              label: Text("Playlists", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-            const NavigationRailDestination(
-              icon: Divider(indent: 10, endIndent: 10),
-              label: Text(""),
-              disabled: true,
-            ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.settings_outlined),
-              label: Text("Settings", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-            ),
-          ],
-          selectedIndex: appState.settings["view"],
-          onDestinationSelected: (value) {
-            if (value == 0) {
-              appState.settings["expand"] = !appState.settings["expand"];
-              saveSettings(settings: jsonEncode(appState.settings));
-            } else {
-              if (value != appState.settings["view"]) {
-                appState.settings["view"] = value;
-                saveSettings(settings: jsonEncode(appState.settings));
-              }
-
-              BrowseLevelState.onDestinationSelected(value);
-            }
+        child: GestureDetector(
+          onLongPress: () {
+            setState(() {
+              _setup = true;
+            });
           },
+          child: NavigationRail(
+            extended: appState.settings['expand'] || _setup,
+            minWidth: 72,
+            minExtendedWidth: 192,
+            destinations: destinations,
+            selectedIndex: selectedIndex,
+            onDestinationSelected: (value) {
+              if (value == 0) {
+                if (_setup) {
+                  saveSettings(settings: jsonEncode(appState.settings));
+
+                  setState(() {
+                    _setup = false;
+                  });
+                } else {
+                  appState.settings['expand'] = !appState.settings['expand'];
+                  saveSettings(settings: jsonEncode(appState.settings));
+                }
+              } else {
+                Category? category = browsePath[value];
+
+                if (category != null) {
+                  if (_setup) {
+                    List hidden = appState.settings['hidden'] ?? [];
+
+                    if (hidden.contains(category.index)) {
+                      hidden.remove(category.index);
+                    } else {
+                      hidden.add(category.index);
+                    }
+
+                    appState.settings['hidden'] = hidden;
+
+                    setState(() {});
+                  } else {
+                    if (category.index != appState.settings['view']) {
+                      appState.settings['view'] = category.index;
+                      saveSettings(settings: jsonEncode(appState.settings));
+                    }
+
+                    BrowseLevelState.onDestinationSelected(category.index);
+                  }
+                }
+              }
+            },
+          ),
         ),
       ),
     );
