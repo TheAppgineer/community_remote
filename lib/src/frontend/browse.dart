@@ -310,7 +310,47 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         Widget? trailing;
         String? imageKey = browseList[index].imageKey;
         Image? image = _imageCache[imageKey];
+        String title = browseList[index].title;
         Text? subtitle;
+        int? disk;
+        int? track;
+
+        (int, String)? leadingNumber(String input, Pattern pattern) {
+          List<String> split = input.split(pattern);
+
+          if (split.isNotEmpty && split[0] != input) {
+            track = int.tryParse(split[0]);
+
+            if (track != null) {
+              return (track!, split.sublist(1).join(' '));
+            }
+          }
+
+          return null;
+        }
+
+        if (browseList[index].hint == BrowseItemHint.actionList) {
+          // Track from single disk: "<track>. <title>"
+          (int, String)? result = leadingNumber(title, '. ');
+
+          if (result != null) {
+            track = result.$1;
+            title = result.$2;
+          } else {
+            // Track from multi disk: "<disk>-<track> <title>"
+            result = leadingNumber(title, '-');
+
+            if (result != null) {
+              disk = result.$1;
+              result = leadingNumber(result.$2, ' ');
+
+              if (result != null) {
+                track = result.$1;
+                title = result.$2;
+              }
+            }
+          }
+        }
 
         if (image != null) {
           leading = Row(
@@ -319,6 +359,13 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
               image,
               const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
             ],
+          );
+        } else if (track != null) {
+          String id = disk != null ? '$disk-$track' : track.toString();
+
+          leading = SizedBox(
+            width: 58,
+            child: Text(id, style: const TextStyle(fontSize: 14)),
           );
         } else {
           if (!_isScrolling && imageKey != null) {
@@ -363,7 +410,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         return ListTile(
           leading: leading,
           trailing: trailing,
-          title: Text(browseList[index].title),
+          title: Text(title),
           subtitle: subtitle,
           onTap: () {
             switch (browseList[index].hint) {
