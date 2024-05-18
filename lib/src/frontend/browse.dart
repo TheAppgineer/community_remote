@@ -453,7 +453,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           margin: const EdgeInsets.all(10),
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: listView,
+            child: listView ?? const SizedBox.expand(),
           ),
         ),
       ),

@@ -164,6 +164,80 @@ class MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class Setup extends StatefulWidget {
+  const Setup({
+    super.key,
+  });
+
+  @override
+  State<Setup> createState() => _SetupState();
+}
+
+class _SetupState extends State<Setup> {
+  String? _ip;
+  String? _port;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 600,
+      child: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Supply Server IP and Port to bypass Server discovery',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20)),
+            TextField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                hintText: 'Server IP',
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _ip = value;
+                });
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20)),
+            TextField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                hintText: 'Server Port',
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _port = value;
+                });
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20)),
+            ElevatedButton.icon(
+              onPressed: () {
+                if (_ip != null) {
+                  setServerProperties(ip: _ip!, port: _port);
+                }
+
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.link_outlined),
+              label: const Text('Connect to Server'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class QuickAccessButton extends StatelessWidget {
   const QuickAccessButton({
     super.key,
@@ -176,7 +250,7 @@ class QuickAccessButton extends StatelessWidget {
     IconData icon;
 
     if (appState.serverName == null) {
-      icon = Icons.help_center_outlined;
+      icon = Icons.link_outlined;
     } else if (appState.zone == null) {
       icon = Icons.speaker_outlined;
     } else if (appState.pauseOnTrackEnd) {
@@ -203,7 +277,7 @@ class QuickAccessButton extends StatelessWidget {
     String? tooltip;
 
     if (appState.serverName == null) {
-      tooltip = "How To Connect?";
+      tooltip = "Connect Manually";
     } else if (appState.zone == null) {
       tooltip = "Select Zone";
     } else if (appState.pauseOnTrackEnd) {
@@ -215,6 +289,12 @@ class QuickAccessButton extends StatelessWidget {
 
   takeAction(context) {
     if (appState.serverName == null) {
+      showDialog(
+        context: context,
+        builder: (context) => const Dialog(
+          child: Setup(),
+        )
+      );
     } else if (appState.zone == null) {
       showDialog(
         context: context,

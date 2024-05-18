@@ -96,6 +96,14 @@ pub async fn start_roon(
     settings
 }
 
+pub async fn set_server_properties(ip: String, port: Option<String>) {
+    let mut api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_mut() {
+        roon.set_server_properties(ip, port).await;
+    }
+}
+
 fn init_logger(support_path: &str, log_level: log::LevelFilter) {
     let log_path = format!("{support_path}/messages.log");
     let time_format = format_description!("[hour]:[minute]:[second].[subsecond]");

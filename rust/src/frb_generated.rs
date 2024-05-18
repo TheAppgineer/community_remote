@@ -31,7 +31,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.33";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1365145106;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 852261618;
 
 // Section: executor
 
@@ -858,6 +858,44 @@ fn wire_select_zone_impl(
                 transform_result_sse(
                     (move || async move {
                         Result::<_, ()>::Ok(crate::api::simple::select_zone(api_zone_id).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_set_server_properties_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "set_server_properties",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_ip = <String>::sse_decode(&mut deserializer);
+            let api_port = <Option<String>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::set_server_properties(api_ip, api_port).await,
+                        )
                     })()
                     .await,
                 )
@@ -1989,30 +2027,31 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        5 => wire_browse_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
-        6 => wire_browse_with_input_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire_change_volume_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire_change_zone_volume_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire_control_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire_control_by_zone_id_impl(port, ptr, rust_vec_len, data_len),
-        4 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
-        25 => wire_group_outputs_impl(port, ptr, rust_vec_len, data_len),
+        6 => wire_browse_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire_browse_back_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire_browse_next_page_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire_browse_with_input_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire_change_volume_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire_change_zone_volume_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire_control_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire_control_by_zone_id_impl(port, ptr, rust_vec_len, data_len),
+        5 => wire_get_image_impl(port, ptr, rust_vec_len, data_len),
+        26 => wire_group_outputs_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire_mute_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire_mute_all_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire_mute_zone_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire_pause_after_queue_items_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire_pause_all_impl(port, ptr, rust_vec_len, data_len),
-        18 => wire_pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire_query_profile_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
-        9 => wire_search_artist_impl(port, ptr, rust_vec_len, data_len),
-        11 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire_select_queue_item_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire_standby_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire_mute_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire_mute_all_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire_mute_zone_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire_pause_after_queue_items_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire_pause_all_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire_pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire_query_profile_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire_save_settings_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire_search_artist_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire_select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire_select_queue_item_impl(port, ptr, rust_vec_len, data_len),
+        4 => wire_select_zone_impl(port, ptr, rust_vec_len, data_len),
+        3 => wire_set_server_properties_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire_standby_impl(port, ptr, rust_vec_len, data_len),
         2 => wire_start_roon_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }

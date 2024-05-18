@@ -19,6 +19,10 @@ Future<String> startRoon(
     RustLib.instance.api
         .startRoon(supportPath: supportPath, cb: cb, hint: hint);
 
+Future<void> setServerProperties(
+        {required String ip, String? port, dynamic hint}) =>
+    RustLib.instance.api.setServerProperties(ip: ip, port: port, hint: hint);
+
 Future<void> selectZone({required String zoneId, dynamic hint}) =>
     RustLib.instance.api.selectZone(zoneId: zoneId, hint: hint);
 

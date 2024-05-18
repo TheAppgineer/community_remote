@@ -14,15 +14,20 @@ use roon_api::{
     },
     CoreEvent, Info, Parsed, RoonApi, Services, Svc,
 };
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::collections::VecDeque;
-use std::{collections::HashMap, sync::Arc};
+use std::{
+    collections::{HashMap, VecDeque},
+    net::{IpAddr, Ipv4Addr},
+    str::FromStr,
+    sync::Arc,
+};
 use tokio::{
     sync::{
         mpsc::{channel, Receiver, Sender},
         Mutex,
     },
-    time::{sleep, Duration},
+    time::{self, sleep, Duration},
 };
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
@@ -38,6 +43,13 @@ const QUEUE: &str = "Queue";
 pub struct Roon {
     config_path: Arc<String>,
     handler: Arc<Mutex<RoonHandler>>,
+    server: Arc<Mutex<ServerProps>>,
+}
+
+#[derive(Clone, Default, Deserialize, Serialize)]
+struct ServerProps {
+    ip: Option<String>,
+    port: Option<String>,
 }
 
 struct RoonHandler {
@@ -72,12 +84,17 @@ impl Roon {
         let mut roon = RoonApi::new(info);
         let config_path = Arc::new(config_path);
         let value = RoonApi::load_config(&config_path, "settings");
+        let server = RoonApi::load_config(&config_path, "server");
+        let server = Arc::new(Mutex::new(
+            serde_json::from_value::<ServerProps>(server).unwrap_or_default(),
+        ));
         let handler = Arc::new(Mutex::new(RoonHandler::new(tx, config_path.clone())));
 
         log::info!("Loading config from: {config_path}");
 
         let handler_clone = handler.clone();
         let config_path_clone = config_path.clone();
+        let server_clone = server.clone();
         tokio::spawn(async move {
             loop {
                 let services = Some(vec![
@@ -88,11 +105,31 @@ impl Roon {
                 let provided: HashMap<String, Svc> = HashMap::new();
                 let config_path = config_path_clone.clone();
                 let get_roon_state = Box::new(move || RoonApi::load_roon_state(&config_path));
+                let timeout = Duration::from_secs(20);
+                let connection = {
+                    let server = server_clone.lock().await;
 
-                if let Some((mut handlers, mut core_rx)) = roon
-                    .start_discovery(get_roon_state, provided, services)
-                    .await
-                {
+                    if let Some(ip) = server.ip.as_deref() {
+                        let ip_addr = IpAddr::V4(Ipv4Addr::from_str(ip).unwrap());
+                        let port = server.port.as_deref().unwrap_or("9330");
+
+                        log::info!("Connecting to: {ip}:{port}...");
+                        time::timeout(
+                            timeout,
+                            roon.ws_connect(get_roon_state, provided, services, &ip_addr, port),
+                        )
+                        .await
+                    } else {
+                        log::info!("Starting Server discovery...");
+                        time::timeout(
+                            timeout,
+                            roon.start_discovery(get_roon_state, provided, services),
+                        )
+                        .await
+                    }
+                };
+
+                if let Ok(Some((mut handlers, mut core_rx))) = connection {
                     let roon_handler = handler_clone.clone();
 
                     roon_handler.lock().await.zone_id = None;
@@ -118,9 +155,24 @@ impl Roon {
         let roon = Self {
             config_path,
             handler,
+            server,
         };
 
         (roon, rx, value.to_string())
+    }
+
+    pub async fn set_server_properties(&mut self, ip: String, port: Option<String>) {
+        let server_props = ServerProps { ip: Some(ip), port };
+
+        *(self.server.lock().await) = server_props.clone();
+
+        let value = server_props
+            .serialize(serde_json::value::Serializer)
+            .unwrap();
+
+        if let Err(err) = RoonApi::save_config(&self.config_path, "server", value) {
+            log::warn!("Failed to save server config: {err}");
+        }
     }
 
     pub async fn get_image(&self, image_key: String) -> Option<()> {
