@@ -214,47 +214,44 @@ impl Roon {
         input: Option<String>,
     ) -> Option<()> {
         let mut handler = self.handler.lock().await;
+        let category_paths = HashMap::from([
+            (0, vec!["Search", "Library"]),
+            (1, vec!["Artists", "Library"]),
+            (2, vec!["Albums", "Library"]),
+            (3, vec!["Tracks", "Library"]),
+            (4, vec!["Genres"]),
+            (5, vec!["Composers", "Library"]),
+            (6, vec!["Tags", "Library"]),
+            (7, vec!["My Live Radio"]),
+            (8, vec!["Playlists"]),
+            (9, vec!["Settings"]),
+        ]);
+        let multi_session_key = handler.get_multi_session_key(session_id);
 
-        if Some(category) != handler.browse_category {
-            let category_paths = HashMap::from([
-                (0, vec!["Search", "Library"]),
-                (1, vec!["Artists", "Library"]),
-                (2, vec!["Albums", "Library"]),
-                (3, vec!["Tracks", "Library"]),
-                (4, vec!["Genres"]),
-                (5, vec!["Composers", "Library"]),
-                (6, vec!["Tags", "Library"]),
-                (7, vec!["My Live Radio"]),
-                (8, vec!["Playlists"]),
-                (9, vec!["Settings"]),
-            ]);
-            let multi_session_key = handler.get_multi_session_key(session_id);
+        handler.browse_offset = 0;
+        handler.browse_level = 0;
+        handler.browse_total = 0;
 
-            handler.browse_offset = 0;
-            handler.browse_level = 0;
-            handler.browse_total = 0;
-
-            if let Some(path) = category_paths.get(&category) {
-                let path = path
-                    .iter()
-                    .map(|str| String::from(*str))
-                    .collect::<Vec<_>>();
-                handler
-                    .browse_path
-                    .insert(multi_session_key.as_ref()?.to_owned(), path);
-            }
-
-            let opts = BrowseOpts {
-                multi_session_key,
-                pop_all: true,
-                set_display_offset: Some(0),
-                ..Default::default()
-            };
-
-            handler.browse.as_mut()?.browse(opts).await;
-            handler.browse_category = Some(category);
-            handler.browse_input = input;
+        if let Some(path) = category_paths.get(&category) {
+            let path = path
+                .iter()
+                .map(|str| String::from(*str))
+                .collect::<Vec<_>>();
+            handler
+                .browse_path
+                .insert(multi_session_key.as_ref()?.to_owned(), path);
         }
+
+        let opts = BrowseOpts {
+            multi_session_key,
+            pop_all: true,
+            set_display_offset: Some(0),
+            ..Default::default()
+        };
+
+        handler.browse.as_mut()?.browse(opts).await;
+        handler.browse_category = Some(category);
+        handler.browse_input = input;
 
         Some(())
     }

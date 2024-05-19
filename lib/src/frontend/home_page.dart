@@ -22,7 +22,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  Icon? _profileIcon;
+  Widget? _profileIcon;
 
   _setProfileIcon(String profileName) {
     IconData icon;
@@ -84,9 +84,12 @@ class MyHomePageState extends State<MyHomePage> {
         icon = Mdi.alphaPCircleOutline;
     }
 
-    setState(() {
-      _profileIcon = Icon(icon, size: 32);
-    });
+    _profileIcon = IconButton(
+      icon: Icon(icon, size: 32),
+      onPressed: () {
+        BrowseLevelState.selectProfile();
+      },
+    );
   }
 
   @override void initState() {

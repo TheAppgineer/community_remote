@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
@@ -130,6 +132,7 @@ class BrowseLevel extends StatefulWidget {
 
 class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   static bool _viewChanged = false;
+  static bool _toProfile = false;
   late final ScrollController _controller;
   late String _route;
   BrowseItems? _browseItems;
@@ -142,6 +145,15 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
     _navigator.popUntilRoot();
 
     browse(category: category, sessionId: exploreId);
+  }
+
+  static void selectProfile() {
+    if (_navigator.currentRoute != 'Profile') {
+      _viewChanged = true;
+      _toProfile = true;
+
+      browse(category: Category.settings.index, sessionId: exploreId);
+    }
   }
 
   void addToImageCache(ImageKeyValue keyValue) {
@@ -172,12 +184,35 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
 
   void _setBrowseItems(BrowseItems newItems) {
     if (_browseItems == null || _viewChanged) {
-      _viewChanged = false;
-
       if (_controller.positions.isNotEmpty) {
         _controller.jumpTo(0);
       }
 
+      if (_toProfile) {
+        if ((_browseItems == null || _browseItems!.list.title != "Profile")
+          && newItems.list.title == 'Settings')
+        {
+          _navigator.popUntilRoot();
+
+          for (var item in newItems.items) {
+            if (item.title == "Profile") {
+              _navigator.pushNamed(item.title);
+
+              // Delay the browse request to give the pushed route time to register its callback
+              Future.delayed(const Duration(milliseconds: 20), () {
+                selectBrowseItem(sessionId: exploreId, item: item);
+              });
+              break;
+            }
+          }
+        } else {
+          _toProfile = false;
+          _viewChanged = false;
+          return;
+        }
+      }
+
+      _viewChanged = false;
       _browseItems = newItems;
 
       if (mounted) {
@@ -265,6 +300,12 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         },
       ),
     ];
+
+    if (_toProfile) {
+      _toProfile = false;
+      appState.settings['view'] = Category.settings.index;
+      saveSettings(settings: jsonEncode(appState.settings));
+    }
 
     if (_browseItems != null) {
       var browseList = _browseItems!.items;
@@ -459,6 +500,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       ),
       onPopInvoked: (didPop) {
         if (didPop && !_viewChanged) {
+          _navigator.routes.removeLast();
           browseBack(sessionId: exploreId);
         }
       },
