@@ -130,6 +130,7 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_CoreFound) {
       serverName = event.field0;
 
+      initialized = false;
       queryProfile(sessionId: exploreId);
 
       if (settings["zoneId"] != null) {

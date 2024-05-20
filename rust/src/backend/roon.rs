@@ -689,6 +689,7 @@ impl RoonHandler {
                 self.transport.as_ref()?.subscribe_zones().await;
                 self.transport.as_ref()?.subscribe_outputs().await;
 
+                self.browse_offset = 0;
                 self.browse_category = None;
                 self.browse_total = 0;
                 self.browse.as_mut()?.browse_clear();
@@ -1003,7 +1004,8 @@ impl RoonHandler {
                         .unwrap();
                 }
                 Parsed::Error(err) => match err {
-                    RoonApiError::BrowseInvalidItemKey(_) => {
+                    RoonApiError::BrowseInvalidItemKey(_)
+                    | RoonApiError::BrowseInvalidLevels(_) => {
                         self.browse_category = None;
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
