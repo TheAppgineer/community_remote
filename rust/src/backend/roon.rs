@@ -192,11 +192,15 @@ impl Roon {
             let zone = handler.zone_map.get(zone_id).cloned();
 
             handler.zone_id = Some(zone_id.to_owned());
-            handler
-                .transport
-                .as_ref()?
-                .subscribe_queue(zone_id, 100)
-                .await;
+
+            if zone.is_some() {
+                handler
+                    .transport
+                    .as_ref()?
+                    .subscribe_queue(zone_id, 100)
+                    .await;
+            }
+
             handler
                 .event_tx
                 .send(RoonEvent::ZoneChanged(zone))
@@ -742,6 +746,13 @@ impl RoonHandler {
                     for zone in zones {
                         if Some(&zone.zone_id) == self.zone_id.as_ref() {
                             curr_zone = Some(zone.to_owned());
+
+                            if prev_zone_state.is_none() {
+                                self.transport
+                                    .as_ref()?
+                                    .subscribe_queue(&zone.zone_id, 100)
+                                    .await;
+                            }
                         }
                         self.zone_map.insert(zone.zone_id.to_owned(), zone);
                     }
