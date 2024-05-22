@@ -1,0 +1,27 @@
+id: com.theappgineer.community_remote
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: community_remote
+modules:
+  - name: community_remote
+    buildsystem: simple
+    build-commands:
+      - install -D community_remote /app/bin/community_remote
+      - cp -r lib /app/bin/lib/
+      - cp -r data /app/bin/data
+    sources:
+      - type: dir
+        path: ../build/linux/x64/release/bundle/
+finish-args:
+  # X11 + XShm access
+  - --share=ipc
+  - --socket=fallback-x11
+  # Wayland access
+  - --socket=wayland
+  # GPU acceleration if needed
+  - --device=dri
+  # Needs to talk to the network:
+  - --share=network
+  # Needs to save files locally
+  - --filesystem=xdg-documents
