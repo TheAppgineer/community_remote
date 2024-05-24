@@ -3,6 +3,13 @@ runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 command: community_remote
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=dri
+  - --share=network
+  - --filesystem=xdg-documents
 modules:
   - name: community_remote
     buildsystem: simple
@@ -10,18 +17,15 @@ modules:
       - install -D community_remote /app/bin/community_remote
       - cp -r lib /app/bin/lib/
       - cp -r data /app/bin/data
+      - install -D com.theappgineer.community_remote.metainfo.xml /app/share/metainfo/com.theappgineer.community_remote.metainfo.xml
+      - install -D com.theappgineer.community_remote.desktop /app/share/applications/com.theappgineer.community_remote.desktop
+      - install -D com.theappgineer.community_remote.png /app/share/icons/hicolor/256x256/apps/com.theappgineer.community_remote.png
     sources:
       - type: dir
         path: ../build/linux/x64/release/bundle/
-finish-args:
-  # X11 + XShm access
-  - --share=ipc
-  - --socket=fallback-x11
-  # Wayland access
-  - --socket=wayland
-  # GPU acceleration if needed
-  - --device=dri
-  # Needs to talk to the network:
-  - --share=network
-  # Needs to save files locally
-  - --filesystem=xdg-documents
+      - type: file
+        path: com.theappgineer.community_remote.metainfo.xml
+      - type: file
+        path: com.theappgineer.community_remote.desktop
+      - type: file
+        path: icons/256x256/com.theappgineer.community_remote.png

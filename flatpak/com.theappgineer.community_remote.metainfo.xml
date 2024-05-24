@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.theappgineer.community_remote</id>
+
+  <name>Community Remote</name>
+  <summary>The for Community by Community Roon Remote</summary>
+
+  <developer id="com.theappgineer">
+    <name>The Appgineer</name>
+  </developer>
+
+  <url type="homepage">https://github.com/TheAppgineer/community_remote</url>
+  <url type="donation">https://buymeacoffee.com/theappgineer</url>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <content_rating type="oars-1.1" />
+
+  <description>
+    <p>
+      An Open Source remote for controlling your Roon system, focusing on multi platform, stability, performance.
+    </p>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/master/images/linux-light.png</image>
+      <caption>Community Remote Light Theme</caption>
+    </screenshot>
+  </screenshots>
+
+  <launchable type="desktop-id">com.theappgineer.community_remote.desktop</launchable>
+  <releases>
+    <release version="0.0.1" date="2024-05-24">
+    </release>
+  </releases>
+</component>
