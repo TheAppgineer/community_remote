@@ -3,7 +3,7 @@
   <id>com.theappgineer.community_remote</id>
 
   <name>Community Remote</name>
-  <summary>The for Community by Community Roon Remote</summary>
+  <summary>The Open Source Roon Remote</summary>
 
   <developer id="com.theappgineer">
     <name>The Appgineer</name>
@@ -31,7 +31,7 @@
 
   <launchable type="desktop-id">com.theappgineer.community_remote.desktop</launchable>
   <releases>
-    <release version="0.0.1" date="2024-05-24">
+    <release version="0.0.1" date="2024-05-25">
     </release>
   </releases>
 </component>
