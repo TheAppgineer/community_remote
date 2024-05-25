@@ -15,17 +15,15 @@ modules:
     buildsystem: simple
     build-commands:
       - install -D community_remote /app/bin/community_remote
-      - cp -r lib /app/bin/lib/
+      - cp -r lib /app/bin/lib
       - cp -r data /app/bin/data
       - install -D com.theappgineer.community_remote.metainfo.xml /app/share/metainfo/com.theappgineer.community_remote.metainfo.xml
       - install -D com.theappgineer.community_remote.desktop /app/share/applications/com.theappgineer.community_remote.desktop
-      - install -D com.theappgineer.community_remote.png /app/share/icons/hicolor/256x256/apps/com.theappgineer.community_remote.png
+      - install -D icons/256x256/com.theappgineer.community_remote.png /app/share/icons/hicolor/256x256/apps/com.theappgineer.community_remote.png
     sources:
-      - type: dir
-        path: ../build/linux/x64/release/bundle/
-      - type: file
-        path: com.theappgineer.community_remote.metainfo.xml
-      - type: file
-        path: com.theappgineer.community_remote.desktop
-      - type: file
-        path: icons/256x256/com.theappgineer.community_remote.png
+      - type: archive
+        only-arches:
+          - x86_64
+        path: ../community_remote-linux-x86_64.tar.gz
+        sha256: f93dcb40b6a6555797a20ea20dd10bb49ed278b0bbbcf1da29cced600b8b7303
+        dest: ./
