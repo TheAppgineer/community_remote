@@ -128,13 +128,15 @@ class _ZonesState extends State<Zones> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListView.separated(
-            controller: ScrollController(),
-            padding: const EdgeInsets.all(15),
-            itemBuilder: itemBuilder,
-            separatorBuilder: (context, index) => const Divider(),
-            itemCount: zones.length,
-            shrinkWrap: true,
+          Flexible(
+            child: ListView.separated(
+              controller: ScrollController(),
+              padding: const EdgeInsets.all(15),
+              itemBuilder: itemBuilder,
+              separatorBuilder: (context, index) => const Divider(),
+              itemCount: zones.length,
+              shrinkWrap: true,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
