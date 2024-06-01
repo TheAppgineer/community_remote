@@ -961,7 +961,7 @@ impl RoonHandler {
                                     }
                                 } else {
                                     result.offset
-                                };
+                                } as u32;
 
                                 let browse_items = BrowseItems {
                                     list: result.list,

@@ -40,7 +40,7 @@ pub enum RoonEvent {
 
 pub struct BrowseItems {
     pub list: BrowseList,
-    pub offset: usize,
+    pub offset: u32,
     pub items: Vec<BrowseItem>,
 }
 

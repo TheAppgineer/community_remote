@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:community_remote/src/frontend/app_state.dart';
@@ -27,19 +28,22 @@ Future<void> main() async {
     "view": 0,
     "zoneId": null,
   };
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
   appState.setSettings(settings);
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => appState,
-      child: const MyApp(),
+      child: MyApp(title: 'Community Remote v${packageInfo.version}'),
     )
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.title});
+
+  final String title;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -91,7 +95,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     var appState = context.watch<MyAppState>();
 
     return MaterialApp(
-      title: 'Community Remote',
+      title: widget.title,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -108,7 +112,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.values.byName(appState.settings['theme']),
-      home: const MyHomePage(title: 'Community Remote'),
+      home: MyHomePage(title: widget.title),
     );
   }
 }
