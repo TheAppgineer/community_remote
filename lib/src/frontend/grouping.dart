@@ -87,12 +87,14 @@ class _GroupingState extends State<Grouping> {
             ListTile(
               title: Text('Group ${primOutput.displayName} with:', style: const TextStyle(fontSize: 20),),
             ),
-            ListView.separated(
-              padding: const EdgeInsets.all(10),
-              itemBuilder: itemBuilder,
-              separatorBuilder: (context, index) => const Divider(),
-              itemCount: outputIds.length,
-              shrinkWrap: true,
+            Flexible(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(10),
+                itemBuilder: itemBuilder,
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: outputIds.length,
+                shrinkWrap: true,
+              ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             ElevatedButton.icon(

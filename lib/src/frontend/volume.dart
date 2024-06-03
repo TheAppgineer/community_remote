@@ -178,12 +178,14 @@ class _VolumeDialogState extends State<VolumeDialog> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListView.builder(
-            controller: ScrollController(),
-            padding: const EdgeInsets.all(6),
-            itemBuilder: itemBuilder,
-            itemCount: outputs.length,
-            shrinkWrap: true,
+          Flexible(
+            child: ListView.builder(
+              controller: ScrollController(),
+              padding: const EdgeInsets.all(6),
+              itemBuilder: itemBuilder,
+              itemCount: outputs.length,
+              shrinkWrap: true,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 30, 20),
