@@ -134,6 +134,14 @@ pub async fn select_zone(zone_id: String) {
     }
 }
 
+pub async fn transfer_from_zone(zone_id: String) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.transfer_from_zone(&zone_id).await;
+    }
+}
+
 pub async fn get_image(image_key: String) {
     let api = API.lock().await;
 

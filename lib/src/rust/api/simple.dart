@@ -25,6 +25,9 @@ Future<void> setServerProperties({required String ip, String? port}) =>
 Future<void> selectZone({required String zoneId}) =>
     RustLib.instance.api.crateApiSimpleSelectZone(zoneId: zoneId);
 
+Future<void> transferFromZone({required String zoneId}) =>
+    RustLib.instance.api.crateApiSimpleTransferFromZone(zoneId: zoneId);
+
 Future<void> getImage({required String imageKey}) =>
     RustLib.instance.api.crateApiSimpleGetImage(imageKey: imageKey);
 

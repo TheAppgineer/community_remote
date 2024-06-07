@@ -38,6 +38,9 @@ class _ZonesState extends State<Zones> {
         Widget? trailing;
         Widget? playState;
         Text? metaData;
+        TextStyle? style = zones[index].zoneId == appState.zone!.zoneId
+          ? TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary)
+          : const TextStyle(fontWeight: FontWeight.normal);
 
         switch (zones[index].state) {
           case PlayState.playing:
@@ -59,21 +62,11 @@ class _ZonesState extends State<Zones> {
             break;
         }
 
-        if (appState.zone != null && appState.zone!.zoneId == zones[index].zoneId) {
-          trailing = MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-                icon: const Icon(Icons.more_vert),
-              );
-            },
-            menuChildren: List<MenuItemButton>.generate(
+        if (appState.zone != null) {
+          List<MenuItemButton>? menuChildren;
+
+          if (appState.zone!.zoneId == zones[index].zoneId) {
+            menuChildren = List<MenuItemButton>.generate(
               (zones[index].outputIds.length == 1 ? 1 : 2),
               (index) => MenuItemButton(
                 child: Text(index > 0 ? 'Ungroup' : 'Group...'),
@@ -90,30 +83,51 @@ class _ZonesState extends State<Zones> {
                   }
                 },
               ),
-            ),
+            );
+          } else {
+            menuChildren = List<MenuItemButton>.generate(
+              1,
+              (index) => MenuItemButton(
+                child: Text('Transfer Queue to ${appState.zone!.displayName}'),
+                onPressed: () {
+                  transferFromZone(zoneId: zones[index].zoneId);
+                },
+              ),
+            );
+          }
+
+          trailing = MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.more_vert),
+              );
+            },
+            menuChildren: menuChildren,
             onClose: () {
               // Delay the onClose handling to make sure onPressed can be handled first
               Future.delayed(const Duration(milliseconds: 100), () {
               });
             },
           );
-        } else {
-          var imageKey = zones[index].imageKey;
-
-          if (imageKey != null) {
-            trailing = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
-          }
         }
 
         if (zones[index].nowPlaying != null) {
-          metaData = Text(zones[index].nowPlaying!);
+          metaData = Text(zones[index].nowPlaying!, style: style);
         }
 
         return ListTile(
           leading: playState,
           trailing: trailing,
-          title: Text(zones[index].displayName),
+          title: Text(zones[index].displayName, style: style),
           subtitle: metaData,
+          focusColor: Colors.transparent,
           onTap: () {
             var zoneId = zones[index].zoneId;
 

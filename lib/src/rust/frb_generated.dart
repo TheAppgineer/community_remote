@@ -58,7 +58,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.0.0-dev.37';
 
   @override
-  int get rustContentHash => 852261618;
+  int get rustContentHash => -2102101347;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -132,6 +132,8 @@ abstract class RustLibApi extends BaseApi {
   Future<String> crateApiSimpleStartRoon(
       {required String supportPath,
       required FutureOr<void> Function(RoonEvent) cb});
+
+  Future<void> crateApiSimpleTransferFromZone({required String zoneId});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -792,6 +794,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiSimpleStartRoonConstMeta => const TaskConstMeta(
         debugName: "start_roon",
         argNames: ["supportPath", "cb"],
+      );
+
+  @override
+  Future<void> crateApiSimpleTransferFromZone({required String zoneId}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(zoneId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 27, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiSimpleTransferFromZoneConstMeta,
+      argValues: [zoneId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiSimpleTransferFromZoneConstMeta =>
+      const TaskConstMeta(
+        debugName: "transfer_from_zone",
+        argNames: ["zoneId"],
       );
 
   Future<void> Function(int, dynamic)
