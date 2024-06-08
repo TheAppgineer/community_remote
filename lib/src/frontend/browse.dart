@@ -453,6 +453,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           trailing: trailing,
           title: Text(title),
           subtitle: subtitle,
+          focusColor: Colors.transparent,
           onTap: () {
             switch (browseList[index].hint) {
               case BrowseItemHint.action:
