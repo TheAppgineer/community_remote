@@ -211,6 +211,18 @@ impl Roon {
         Some(())
     }
 
+    pub async fn transfer_from_zone(&self, zone_id: &str) -> Option<()> {
+        let handler = self.handler.lock().await;
+
+        handler
+            .transport
+            .as_ref()?
+            .transfer_zone(zone_id, handler.zone_id.as_deref()?)
+            .await;
+
+        Some(())
+    }
+
     pub async fn browse_category(
         &self,
         category: i32,
