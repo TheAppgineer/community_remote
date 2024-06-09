@@ -31,6 +31,9 @@
 
   <launchable type="desktop-id">com.theappgineer.community_remote.desktop</launchable>
   <releases>
+    <release version="0.0.3" date="2024-06-09">
+      <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.3</url>
+    </release>
     <release version="0.0.2" date="2024-06-08">
       <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.2</url>
     </release>
