@@ -38,9 +38,11 @@ class _ZonesState extends State<Zones> {
         Widget? trailing;
         Widget? playState;
         Text? metaData;
-        TextStyle? style = zones[index].zoneId == appState.zone!.zoneId
-          ? TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary)
-          : const TextStyle(fontWeight: FontWeight.normal);
+        TextStyle? style = const TextStyle(fontWeight: FontWeight.normal);
+
+        if (appState.zone != null && zones[index].zoneId == appState.zone!.zoneId) {
+          style = TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary);
+        }
 
         switch (zones[index].state) {
           case PlayState.playing:
