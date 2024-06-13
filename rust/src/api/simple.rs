@@ -36,6 +36,7 @@ pub enum RoonEvent {
     PauseOnTrackEnd(bool),
     Image(ImageKeyValue),
     SettingsSaved,
+    Services(Vec<String>),
 }
 
 pub struct BrowseItems {

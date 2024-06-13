@@ -32,6 +32,7 @@ mixin _$RoonEvent {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +51,7 @@ mixin _$RoonEvent {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -68,6 +70,7 @@ mixin _$RoonEvent {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -87,6 +90,7 @@ mixin _$RoonEvent {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -105,6 +109,7 @@ mixin _$RoonEvent {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -123,6 +128,7 @@ mixin _$RoonEvent {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -224,6 +230,7 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return coreFound(field0);
   }
@@ -245,6 +252,7 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return coreFound?.call(field0);
   }
@@ -266,6 +274,7 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (coreFound != null) {
@@ -291,6 +300,7 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return coreFound(this);
   }
@@ -312,6 +322,7 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return coreFound?.call(this);
   }
@@ -333,6 +344,7 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (coreFound != null) {
@@ -432,6 +444,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return coreLost(field0);
   }
@@ -453,6 +466,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return coreLost?.call(field0);
   }
@@ -474,6 +488,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (coreLost != null) {
@@ -499,6 +514,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return coreLost(this);
   }
@@ -520,6 +536,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return coreLost?.call(this);
   }
@@ -541,6 +558,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (coreLost != null) {
@@ -650,6 +668,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return zonesChanged(field0);
   }
@@ -671,6 +690,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return zonesChanged?.call(field0);
   }
@@ -692,6 +712,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (zonesChanged != null) {
@@ -717,6 +738,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return zonesChanged(this);
   }
@@ -738,6 +760,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return zonesChanged?.call(this);
   }
@@ -759,6 +782,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (zonesChanged != null) {
@@ -859,6 +883,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return zoneChanged(field0);
   }
@@ -880,6 +905,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return zoneChanged?.call(field0);
   }
@@ -901,6 +927,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (zoneChanged != null) {
@@ -926,6 +953,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return zoneChanged(this);
   }
@@ -947,6 +975,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return zoneChanged?.call(this);
   }
@@ -968,6 +997,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (zoneChanged != null) {
@@ -1067,6 +1097,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return zoneSeek(field0);
   }
@@ -1088,6 +1119,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return zoneSeek?.call(field0);
   }
@@ -1109,6 +1141,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (zoneSeek != null) {
@@ -1134,6 +1167,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return zoneSeek(this);
   }
@@ -1155,6 +1189,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return zoneSeek?.call(this);
   }
@@ -1176,6 +1211,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (zoneSeek != null) {
@@ -1285,6 +1321,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return outputsChanged(field0);
   }
@@ -1306,6 +1343,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return outputsChanged?.call(field0);
   }
@@ -1327,6 +1365,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (outputsChanged != null) {
@@ -1352,6 +1391,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return outputsChanged(this);
   }
@@ -1373,6 +1413,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return outputsChanged?.call(this);
   }
@@ -1394,6 +1435,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (outputsChanged != null) {
@@ -1494,6 +1536,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return browseItems(field0);
   }
@@ -1515,6 +1558,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return browseItems?.call(field0);
   }
@@ -1536,6 +1580,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (browseItems != null) {
@@ -1561,6 +1606,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return browseItems(this);
   }
@@ -1582,6 +1628,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return browseItems?.call(this);
   }
@@ -1603,6 +1650,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (browseItems != null) {
@@ -1712,6 +1760,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return browseActions(field0);
   }
@@ -1733,6 +1782,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return browseActions?.call(field0);
   }
@@ -1754,6 +1804,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (browseActions != null) {
@@ -1779,6 +1830,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return browseActions(this);
   }
@@ -1800,6 +1852,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return browseActions?.call(this);
   }
@@ -1821,6 +1874,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (browseActions != null) {
@@ -1895,6 +1949,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return browseReset();
   }
@@ -1916,6 +1971,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return browseReset?.call();
   }
@@ -1937,6 +1993,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (browseReset != null) {
@@ -1962,6 +2019,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return browseReset(this);
   }
@@ -1983,6 +2041,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return browseReset?.call(this);
   }
@@ -2004,6 +2063,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (browseReset != null) {
@@ -2097,6 +2157,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return profile(field0);
   }
@@ -2118,6 +2179,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return profile?.call(field0);
   }
@@ -2139,6 +2201,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (profile != null) {
@@ -2164,6 +2227,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return profile(this);
   }
@@ -2185,6 +2249,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return profile?.call(this);
   }
@@ -2206,6 +2271,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (profile != null) {
@@ -2314,6 +2380,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return queueItems(field0);
   }
@@ -2335,6 +2402,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return queueItems?.call(field0);
   }
@@ -2356,6 +2424,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (queueItems != null) {
@@ -2381,6 +2450,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return queueItems(this);
   }
@@ -2402,6 +2472,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return queueItems?.call(this);
   }
@@ -2423,6 +2494,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (queueItems != null) {
@@ -2524,6 +2596,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return pauseOnTrackEnd(field0);
   }
@@ -2545,6 +2618,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return pauseOnTrackEnd?.call(field0);
   }
@@ -2566,6 +2640,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (pauseOnTrackEnd != null) {
@@ -2591,6 +2666,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return pauseOnTrackEnd(this);
   }
@@ -2612,6 +2688,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return pauseOnTrackEnd?.call(this);
   }
@@ -2633,6 +2710,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (pauseOnTrackEnd != null) {
@@ -2732,6 +2810,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return image(field0);
   }
@@ -2753,6 +2832,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return image?.call(field0);
   }
@@ -2774,6 +2854,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (image != null) {
@@ -2799,6 +2880,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return image(this);
   }
@@ -2820,6 +2902,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return image?.call(this);
   }
@@ -2841,6 +2924,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (image != null) {
@@ -2916,6 +3000,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
   }) {
     return settingsSaved();
   }
@@ -2937,6 +3022,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
   }) {
     return settingsSaved?.call();
   }
@@ -2958,6 +3044,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
     if (settingsSaved != null) {
@@ -2983,6 +3070,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
   }) {
     return settingsSaved(this);
   }
@@ -3004,6 +3092,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
   }) {
     return settingsSaved?.call(this);
   }
@@ -3025,6 +3114,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
     TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
     if (settingsSaved != null) {
@@ -3037,4 +3127,226 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
 abstract class RoonEvent_SettingsSaved extends RoonEvent {
   const factory RoonEvent_SettingsSaved() = _$RoonEvent_SettingsSavedImpl;
   const RoonEvent_SettingsSaved._() : super._();
+}
+
+/// @nodoc
+abstract class _$$RoonEvent_ServicesImplCopyWith<$Res> {
+  factory _$$RoonEvent_ServicesImplCopyWith(_$RoonEvent_ServicesImpl value,
+          $Res Function(_$RoonEvent_ServicesImpl) then) =
+      __$$RoonEvent_ServicesImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<String> field0});
+}
+
+/// @nodoc
+class __$$RoonEvent_ServicesImplCopyWithImpl<$Res>
+    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_ServicesImpl>
+    implements _$$RoonEvent_ServicesImplCopyWith<$Res> {
+  __$$RoonEvent_ServicesImplCopyWithImpl(_$RoonEvent_ServicesImpl _value,
+      $Res Function(_$RoonEvent_ServicesImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$RoonEvent_ServicesImpl(
+      null == field0
+          ? _value._field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
+  const _$RoonEvent_ServicesImpl(final List<String> field0)
+      : _field0 = field0,
+        super._();
+
+  final List<String> _field0;
+  @override
+  List<String> get field0 {
+    if (_field0 is EqualUnmodifiableListView) return _field0;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_field0);
+  }
+
+  @override
+  String toString() {
+    return 'RoonEvent.services(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RoonEvent_ServicesImpl &&
+            const DeepCollectionEquality().equals(other._field0, _field0));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RoonEvent_ServicesImplCopyWith<_$RoonEvent_ServicesImpl> get copyWith =>
+      __$$RoonEvent_ServicesImplCopyWithImpl<_$RoonEvent_ServicesImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0) coreLost,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
+    required TResult Function(Zone? field0) zoneChanged,
+    required TResult Function(ZoneSeek field0) zoneSeek,
+    required TResult Function(Map<String, String> field0) outputsChanged,
+    required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
+    required TResult Function() browseReset,
+    required TResult Function(String field0) profile,
+    required TResult Function(List<QueueItem> field0) queueItems,
+    required TResult Function(bool field0) pauseOnTrackEnd,
+    required TResult Function(ImageKeyValue field0) image,
+    required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
+  }) {
+    return services(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0)? coreLost,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
+    TResult? Function(ZoneSeek field0)? zoneSeek,
+    TResult? Function(Map<String, String> field0)? outputsChanged,
+    TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
+    TResult? Function()? browseReset,
+    TResult? Function(String field0)? profile,
+    TResult? Function(List<QueueItem> field0)? queueItems,
+    TResult? Function(bool field0)? pauseOnTrackEnd,
+    TResult? Function(ImageKeyValue field0)? image,
+    TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
+  }) {
+    return services?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? coreFound,
+    TResult Function(String field0)? coreLost,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult Function(Zone? field0)? zoneChanged,
+    TResult Function(ZoneSeek field0)? zoneSeek,
+    TResult Function(Map<String, String> field0)? outputsChanged,
+    TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
+    TResult Function()? browseReset,
+    TResult Function(String field0)? profile,
+    TResult Function(List<QueueItem> field0)? queueItems,
+    TResult Function(bool field0)? pauseOnTrackEnd,
+    TResult Function(ImageKeyValue field0)? image,
+    TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
+    required TResult orElse(),
+  }) {
+    if (services != null) {
+      return services(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreLost value) coreLost,
+    required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
+    required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
+    required TResult Function(RoonEvent_ZoneSeek value) zoneSeek,
+    required TResult Function(RoonEvent_OutputsChanged value) outputsChanged,
+    required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
+    required TResult Function(RoonEvent_BrowseReset value) browseReset,
+    required TResult Function(RoonEvent_Profile value) profile,
+    required TResult Function(RoonEvent_QueueItems value) queueItems,
+    required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
+    required TResult Function(RoonEvent_Image value) image,
+    required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
+  }) {
+    return services(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreLost value)? coreLost,
+    TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult? Function(RoonEvent_ZoneSeek value)? zoneSeek,
+    TResult? Function(RoonEvent_OutputsChanged value)? outputsChanged,
+    TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult? Function(RoonEvent_BrowseReset value)? browseReset,
+    TResult? Function(RoonEvent_Profile value)? profile,
+    TResult? Function(RoonEvent_QueueItems value)? queueItems,
+    TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
+    TResult? Function(RoonEvent_Image value)? image,
+    TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
+  }) {
+    return services?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreLost value)? coreLost,
+    TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult Function(RoonEvent_ZoneSeek value)? zoneSeek,
+    TResult Function(RoonEvent_OutputsChanged value)? outputsChanged,
+    TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult Function(RoonEvent_BrowseReset value)? browseReset,
+    TResult Function(RoonEvent_Profile value)? profile,
+    TResult Function(RoonEvent_QueueItems value)? queueItems,
+    TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
+    TResult Function(RoonEvent_Image value)? image,
+    TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
+    required TResult orElse(),
+  }) {
+    if (services != null) {
+      return services(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RoonEvent_Services extends RoonEvent {
+  const factory RoonEvent_Services(final List<String> field0) =
+      _$RoonEvent_ServicesImpl;
+  const RoonEvent_Services._() : super._();
+
+  List<String> get field0;
+  @JsonKey(ignore: true)
+  _$$RoonEvent_ServicesImplCopyWith<_$RoonEvent_ServicesImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

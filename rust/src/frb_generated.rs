@@ -1862,6 +1862,10 @@ impl SseDecode for crate::api::simple::RoonEvent {
             13 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
+            14 => {
+                let mut var_field0 = <Vec<String>>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::Services(var_field0);
+            }
             _ => {
                 unimplemented!("");
             }
@@ -2544,6 +2548,9 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
                 [12.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             crate::api::simple::RoonEvent::SettingsSaved => [13.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Services(field0) => {
+                [14.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
         }
     }
 }
@@ -3373,6 +3380,10 @@ impl SseEncode for crate::api::simple::RoonEvent {
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
                 <i32>::sse_encode(13, serializer);
+            }
+            crate::api::simple::RoonEvent::Services(field0) => {
+                <i32>::sse_encode(14, serializer);
+                <Vec<String>>::sse_encode(field0, serializer);
             }
         }
     }

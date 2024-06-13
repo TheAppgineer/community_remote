@@ -208,7 +208,10 @@ impl Roon {
             (6, vec!["Tags", "Library"]),
             (7, vec!["My Live Radio"]),
             (8, vec!["Playlists"]),
-            (9, vec!["Settings"]),
+            (9, vec!["KKBOX"]),
+            (10, vec!["Qobuz"]),
+            (11, vec!["TIDAL"]),
+            (12, vec!["Settings"]),
         ]);
         let multi_session_key = handler.get_multi_session_key(session_id);
 

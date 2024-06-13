@@ -1388,6 +1388,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 13:
         return RoonEvent_SettingsSaved();
+      case 14:
+        return RoonEvent_Services(
+          dco_decode_list_String(raw[1]),
+        );
       default:
         throw Exception("unreachable");
     }
@@ -2202,6 +2206,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return RoonEvent_Image(var_field0);
       case 13:
         return RoonEvent_SettingsSaved();
+      case 14:
+        var var_field0 = sse_decode_list_String(deserializer);
+        return RoonEvent_Services(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -2960,6 +2967,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
         sse_encode_i_32(13, serializer);
+      case RoonEvent_Services(field0: final field0):
+        sse_encode_i_32(14, serializer);
+        sse_encode_list_String(field0, serializer);
     }
   }
 

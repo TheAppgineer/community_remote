@@ -12,6 +12,10 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:mdi/mdi.dart';
 import 'package:provider/provider.dart';
 
+const kkbox = "KKBOX";
+const qobuz = "Qobuz";
+const tidal = "TIDAL";
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -380,9 +384,10 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
       _getDivider(label: "Library"),
     ];
 
-    NavigationRailDestination getDestination(Category category) {
+    NavigationRailDestination? getDestination(Category category, List<String> services) {
       IconData icon;
       String name;
+      double? size;
 
       switch (category) {
         case Category.search:
@@ -421,6 +426,30 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
           icon = Icons.playlist_play_outlined;
           name = 'Playlists';
           break;
+        case Category.kkbox:
+          if (services.contains(kkbox)) {
+            icon = Mdi.alphaKBoxOutline;
+            name = kkbox;
+            size = 32;
+            break;
+          }
+          return null;
+        case Category.qobuz:
+          if (services.contains(qobuz)) {
+            icon = Mdi.alphaQBoxOutline;
+            name = qobuz;
+            size = 32;
+            break;
+          }
+          return null;
+        case Category.tidal:
+          if (services.contains(tidal)) {
+            icon = Mdi.alphaTBoxOutline;
+            name = tidal;
+            size = 32;
+            break;
+          }
+          return null;
         case Category.settings:
           icon = Icons.settings_outlined;
           name = 'Settings';
@@ -430,7 +459,7 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
       List hidden = appState.settings['hidden'] ?? [];
       Icon stateIcon = _setup
         ? hidden.contains(category.index) ? const Icon(Icons.toggle_off_outlined) : const Icon(Icons.toggle_on_outlined)
-        : Icon(icon);
+        : Icon(icon, size: size);
 
       return NavigationRailDestination(
         icon: stateIcon,
@@ -445,14 +474,15 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
 
       List hidden = appState.settings['hidden'] ?? [];
       bool visible = _setup || !hidden.contains(category.index);
+      NavigationRailDestination? destination = getDestination(category, appState.services);
 
-      if (visible) {
+      if (visible && destination != null) {
         if (category == Category.settings) {
           destinations.add(_getDivider());
         }
 
         browsePath[destinations.length] = category;
-        destinations.add(getDestination(category));
+        destinations.add(destination);
       }
     }
 

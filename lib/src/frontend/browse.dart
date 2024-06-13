@@ -17,6 +17,9 @@ enum Category {
   tags,
   liveRadio,
   playlists,
+  kkbox,
+  qobuz,
+  tidal,
   settings,
 }
 

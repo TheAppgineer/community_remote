@@ -191,6 +191,9 @@ sealed class RoonEvent with _$RoonEvent {
     ImageKeyValue field0,
   ) = RoonEvent_Image;
   const factory RoonEvent.settingsSaved() = RoonEvent_SettingsSaved;
+  const factory RoonEvent.services(
+    List<String> field0,
+  ) = RoonEvent_Services;
 }
 
 class ZoneSummary {

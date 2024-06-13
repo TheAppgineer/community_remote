@@ -17,6 +17,7 @@ class MyAppState extends ChangeNotifier {
   List<QueueItem>? queue;
   bool takeDefaultAction = false;
   Zone? zone;
+  List<String> services = [];
   late Map<String, dynamic> settings;
   Function? _progressCallback;
   Function? _queueRemainingCallback;
@@ -189,6 +190,8 @@ class MyAppState extends ChangeNotifier {
       queue = event.field0;
     } else if (event is RoonEvent_PauseOnTrackEnd) {
       pauseOnTrackEnd = event.field0;
+    } else if (event is RoonEvent_Services) {
+      services = event.field0;
     }
 
     notifyListeners();

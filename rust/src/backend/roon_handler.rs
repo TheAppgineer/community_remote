@@ -42,6 +42,7 @@ pub struct RoonHandler {
     pub artist_search: bool,
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
+    pub services: Vec<String>,
     api_token: Option<String>,
     config_path: Arc<String>,
     outputs: HashMap<String, String>,
@@ -69,6 +70,7 @@ impl RoonHandler {
             artist_search: false,
             pause_on_track_end: false,
             pause_after_item_ids: None,
+            services: Vec::new(),
             api_token: None,
             config_path,
             outputs: HashMap::new(),
@@ -273,6 +275,22 @@ impl RoonHandler {
                     let key = multi_session_key.as_deref()?;
 
                     self.browse.as_mut()?.browse_result().await;
+
+                    if result.list.title == "Explore" {
+                        for item in &result.items {
+                            let title = item.title.to_owned();
+
+                            if !self.services.contains(&title)
+                                && (title == "KKBOX" || title == "Qobuz" || title == "TIDAL")
+                            {
+                                self.services.push(title);
+                                self.event_tx
+                                    .send(RoonEvent::Services(self.services.to_owned()))
+                                    .await
+                                    .unwrap();
+                            }
+                        }
+                    }
 
                     if let Some(path) = self.browse_path.get_mut(key) {
                         if let Some(category) = path.pop() {
