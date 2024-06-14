@@ -102,6 +102,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: roonAccentColor,
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,
       ),
@@ -109,6 +110,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: roonAccentColor,
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,
       ),
