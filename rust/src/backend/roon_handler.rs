@@ -440,6 +440,7 @@ impl RoonHandler {
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     }
+                    RoonApiError::BrowseUnexpectedError(_) => {}
                     RoonApiError::ImageUnexpectedError((_, image_key)) => {
                         let scaling = Some(Scaling::new(Scale::Stretch, 100, 100));
                         let args = Args::new(scaling, None);
