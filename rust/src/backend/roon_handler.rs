@@ -435,13 +435,11 @@ impl RoonHandler {
                 }
                 Parsed::Error(err) => match err {
                     RoonApiError::BrowseInvalidItemKey(_)
-                    | RoonApiError::BrowseInvalidLevels(_) => {
+                    | RoonApiError::BrowseInvalidLevels(_)
+                    | RoonApiError::BrowseUnexpectedError(_) => {
                         self.browse_category = None;
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
-                    }
-                    RoonApiError::BrowseUnexpectedError(_) => {
-                        self.browse.as_mut()?.browse_clear();
                     }
                     RoonApiError::ImageUnexpectedError((_, image_key)) => {
                         let scaling = Some(Scaling::new(Scale::Stretch, 100, 100));
