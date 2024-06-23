@@ -8,6 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/browse.dart';
 import 'package:community_remote/src/frontend/home_page.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:community_remote/src/rust/frb_generated.dart';
@@ -25,7 +26,7 @@ Future<void> main() async {
   Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
     "expand": false,
     "theme": "light",
-    "view": 0,
+    "view": Category.artists.index,
     "zoneId": null,
   };
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -101,6 +102,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: roonAccentColor,
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,
       ),
@@ -108,6 +110,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: roonAccentColor,
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,
       ),

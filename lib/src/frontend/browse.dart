@@ -17,6 +17,9 @@ enum Category {
   tags,
   liveRadio,
   playlists,
+  kkbox,
+  qobuz,
+  tidal,
   settings,
 }
 
@@ -103,6 +106,7 @@ class Browse extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: roonAccentColor,
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,
       ),
@@ -110,6 +114,7 @@ class Browse extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: roonAccentColor,
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,
       ),
