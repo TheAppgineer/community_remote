@@ -3,7 +3,7 @@ Version=1.0
 Type=Application
 
 Name=Community Remote
-Comment=The for Community by Community Roon Remote
+Comment=Play Roon the community way
 Categories=AudioVideo;Player;
 
 Icon=com.theappgineer.community_remote

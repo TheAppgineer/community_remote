@@ -3,14 +3,17 @@
   <id>com.theappgineer.community_remote</id>
 
   <name>Community Remote</name>
-  <summary>The Open Source Roon Remote</summary>
+  <summary>Play Roon the community way</summary>
 
   <developer id="com.theappgineer">
     <name>The Appgineer</name>
   </developer>
 
-  <url type="homepage">https://github.com/TheAppgineer/community_remote</url>
+  <url type="homepage">https://theappgineer.com/community_remote/</url>
+  <url type="bugtracker">https://github.com/TheAppgineer/community_remote/issues</url>
   <url type="donation">https://buymeacoffee.com/theappgineer</url>
+  <url type="vcs-browser">https://github.com/TheAppgineer/community_remote</url>
+  <url type="contact">https://community.roonlabs.com/t/community-remote-for-linux-first-native-linux-gui-for-roon/274461</url>
 
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
@@ -18,14 +21,19 @@
 
   <description>
     <p>
-      An Open Source remote for controlling your Roon system, focusing on multi platform, stability, performance.
+      Community Remote tries to serve those use-cases that are left open by the official Roon Remote.
+      Linux support is the obvious one, others are random album playback and accessibility.
     </p>
   </description>
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/master/images/linux-light.png</image>
-      <caption>Community Remote Light Theme</caption>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.0.1/images/linux-dark.png</image>
+      <caption>Artists browser. Playback from Queue. Dark Theme</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.0.1/images/linux-light.png</image>
+      <caption>Albums browser. Empty Queue. Light Theme</caption>
     </screenshot>
   </screenshots>
 
@@ -40,4 +48,9 @@
     <release version="0.0.1" date="2024-05-25">
     </release>
   </releases>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#c1c1ff</color>
+    <color type="primary" scheme_preference="dark">#8e8eec</color>
+  </branding>
 </component>
