@@ -1,16 +1,18 @@
 # Community Remote
-The for Community by Community Roon Remote
+Play Roon the community way
 
 ## Early Development Stage
-Community Remote is in early development. To be able to use it things like, installing and using developer tools, Android sideloading, etc. should not scare you off.
+Community Remote is in early development, with a current focus on Linux support. To be able to use on other platforms things like, Android sideloading, Windows security warnings, etc. should not scare you off.
 
 ## Supported Platforms
-Currently supported platforms are Linux and Android, with a fixed desktop layout (i.e. PC, tablet only).
+Currently supported platforms are Linux, Android and Windows, with a fixed desktop layout (i.e. PC, tablet only).
 
 The project is named Community Remote to emphasize that, in order to have maximum platform support, community collaboration is necessary.
 
 ### Linux
 ![Linux screenshot](images/linux-light.png)
+
+![Linux screenshot](images/linux-dark.png)
 
 ### Android
 ![Android screenshot](images/android-dark.png)
