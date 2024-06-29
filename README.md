@@ -10,12 +10,15 @@ Currently supported platforms are Linux, Android and Windows, with a fixed deskt
 The project is named Community Remote to emphasize that, in order to have maximum platform support, community collaboration is necessary.
 
 ### Linux
-![Linux screenshot](images/linux-light.png)
+![Linux screenshot light](images/linux-light.png)
 
-![Linux screenshot](images/linux-dark.png)
+![Linux screenshot dark](images/linux-dark.png)
 
 ### Android
 ![Android screenshot](images/android-dark.png)
+
+### Windows
+![Windows screenshot](images/windows-dark.png)
 
 ## Developers Helicopter View
 The Community Remote consists out of three main buidling blocks.
