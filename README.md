@@ -47,7 +47,7 @@ https://docs.flutter.dev/get-started/install
 Visit [rustup.rs](https://rustup.rs/) and follow the provided instructions.
 
 ### Build Flutter Rust Bridge
-    cargo install 'flutter_rust_bridge_codegen@^2.0.0-dev.0'
+    cargo install 'flutter_rust_bridge_codegen@^2.0.0'
 
 ### Build Community Remote
 A debug build can be built and run from Visual Studio Code.
@@ -59,3 +59,7 @@ To build for Linux
 To build an apk for Android
 
     flutter build apk --release
+
+To build for Windows
+
+    flutter build windows --release
