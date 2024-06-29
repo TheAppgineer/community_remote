@@ -19,9 +19,10 @@ modules:
       - install -D com.theappgineer.community_remote.metainfo.xml /app/share/metainfo/com.theappgineer.community_remote.metainfo.xml
       - install -D com.theappgineer.community_remote.desktop /app/share/applications/com.theappgineer.community_remote.desktop
       - install -D icons/256x256/com.theappgineer.community_remote.png /app/share/icons/hicolor/256x256/apps/com.theappgineer.community_remote.png
+      - install -D icons/512x512/com.theappgineer.community_remote.png /app/share/icons/hicolor/512x512/apps/com.theappgineer.community_remote.png
     sources:
       - type: archive
         only-arches:
           - x86_64
         path: ../community_remote-linux-x86_64.tar.gz
-        sha256: 4ddf6a570ceb67f1a9e31e88206965b4d200ff45b036efbbdbbc35edecc92613
+        sha256: 42c57781c8bebf3d32edf5a0b0fe16f071412b83cb25dae9bf1fdf55ac0af56c
