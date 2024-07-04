@@ -44,6 +44,5 @@ app.*.map.json
 /android/app/release
 
 # Project related
-community_remote-linux-x86_64/
 devtools_options.yaml
 config.json
