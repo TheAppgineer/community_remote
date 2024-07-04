@@ -26,3 +26,8 @@ modules:
           - x86_64
         path: ../community_remote-linux-x86_64.tar.gz
         sha256: 42c57781c8bebf3d32edf5a0b0fe16f071412b83cb25dae9bf1fdf55ac0af56c
+      - type: archive
+        only-arches:
+          - aarch64
+        path: ../community_remote-linux-aarch64.tar.gz
+        sha256: c5f85959f8862ac7b19338a30b4789e501dc18e84902ecd22988226818c05218
