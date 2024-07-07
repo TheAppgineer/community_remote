@@ -123,9 +123,17 @@ class MyHomePageState extends State<MyHomePage> {
     );
     ThemeMode theme = ThemeMode.values.byName(appState.settings['theme']);
     IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
-    String subtitle = appState.serverName != null
-      ? 'Served by: ${appState.serverName}'
-      : 'Use Roon Remote to Enable Extension';
+    String subtitle;
+
+    if (appState.serverName == null) {
+      subtitle = '\u26a0 No server discovered!';
+    } else {
+      if (appState.token == null) {
+        subtitle = '\u24d8 Use Roon Remote to Enable Extension';
+      } else {
+        subtitle = 'Served by: ${appState.serverName}';
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -183,6 +191,42 @@ class Setup extends StatefulWidget {
 class _SetupState extends State<Setup> {
   String? _ip;
   String? _port;
+  TextEditingController? _ipController;
+  TextEditingController? _portController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getServerProperties();
+  }
+
+  @override
+  void dispose() {
+    if (_ipController != null) {
+      _ipController!.dispose();
+    }
+
+    if (_portController != null) {
+      _portController!.dispose();
+    }
+
+    super.dispose();
+  }
+
+  _getServerProperties() async {
+    (String, String)? props = await getServerProperties();
+
+    if (mounted && props != null) {
+      _ipController = TextEditingController()..text = props.$1;
+      _portController = TextEditingController()..text = props.$2;
+
+      setState(() {
+        _ip = props.$1;
+        _port = props.$2;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +248,7 @@ class _SetupState extends State<Setup> {
             ),
             const Padding(padding: EdgeInsets.only(top: 20)),
             TextField(
+              controller: _ipController,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
                 hintText: 'Server IP',
@@ -216,6 +261,7 @@ class _SetupState extends State<Setup> {
             ),
             const Padding(padding: EdgeInsets.only(top: 20)),
             TextField(
+              controller: _portController,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
                 hintText: 'Server Port',
@@ -258,6 +304,8 @@ class QuickAccessButton extends StatelessWidget {
 
     if (appState.serverName == null) {
       icon = Icons.link_outlined;
+    } else if (appState.token == null) {
+      icon = Icons.phone_android_outlined;
     } else if (appState.zone == null) {
       icon = Icons.speaker_outlined;
     } else if (appState.pauseOnTrackEnd) {
@@ -284,11 +332,13 @@ class QuickAccessButton extends StatelessWidget {
     String? tooltip;
 
     if (appState.serverName == null) {
-      tooltip = "Connect Manually";
+      tooltip = 'Connect Manually';
+    } else if (appState.token == null) {
+      tooltip = '\u24d8 Use Roon Remote to Enable Extension';
     } else if (appState.zone == null) {
-      tooltip = "Select Zone";
+      tooltip = 'Select Zone';
     } else if (appState.pauseOnTrackEnd) {
-      tooltip = "Pausing at End of Track...";
+      tooltip = 'Pausing at End of Track...';
     }
 
     return tooltip;
@@ -344,7 +394,9 @@ class QuickAccessButton extends StatelessWidget {
           onLongPress();
         },
         child: FloatingActionButton(
-          onPressed: () => takeAction(context),
+          onPressed: appState.serverName != null && appState.token == null
+            ? null
+            : () => takeAction(context),
           tooltip: getTooltip(),
           child: getIcon(),
         ),

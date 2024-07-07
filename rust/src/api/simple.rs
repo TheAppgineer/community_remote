@@ -22,7 +22,8 @@ use crate::backend::roon::Roon;
 static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::new()));
 
 pub enum RoonEvent {
-    CoreFound(String),
+    CoreDiscovered(String, Option<String>),
+    CoreRegistered(String, String),
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
     ZoneChanged(Option<Zone>),
@@ -102,6 +103,16 @@ pub async fn set_server_properties(ip: String, port: Option<String>) {
 
     if let Some(roon) = api.roon.as_mut() {
         roon.set_server_properties(ip, port).await;
+    }
+}
+
+pub async fn get_server_properties() -> Option<(String, String)> {
+    let mut api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_mut() {
+        roon.get_server_properties()
+    } else {
+        None
     }
 }
 

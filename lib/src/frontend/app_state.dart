@@ -11,6 +11,7 @@ class MyAppState extends ChangeNotifier {
   static final Map<String, Function(BrowseItems)> _browseCallbacks = {};
   static Function? _profileCallback;
   String? serverName;
+  String? token;
   List<ZoneSummary>? zoneList;
   Map<String, String>? outputs;
   List<BrowseItem>? actionItems;
@@ -23,7 +24,7 @@ class MyAppState extends ChangeNotifier {
   Function? _queueRemainingCallback;
   final Map<String, List<Function>> _pendingImages = {};
   bool pauseOnTrackEnd = false;
-  bool initialized = false;
+  bool _initialized = false;
 
   static setBrowseCallback(String route, Function(BrowseItems) callback) {
     _browseCallbacks[route] = callback;
@@ -128,10 +129,14 @@ class MyAppState extends ChangeNotifier {
       }
 
       return;
-    } else if (event is RoonEvent_CoreFound) {
+    } else if (event is RoonEvent_CoreDiscovered) {
       serverName = event.field0;
+      token = event.field1;
+      _initialized = false;
+    } else if (event is RoonEvent_CoreRegistered) {
+      serverName = event.field0;
+      token = event.field1;
 
-      initialized = false;
       queryProfile(sessionId: exploreId);
 
       if (settings["zoneId"] != null) {
@@ -142,8 +147,8 @@ class MyAppState extends ChangeNotifier {
         _profileCallback!(event.field0);
       }
 
-      if (!initialized) {
-        initialized = true;
+      if (!_initialized) {
+        _initialized = true;
         BrowseLevelState.onDestinationSelected(settings["view"]);
       }
     } else if (event is RoonEvent_ZonesChanged) {

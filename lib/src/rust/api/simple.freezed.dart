@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$RoonEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -37,7 +38,8 @@ mixin _$RoonEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -56,7 +58,8 @@ mixin _$RoonEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -76,7 +79,8 @@ mixin _$RoonEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -95,7 +99,8 @@ mixin _$RoonEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -114,7 +119,8 @@ mixin _$RoonEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -152,71 +158,82 @@ class _$RoonEventCopyWithImpl<$Res, $Val extends RoonEvent>
 }
 
 /// @nodoc
-abstract class _$$RoonEvent_CoreFoundImplCopyWith<$Res> {
-  factory _$$RoonEvent_CoreFoundImplCopyWith(_$RoonEvent_CoreFoundImpl value,
-          $Res Function(_$RoonEvent_CoreFoundImpl) then) =
-      __$$RoonEvent_CoreFoundImplCopyWithImpl<$Res>;
+abstract class _$$RoonEvent_CoreDiscoveredImplCopyWith<$Res> {
+  factory _$$RoonEvent_CoreDiscoveredImplCopyWith(
+          _$RoonEvent_CoreDiscoveredImpl value,
+          $Res Function(_$RoonEvent_CoreDiscoveredImpl) then) =
+      __$$RoonEvent_CoreDiscoveredImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String field0});
+  $Res call({String field0, String? field1});
 }
 
 /// @nodoc
-class __$$RoonEvent_CoreFoundImplCopyWithImpl<$Res>
-    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_CoreFoundImpl>
-    implements _$$RoonEvent_CoreFoundImplCopyWith<$Res> {
-  __$$RoonEvent_CoreFoundImplCopyWithImpl(_$RoonEvent_CoreFoundImpl _value,
-      $Res Function(_$RoonEvent_CoreFoundImpl) _then)
+class __$$RoonEvent_CoreDiscoveredImplCopyWithImpl<$Res>
+    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_CoreDiscoveredImpl>
+    implements _$$RoonEvent_CoreDiscoveredImplCopyWith<$Res> {
+  __$$RoonEvent_CoreDiscoveredImplCopyWithImpl(
+      _$RoonEvent_CoreDiscoveredImpl _value,
+      $Res Function(_$RoonEvent_CoreDiscoveredImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? field0 = null,
+    Object? field1 = freezed,
   }) {
-    return _then(_$RoonEvent_CoreFoundImpl(
+    return _then(_$RoonEvent_CoreDiscoveredImpl(
       null == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
               as String,
+      freezed == field1
+          ? _value.field1
+          : field1 // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
-  const _$RoonEvent_CoreFoundImpl(this.field0) : super._();
+class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
+  const _$RoonEvent_CoreDiscoveredImpl(this.field0, [this.field1]) : super._();
 
   @override
   final String field0;
+  @override
+  final String? field1;
 
   @override
   String toString() {
-    return 'RoonEvent.coreFound(field0: $field0)';
+    return 'RoonEvent.coreDiscovered(field0: $field0, field1: $field1)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RoonEvent_CoreFoundImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
+            other is _$RoonEvent_CoreDiscoveredImpl &&
+            (identical(other.field0, field0) || other.field0 == field0) &&
+            (identical(other.field1, field1) || other.field1 == field1));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, field0);
+  int get hashCode => Object.hash(runtimeType, field0, field1);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RoonEvent_CoreFoundImplCopyWith<_$RoonEvent_CoreFoundImpl> get copyWith =>
-      __$$RoonEvent_CoreFoundImplCopyWithImpl<_$RoonEvent_CoreFoundImpl>(
-          this, _$identity);
+  _$$RoonEvent_CoreDiscoveredImplCopyWith<_$RoonEvent_CoreDiscoveredImpl>
+      get copyWith => __$$RoonEvent_CoreDiscoveredImplCopyWithImpl<
+          _$RoonEvent_CoreDiscoveredImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -232,13 +249,14 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
   }) {
-    return coreFound(field0);
+    return coreDiscovered(field0, field1);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -254,13 +272,14 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
   }) {
-    return coreFound?.call(field0);
+    return coreDiscovered?.call(field0, field1);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -277,8 +296,8 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult Function(List<String> field0)? services,
     required TResult orElse(),
   }) {
-    if (coreFound != null) {
-      return coreFound(field0);
+    if (coreDiscovered != null) {
+      return coreDiscovered(field0, field1);
     }
     return orElse();
   }
@@ -286,7 +305,8 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -302,13 +322,14 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
     required TResult Function(RoonEvent_Services value) services,
   }) {
-    return coreFound(this);
+    return coreDiscovered(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -324,13 +345,14 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
     TResult? Function(RoonEvent_Services value)? services,
   }) {
-    return coreFound?.call(this);
+    return coreDiscovered?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -347,22 +369,255 @@ class _$RoonEvent_CoreFoundImpl extends RoonEvent_CoreFound {
     TResult Function(RoonEvent_Services value)? services,
     required TResult orElse(),
   }) {
-    if (coreFound != null) {
-      return coreFound(this);
+    if (coreDiscovered != null) {
+      return coreDiscovered(this);
     }
     return orElse();
   }
 }
 
-abstract class RoonEvent_CoreFound extends RoonEvent {
-  const factory RoonEvent_CoreFound(final String field0) =
-      _$RoonEvent_CoreFoundImpl;
-  const RoonEvent_CoreFound._() : super._();
+abstract class RoonEvent_CoreDiscovered extends RoonEvent {
+  const factory RoonEvent_CoreDiscovered(final String field0,
+      [final String? field1]) = _$RoonEvent_CoreDiscoveredImpl;
+  const RoonEvent_CoreDiscovered._() : super._();
 
   String get field0;
+  String? get field1;
   @JsonKey(ignore: true)
-  _$$RoonEvent_CoreFoundImplCopyWith<_$RoonEvent_CoreFoundImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$RoonEvent_CoreDiscoveredImplCopyWith<_$RoonEvent_CoreDiscoveredImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RoonEvent_CoreRegisteredImplCopyWith<$Res> {
+  factory _$$RoonEvent_CoreRegisteredImplCopyWith(
+          _$RoonEvent_CoreRegisteredImpl value,
+          $Res Function(_$RoonEvent_CoreRegisteredImpl) then) =
+      __$$RoonEvent_CoreRegisteredImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0, String field1});
+}
+
+/// @nodoc
+class __$$RoonEvent_CoreRegisteredImplCopyWithImpl<$Res>
+    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_CoreRegisteredImpl>
+    implements _$$RoonEvent_CoreRegisteredImplCopyWith<$Res> {
+  __$$RoonEvent_CoreRegisteredImplCopyWithImpl(
+      _$RoonEvent_CoreRegisteredImpl _value,
+      $Res Function(_$RoonEvent_CoreRegisteredImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+    Object? field1 = null,
+  }) {
+    return _then(_$RoonEvent_CoreRegisteredImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == field1
+          ? _value.field1
+          : field1 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
+  const _$RoonEvent_CoreRegisteredImpl(this.field0, this.field1) : super._();
+
+  @override
+  final String field0;
+  @override
+  final String field1;
+
+  @override
+  String toString() {
+    return 'RoonEvent.coreRegistered(field0: $field0, field1: $field1)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RoonEvent_CoreRegisteredImpl &&
+            (identical(other.field0, field0) || other.field0 == field0) &&
+            (identical(other.field1, field1) || other.field1 == field1));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0, field1);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RoonEvent_CoreRegisteredImplCopyWith<_$RoonEvent_CoreRegisteredImpl>
+      get copyWith => __$$RoonEvent_CoreRegisteredImplCopyWithImpl<
+          _$RoonEvent_CoreRegisteredImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0) coreLost,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
+    required TResult Function(Zone? field0) zoneChanged,
+    required TResult Function(ZoneSeek field0) zoneSeek,
+    required TResult Function(Map<String, String> field0) outputsChanged,
+    required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
+    required TResult Function() browseReset,
+    required TResult Function(String field0) profile,
+    required TResult Function(List<QueueItem> field0) queueItems,
+    required TResult Function(bool field0) pauseOnTrackEnd,
+    required TResult Function(ImageKeyValue field0) image,
+    required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
+  }) {
+    return coreRegistered(field0, field1);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0)? coreLost,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
+    TResult? Function(ZoneSeek field0)? zoneSeek,
+    TResult? Function(Map<String, String> field0)? outputsChanged,
+    TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
+    TResult? Function()? browseReset,
+    TResult? Function(String field0)? profile,
+    TResult? Function(List<QueueItem> field0)? queueItems,
+    TResult? Function(bool field0)? pauseOnTrackEnd,
+    TResult? Function(ImageKeyValue field0)? image,
+    TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
+  }) {
+    return coreRegistered?.call(field0, field1);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0)? coreLost,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult Function(Zone? field0)? zoneChanged,
+    TResult Function(ZoneSeek field0)? zoneSeek,
+    TResult Function(Map<String, String> field0)? outputsChanged,
+    TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
+    TResult Function()? browseReset,
+    TResult Function(String field0)? profile,
+    TResult Function(List<QueueItem> field0)? queueItems,
+    TResult Function(bool field0)? pauseOnTrackEnd,
+    TResult Function(ImageKeyValue field0)? image,
+    TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
+    required TResult orElse(),
+  }) {
+    if (coreRegistered != null) {
+      return coreRegistered(field0, field1);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CoreLost value) coreLost,
+    required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
+    required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
+    required TResult Function(RoonEvent_ZoneSeek value) zoneSeek,
+    required TResult Function(RoonEvent_OutputsChanged value) outputsChanged,
+    required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
+    required TResult Function(RoonEvent_BrowseReset value) browseReset,
+    required TResult Function(RoonEvent_Profile value) profile,
+    required TResult Function(RoonEvent_QueueItems value) queueItems,
+    required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
+    required TResult Function(RoonEvent_Image value) image,
+    required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
+  }) {
+    return coreRegistered(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CoreLost value)? coreLost,
+    TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult? Function(RoonEvent_ZoneSeek value)? zoneSeek,
+    TResult? Function(RoonEvent_OutputsChanged value)? outputsChanged,
+    TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult? Function(RoonEvent_BrowseReset value)? browseReset,
+    TResult? Function(RoonEvent_Profile value)? profile,
+    TResult? Function(RoonEvent_QueueItems value)? queueItems,
+    TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
+    TResult? Function(RoonEvent_Image value)? image,
+    TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
+  }) {
+    return coreRegistered?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CoreLost value)? coreLost,
+    TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult Function(RoonEvent_ZoneSeek value)? zoneSeek,
+    TResult Function(RoonEvent_OutputsChanged value)? outputsChanged,
+    TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult Function(RoonEvent_BrowseReset value)? browseReset,
+    TResult Function(RoonEvent_Profile value)? profile,
+    TResult Function(RoonEvent_QueueItems value)? queueItems,
+    TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
+    TResult Function(RoonEvent_Image value)? image,
+    TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
+    required TResult orElse(),
+  }) {
+    if (coreRegistered != null) {
+      return coreRegistered(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RoonEvent_CoreRegistered extends RoonEvent {
+  const factory RoonEvent_CoreRegistered(
+          final String field0, final String field1) =
+      _$RoonEvent_CoreRegisteredImpl;
+  const RoonEvent_CoreRegistered._() : super._();
+
+  String get field0;
+  String get field1;
+  @JsonKey(ignore: true)
+  _$$RoonEvent_CoreRegisteredImplCopyWith<_$RoonEvent_CoreRegisteredImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -430,7 +685,8 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -452,7 +708,8 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -474,7 +731,8 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -500,7 +758,8 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -522,7 +781,8 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -544,7 +804,8 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -654,7 +915,8 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -676,7 +938,8 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -698,7 +961,8 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -724,7 +988,8 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -746,7 +1011,8 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -768,7 +1034,8 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -869,7 +1136,8 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -891,7 +1159,8 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -913,7 +1182,8 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -939,7 +1209,8 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -961,7 +1232,8 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -983,7 +1255,8 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1083,7 +1356,8 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1105,7 +1379,8 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1127,7 +1402,8 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1153,7 +1429,8 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1175,7 +1452,8 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1197,7 +1475,8 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1307,7 +1586,8 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1329,7 +1609,8 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1351,7 +1632,8 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1377,7 +1659,8 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1399,7 +1682,8 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1421,7 +1705,8 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1522,7 +1807,8 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1544,7 +1830,8 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1566,7 +1853,8 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1592,7 +1880,8 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1614,7 +1903,8 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1636,7 +1926,8 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1746,7 +2037,8 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1768,7 +2060,8 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1790,7 +2083,8 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1816,7 +2110,8 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1838,7 +2133,8 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1860,7 +2156,8 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1935,7 +2232,8 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1957,7 +2255,8 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1979,7 +2278,8 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2005,7 +2305,8 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2027,7 +2328,8 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2049,7 +2351,8 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2143,7 +2446,8 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2165,7 +2469,8 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2187,7 +2492,8 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2213,7 +2519,8 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2235,7 +2542,8 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2257,7 +2565,8 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2366,7 +2675,8 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2388,7 +2698,8 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2410,7 +2721,8 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2436,7 +2748,8 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2458,7 +2771,8 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2480,7 +2794,8 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2582,7 +2897,8 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2604,7 +2920,8 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2626,7 +2943,8 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2652,7 +2970,8 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2674,7 +2993,8 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2696,7 +3016,8 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2796,7 +3117,8 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2818,7 +3140,8 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2840,7 +3163,8 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2866,7 +3190,8 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2888,7 +3213,8 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2910,7 +3236,8 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2986,7 +3313,8 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -3008,7 +3336,8 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -3030,7 +3359,8 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -3056,7 +3386,8 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -3078,7 +3409,8 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3100,7 +3432,8 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3202,7 +3535,8 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String field0) coreFound,
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -3224,7 +3558,8 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0)? coreFound,
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -3246,7 +3581,8 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0)? coreFound,
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -3272,7 +3608,8 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreFound value) coreFound,
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -3294,7 +3631,8 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreFound value)? coreFound,
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3316,7 +3654,8 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreFound value)? coreFound,
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,

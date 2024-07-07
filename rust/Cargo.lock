@@ -278,9 +278,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "2.0.0"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "033e831e28f1077ceae3490fb6d093dfdefefd09c5c6e8544c6579effe7e814f"
+checksum = "aebee2d1d5b8b3cfbbb11919b44791b4e0f037328195efd3832c7f7e0c6c6c8b"
 dependencies = [
  "allo-isolate",
  "android_logger",
@@ -305,9 +305,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_macros"
-version = "2.0.0"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0217fc4b7131b52578be60bbe38c76b3edfc2f9fecab46d9f930510f40ef9023"
+checksum = "6c061770f5f09e99d6143612e95cfc1ba2ae773746fbe5826a9c914a533b0723"
 dependencies = [
  "hex",
  "md-5",
@@ -511,9 +511,9 @@ dependencies = [
 
 [[package]]
 name = "if-addrs"
-version = "0.12.0"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb2a33e9c38988ecbda730c85b0fd9ddcdf83c0305ac7fd21c8bb9f57f2f0cc8"
+checksum = "fc8e9b9a293a79d8206f1aad35c6bb9adadf19c916f4f3545ba77406fd4cab52"
 dependencies = [
  "libc",
  "windows-sys 0.52.0",
@@ -763,8 +763,8 @@ checksum = "adad44e29e4c806119491a7f06f03de4d1af22c3a680dd47f1e6e179439d1f56"
 
 [[package]]
 name = "roon-api"
-version = "0.2.1"
-source = "git+https://github.com/TheAppgineer/rust-roon-api.git?tag=0.2.1#b24a994740bc4a190c9a66eea0d5180e0f22c0f7"
+version = "0.3.0"
+source = "git+https://github.com/TheAppgineer/rust-roon-api.git?rev=8054524#805452455078996d107b7197bf2ff24f4da90cfc"
 dependencies = [
  "futures-util",
  "if-addrs",
