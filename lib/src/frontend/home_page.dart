@@ -126,10 +126,12 @@ class MyHomePageState extends State<MyHomePage> {
     String subtitle;
 
     if (appState.serverName == null) {
-      subtitle = '\u26a0 No server discovered!';
+      subtitle = 'No Roon Server discovered!';
+      _profileIcon = const Icon(Icons.warning);
     } else {
       if (appState.token == null) {
-        subtitle = '\u24d8 Use Roon Remote to Enable Extension';
+        subtitle = 'Use Roon Remote to enable extension';
+        _profileIcon = const Icon(Icons.info);
       } else {
         subtitle = 'Served by: ${appState.serverName}';
       }
@@ -334,7 +336,7 @@ class QuickAccessButton extends StatelessWidget {
     if (appState.serverName == null) {
       tooltip = 'Connect Manually';
     } else if (appState.token == null) {
-      tooltip = '\u24d8 Use Roon Remote to Enable Extension';
+      tooltip = 'Use Roon Remote to enable extension';
     } else if (appState.zone == null) {
       tooltip = 'Select Zone';
     } else if (appState.pauseOnTrackEnd) {
