@@ -26,9 +26,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  Widget? _profileIcon;
+  IconData? _profileIcon;
+  bool _profileStateEnabled = true;
 
-  _setProfileIcon(String profileName) {
+  _setProfileState(bool enabled) {
+    setState(() {
+      _profileStateEnabled = enabled;
+    });
+  }
+
+  _setProfileIcon(String profileName, bool enabled) {
     IconData icon;
 
     switch (profileName[0].toLowerCase()) {
@@ -88,12 +95,10 @@ class MyHomePageState extends State<MyHomePage> {
         icon = Mdi.alphaPCircleOutline;
     }
 
-    _profileIcon = IconButton(
-      icon: Icon(icon, size: 32),
-      onPressed: () {
-        BrowseLevelState.selectProfile();
-      },
-    );
+    setState(() {
+      _profileIcon = icon;
+      _profileStateEnabled = enabled;
+    });
   }
 
   @override void initState() {
@@ -123,16 +128,35 @@ class MyHomePageState extends State<MyHomePage> {
     );
     ThemeMode theme = ThemeMode.values.byName(appState.settings['theme']);
     IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
-    String subtitle = appState.serverName != null
-      ? 'Served by: ${appState.serverName}'
-      : 'Use Roon Remote to Enable Extension';
+    String subtitle;
+    Widget? stateIcon;
+
+    if (appState.serverName == null) {
+      subtitle = 'No Roon Server discovered!';
+      stateIcon = const Icon(Icons.warning);
+    } else {
+      if (appState.token == null) {
+        subtitle = 'Use Roon Remote to enable extension';
+        stateIcon = const Icon(Icons.info);
+      } else {
+        subtitle = 'Served by: ${appState.serverName}';
+        stateIcon = IconButton(
+          icon: Icon(_profileIcon, size: 32),
+          onPressed: _profileStateEnabled
+            ? () {
+              BrowseLevelState.selectProfile();
+            }
+            : null,
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         scrolledUnderElevation: 0,
         title: ListTile(
-          leading: _profileIcon,
+          leading: stateIcon,
           title: Text(widget.title),
           subtitle: Text(subtitle),
         ),
@@ -140,7 +164,7 @@ class MyHomePageState extends State<MyHomePage> {
           themeModeButton,
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -150,19 +174,19 @@ class MyHomePageState extends State<MyHomePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  HamburgerMenu(),
-                  Expanded(
+                  HamburgerMenu(profileStateCallback: _setProfileState),
+                  const Expanded(
                     flex: 5,
                     child: Browse(),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 5,
                     child: Queue(),
                   ),
                 ],
               ),
             ),
-            NowPlayingWidget(),
+            const NowPlayingWidget(),
           ],
         ),
       ),
@@ -183,6 +207,42 @@ class Setup extends StatefulWidget {
 class _SetupState extends State<Setup> {
   String? _ip;
   String? _port;
+  TextEditingController? _ipController;
+  TextEditingController? _portController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getServerProperties();
+  }
+
+  @override
+  void dispose() {
+    if (_ipController != null) {
+      _ipController!.dispose();
+    }
+
+    if (_portController != null) {
+      _portController!.dispose();
+    }
+
+    super.dispose();
+  }
+
+  _getServerProperties() async {
+    (String, String)? props = await getServerProperties();
+
+    if (mounted && props != null) {
+      _ipController = TextEditingController()..text = props.$1;
+      _portController = TextEditingController()..text = props.$2;
+
+      setState(() {
+        _ip = props.$1;
+        _port = props.$2;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +264,7 @@ class _SetupState extends State<Setup> {
             ),
             const Padding(padding: EdgeInsets.only(top: 20)),
             TextField(
+              controller: _ipController,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
                 hintText: 'Server IP',
@@ -216,6 +277,7 @@ class _SetupState extends State<Setup> {
             ),
             const Padding(padding: EdgeInsets.only(top: 20)),
             TextField(
+              controller: _portController,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
                 hintText: 'Server Port',
@@ -258,6 +320,8 @@ class QuickAccessButton extends StatelessWidget {
 
     if (appState.serverName == null) {
       icon = Icons.link_outlined;
+    } else if (appState.token == null) {
+      icon = Icons.phone_android_outlined;
     } else if (appState.zone == null) {
       icon = Icons.speaker_outlined;
     } else if (appState.pauseOnTrackEnd) {
@@ -284,11 +348,13 @@ class QuickAccessButton extends StatelessWidget {
     String? tooltip;
 
     if (appState.serverName == null) {
-      tooltip = "Connect Manually";
+      tooltip = 'Connect Manually';
+    } else if (appState.token == null) {
+      tooltip = 'Use Roon Remote to enable extension';
     } else if (appState.zone == null) {
-      tooltip = "Select Zone";
+      tooltip = 'Select Zone';
     } else if (appState.pauseOnTrackEnd) {
-      tooltip = "Pausing at End of Track...";
+      tooltip = 'Pausing at End of Track...';
     }
 
     return tooltip;
@@ -344,7 +410,9 @@ class QuickAccessButton extends StatelessWidget {
           onLongPress();
         },
         child: FloatingActionButton(
-          onPressed: () => takeAction(context),
+          onPressed: appState.serverName != null && appState.token == null
+            ? null
+            : () => takeAction(context),
           tooltip: getTooltip(),
           child: getIcon(),
         ),
@@ -354,7 +422,8 @@ class QuickAccessButton extends StatelessWidget {
 }
 
 class HamburgerMenu extends StatefulWidget {
-  const HamburgerMenu({super.key});
+  const HamburgerMenu({super.key, this.profileStateCallback});
+  final Function(bool)? profileStateCallback;
 
   @override
   State<HamburgerMenu> createState() => _HamburgerMenuState();
@@ -511,6 +580,12 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
             onDestinationSelected: (value) {
               if (value == 0) {
                 if (_setup) {
+                  if (widget.profileStateCallback != null) {
+                    List hidden = appState.settings['hidden'] ?? [];
+
+                    widget.profileStateCallback!(!hidden.contains(Category.settings.index));
+                  }
+
                   saveSettings(settings: jsonEncode(appState.settings));
 
                   setState(() {

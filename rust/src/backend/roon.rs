@@ -143,6 +143,13 @@ impl Roon {
         }
     }
 
+    pub fn get_server_properties(&self) -> Option<(String, String)> {
+        let value = RoonApi::load_config(&self.config_path, "server");
+        let server_props = serde_json::from_value::<ServerProps>(value).ok()?;
+
+        Some((server_props.ip?, server_props.port?))
+    }
+
     pub async fn get_image(&self, image_key: String) -> Option<()> {
         let handler = self.handler.lock().await;
         let scaling = Some(Scaling::new(Scale::Fill, 100, 100));

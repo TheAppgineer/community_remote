@@ -85,7 +85,13 @@ impl RoonHandler {
 
     pub async fn handle_core_event(&mut self, core_event: CoreEvent) -> Option<()> {
         match core_event {
-            CoreEvent::Found(mut core) => {
+            CoreEvent::Discovered(core, token) => {
+                self.event_tx
+                    .send(RoonEvent::CoreDiscovered(core.display_name, token))
+                    .await
+                    .unwrap();
+            }
+            CoreEvent::Registered(mut core, token) => {
                 self.transport = core.get_transport().cloned();
                 self.browse = Some(BrowseHelper::new(core.get_browse().cloned()?));
                 self.image = core.get_image().cloned();
@@ -102,7 +108,7 @@ impl RoonHandler {
                 self.browse.as_mut()?.browse_clear();
 
                 self.event_tx
-                    .send(RoonEvent::CoreFound(core.display_name))
+                    .send(RoonEvent::CoreRegistered(core.display_name, token))
                     .await
                     .unwrap();
             }
@@ -447,6 +453,7 @@ impl RoonHandler {
 
                         self.image.as_ref()?.get_image(&image_key, args).await;
                     }
+                    _ => {}
                 },
                 _ => (),
             }
