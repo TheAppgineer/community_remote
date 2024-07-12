@@ -26,9 +26,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  Widget? _profileIcon;
+  IconData? _profileIcon;
+  bool _profileStateEnabled = true;
 
-  _setProfileIcon(String profileName) {
+  _setProfileState(bool enabled) {
+    setState(() {
+      _profileStateEnabled = enabled;
+    });
+  }
+
+  _setProfileIcon(String profileName, bool enabled) {
     IconData icon;
 
     switch (profileName[0].toLowerCase()) {
@@ -88,12 +95,10 @@ class MyHomePageState extends State<MyHomePage> {
         icon = Mdi.alphaPCircleOutline;
     }
 
-    _profileIcon = IconButton(
-      icon: Icon(icon, size: 32),
-      onPressed: () {
-        BrowseLevelState.selectProfile();
-      },
-    );
+    setState(() {
+      _profileIcon = icon;
+      _profileStateEnabled = enabled;
+    });
   }
 
   @override void initState() {
@@ -124,16 +129,25 @@ class MyHomePageState extends State<MyHomePage> {
     ThemeMode theme = ThemeMode.values.byName(appState.settings['theme']);
     IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
     String subtitle;
+    Widget? stateIcon;
 
     if (appState.serverName == null) {
       subtitle = 'No Roon Server discovered!';
-      _profileIcon = const Icon(Icons.warning);
+      stateIcon = const Icon(Icons.warning);
     } else {
       if (appState.token == null) {
         subtitle = 'Use Roon Remote to enable extension';
-        _profileIcon = const Icon(Icons.info);
+        stateIcon = const Icon(Icons.info);
       } else {
         subtitle = 'Served by: ${appState.serverName}';
+        stateIcon = IconButton(
+          icon: Icon(_profileIcon, size: 32),
+          onPressed: _profileStateEnabled
+            ? () {
+              BrowseLevelState.selectProfile();
+            }
+            : null,
+        );
       }
     }
 
@@ -142,7 +156,7 @@ class MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         scrolledUnderElevation: 0,
         title: ListTile(
-          leading: _profileIcon,
+          leading: stateIcon,
           title: Text(widget.title),
           subtitle: Text(subtitle),
         ),
@@ -150,7 +164,7 @@ class MyHomePageState extends State<MyHomePage> {
           themeModeButton,
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -160,19 +174,19 @@ class MyHomePageState extends State<MyHomePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  HamburgerMenu(),
-                  Expanded(
+                  HamburgerMenu(profileStateCallback: _setProfileState),
+                  const Expanded(
                     flex: 5,
                     child: Browse(),
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 5,
                     child: Queue(),
                   ),
                 ],
               ),
             ),
-            NowPlayingWidget(),
+            const NowPlayingWidget(),
           ],
         ),
       ),
@@ -408,7 +422,8 @@ class QuickAccessButton extends StatelessWidget {
 }
 
 class HamburgerMenu extends StatefulWidget {
-  const HamburgerMenu({super.key});
+  const HamburgerMenu({super.key, this.profileStateCallback});
+  final Function(bool)? profileStateCallback;
 
   @override
   State<HamburgerMenu> createState() => _HamburgerMenuState();
@@ -565,6 +580,12 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
             onDestinationSelected: (value) {
               if (value == 0) {
                 if (_setup) {
+                  if (widget.profileStateCallback != null) {
+                    List hidden = appState.settings['hidden'] ?? [];
+
+                    widget.profileStateCallback!(!hidden.contains(Category.settings.index));
+                  }
+
                   saveSettings(settings: jsonEncode(appState.settings));
 
                   setState(() {

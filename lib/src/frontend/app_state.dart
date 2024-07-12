@@ -144,7 +144,8 @@ class MyAppState extends ChangeNotifier {
       }
     } else if (event is RoonEvent_Profile) {
       if (_profileCallback != null) {
-        _profileCallback!(event.field0);
+        List hidden = settings['hidden'] ?? [];
+        _profileCallback!(event.field0, !hidden.contains(Category.settings.index));
       }
 
       if (!_initialized) {
