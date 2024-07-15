@@ -34,32 +34,23 @@ Future<void> transferFromZone({required String zoneId}) =>
 Future<void> getImage({required String imageKey}) =>
     RustLib.instance.api.crateApiSimpleGetImage(imageKey: imageKey);
 
-Future<void> browse({required int category, required int sessionId}) =>
-    RustLib.instance.api
-        .crateApiSimpleBrowse(category: category, sessionId: sessionId);
+Future<void> browse({required int category}) =>
+    RustLib.instance.api.crateApiSimpleBrowse(category: category);
 
-Future<void> browseWithInput(
-        {required int category, required int sessionId, String? input}) =>
-    RustLib.instance.api.crateApiSimpleBrowseWithInput(
-        category: category, sessionId: sessionId, input: input);
+Future<void> browseWithInput({required int category, String? input}) =>
+    RustLib.instance.api
+        .crateApiSimpleBrowseWithInput(category: category, input: input);
 
 Future<void> browseNextPage() =>
     RustLib.instance.api.crateApiSimpleBrowseNextPage();
 
-Future<void> browseBack({required int sessionId}) =>
-    RustLib.instance.api.crateApiSimpleBrowseBack(sessionId: sessionId);
+Future<void> browseBack() => RustLib.instance.api.crateApiSimpleBrowseBack();
 
-Future<void> searchArtist({required int sessionId, required String artist}) =>
-    RustLib.instance.api
-        .crateApiSimpleSearchArtist(sessionId: sessionId, artist: artist);
+Future<void> searchArtist({required String artist}) =>
+    RustLib.instance.api.crateApiSimpleSearchArtist(artist: artist);
 
-Future<void> queryProfile({required int sessionId}) =>
-    RustLib.instance.api.crateApiSimpleQueryProfile(sessionId: sessionId);
-
-Future<void> selectBrowseItem(
-        {required int sessionId, required BrowseItem item}) =>
-    RustLib.instance.api
-        .crateApiSimpleSelectBrowseItem(sessionId: sessionId, item: item);
+Future<void> selectBrowseItem({required BrowseItem item}) =>
+    RustLib.instance.api.crateApiSimpleSelectBrowseItem(item: item);
 
 Future<void> selectQueueItem({required int queueItemId}) => RustLib.instance.api
     .crateApiSimpleSelectQueueItem(queueItemId: queueItemId);
@@ -164,6 +155,10 @@ sealed class RoonEvent with _$RoonEvent {
     String field0,
     String field1,
   ) = RoonEvent_CoreRegistered;
+  const factory RoonEvent.corePermitted(
+    String field0,
+    bool field1,
+  ) = RoonEvent_CorePermitted;
   const factory RoonEvent.coreLost(
     String field0,
   ) = RoonEvent_CoreLost;
@@ -186,9 +181,6 @@ sealed class RoonEvent with _$RoonEvent {
     List<BrowseItem> field0,
   ) = RoonEvent_BrowseActions;
   const factory RoonEvent.browseReset() = RoonEvent_BrowseReset;
-  const factory RoonEvent.profile(
-    String field0,
-  ) = RoonEvent_Profile;
   const factory RoonEvent.queueItems(
     List<QueueItem> field0,
   ) = RoonEvent_QueueItems;

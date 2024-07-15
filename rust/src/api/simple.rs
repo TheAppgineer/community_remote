@@ -24,6 +24,7 @@ static API: Lazy<Mutex<InternalState>> = Lazy::new(|| Mutex::new(InternalState::
 pub enum RoonEvent {
     CoreDiscovered(String, Option<String>),
     CoreRegistered(String, String),
+    CorePermitted(String, bool),
     CoreLost(String),
     ZonesChanged(Vec<ZoneSummary>),
     ZoneChanged(Option<Zone>),
@@ -32,7 +33,6 @@ pub enum RoonEvent {
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,
-    Profile(String),
     QueueItems(Vec<QueueItem>),
     PauseOnTrackEnd(bool),
     Image(ImageKeyValue),
@@ -162,19 +162,19 @@ pub async fn get_image(image_key: String) {
     }
 }
 
-pub async fn browse(category: i32, session_id: i32) {
+pub async fn browse(category: i32) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.browse_category(category, session_id, None).await;
+        roon.browse_category(category, None).await;
     }
 }
 
-pub async fn browse_with_input(category: i32, session_id: i32, input: Option<String>) {
+pub async fn browse_with_input(category: i32, input: Option<String>) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.browse_category(category, session_id, input).await;
+        roon.browse_category(category, input).await;
     }
 }
 
@@ -186,35 +186,27 @@ pub async fn browse_next_page() {
     }
 }
 
-pub async fn browse_back(session_id: i32) {
+pub async fn browse_back() {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.browse_back(session_id).await;
+        roon.browse_back().await;
     }
 }
 
-pub async fn search_artist(session_id: i32, artist: String) {
+pub async fn search_artist(artist: String) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.search_artist(session_id, artist).await;
+        roon.search_artist(artist).await;
     }
 }
 
-pub async fn query_profile(session_id: i32) {
+pub async fn select_browse_item(item: BrowseItem) {
     let api = API.lock().await;
 
     if let Some(roon) = api.roon.as_ref() {
-        roon.query_profile(session_id).await;
-    }
-}
-
-pub async fn select_browse_item(session_id: i32, item: BrowseItem) {
-    let api = API.lock().await;
-
-    if let Some(roon) = api.roon.as_ref() {
-        roon.select_browse_item(session_id, item).await;
+        roon.select_browse_item(item).await;
     }
 }
 pub async fn select_queue_item(queue_item_id: u32) {

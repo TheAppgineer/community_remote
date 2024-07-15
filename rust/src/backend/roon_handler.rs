@@ -14,15 +14,17 @@ use roon_api::{
 use serde_json::Value;
 use std::{
     collections::{HashMap, VecDeque},
-    sync::Arc,
+    sync::{Arc, Mutex},
 };
 use tokio::sync::mpsc::Sender;
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
 use super::browse_helper::BrowseHelper;
+use super::roon_access::{RoonAccess, RoonAccessData};
 
 pub const BROWSE_PAGE_SIZE: usize = 100;
+pub const SESSION_ID: i32 = 0;
 
 pub struct RoonHandler {
     pub event_tx: Sender<RoonEvent>,
@@ -43,6 +45,8 @@ pub struct RoonHandler {
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
     pub services: Vec<String>,
+    access: Option<Arc<Mutex<RoonAccess>>>,
+    profile: Option<String>,
     api_token: Option<String>,
     config_path: Arc<String>,
     outputs: HashMap<String, String>,
@@ -71,6 +75,8 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
+            access: None,
+            profile: None,
             api_token: None,
             config_path,
             outputs: HashMap::new(),
@@ -79,8 +85,12 @@ impl RoonHandler {
         }
     }
 
-    pub fn get_multi_session_key(&self, session_id: i32) -> Option<String> {
-        Some(format!("{}-{}", self.api_token.as_deref()?, session_id))
+    pub fn set_access(&mut self, access: Arc<Mutex<RoonAccess>>) {
+        self.access = Some(access);
+    }
+
+    pub fn get_multi_session_key(&self) -> Option<String> {
+        Some(format!("{}-{}", self.api_token.as_deref()?, SESSION_ID))
     }
 
     pub async fn handle_core_event(&mut self, core_event: CoreEvent) -> Option<()> {
@@ -136,6 +146,44 @@ impl RoonHandler {
 
                     if let Err(err) = RoonApi::save_roon_state(&self.config_path, roon_state) {
                         log::warn!("Failed to save state: {err}");
+                    }
+
+                    let data = RoonApi::load_config(&self.config_path, "access");
+
+                    if let Ok(data) = serde_json::from_value::<RoonAccessData>(data) {
+                        let profile = Some(data.profile.to_owned());
+
+                        self.query_profile(profile.as_deref()).await;
+                        self.access.as_ref()?.lock().unwrap().set_data(data);
+                    } else {
+                        self.query_profile(None).await;
+                    }
+                }
+                Parsed::SettingsSaved(access) => {
+                    match RoonApi::save_config(&self.config_path, "access", access.to_owned()) {
+                        Err(err) => log::warn!("Failed to save access settings: {err}"),
+                        Ok(()) => {
+                            if let Ok(data) = serde_json::from_value::<RoonAccessData>(access) {
+                                self.query_profile(Some(&data.profile)).await;
+
+                                let profile = if data.profile.is_empty() {
+                                    self.profile.to_owned()?
+                                } else {
+                                    data.profile.to_owned()
+                                };
+                                let profile_access = {
+                                    let mut access = self.access.as_ref()?.lock().unwrap();
+
+                                    access.set_data(data);
+                                    access.has_profile_access()
+                                };
+
+                                self.event_tx
+                                    .send(RoonEvent::CorePermitted(profile, profile_access))
+                                    .await
+                                    .unwrap();
+                            }
+                        }
                     }
                 }
                 Parsed::Zones(zones) => {
@@ -300,6 +348,10 @@ impl RoonHandler {
 
                     if let Some(path) = self.browse_path.get_mut(key) {
                         if let Some(category) = path.pop() {
+                            if result.list.title == "Profile" {
+                                self.set_profile(&result.items).await;
+                            }
+
                             let input = if category == "Search" {
                                 self.browse_input.take()
                             } else {
@@ -346,18 +398,8 @@ impl RoonHandler {
                         self.browse.as_mut()?.browse_clear();
                         self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
                     } else {
-                        if result.list.title == "Settings" {
-                            for item in result.items.iter() {
-                                if item.title == "Profile" {
-                                    if let Some(subtitle) = item.subtitle.as_ref() {
-                                        self.event_tx
-                                            .send(RoonEvent::Profile(subtitle.to_owned()))
-                                            .await
-                                            .unwrap();
-                                        break;
-                                    }
-                                }
-                            }
+                        if result.list.title == "Profile" {
+                            self.set_profile(&result.items).await;
                         }
 
                         if self.browse_category.is_some() {
@@ -387,6 +429,20 @@ impl RoonHandler {
                                 } else {
                                     result.offset
                                 } as u32;
+
+                                if title == "Settings" {
+                                    if let Some(access) = &self.access {
+                                        let access = access.lock().unwrap();
+
+                                        if !access.has_profile_access() {
+                                            let index = items
+                                                .iter()
+                                                .position(|item| item.title == "Profile")?;
+
+                                            items.remove(index);
+                                        }
+                                    }
+                                }
 
                                 let browse_items = BrowseItems {
                                     list: result.list,
@@ -462,7 +518,72 @@ impl RoonHandler {
         Some(())
     }
 
-    async fn send_zone_list(&self) {
+    async fn query_profile(&mut self, profile: Option<&str>) -> Option<()> {
+        let path = match profile {
+            Some(profile) if !profile.is_empty() => {
+                vec![
+                    profile.to_owned(),
+                    "Profile".to_owned(),
+                    "Settings".to_owned(),
+                ]
+            }
+            _ => vec!["Profile".to_owned(), "Settings".to_owned()],
+        };
+        let multi_session_key = self.get_multi_session_key();
+
+        self.browse_path
+            .insert(multi_session_key.as_ref()?.to_owned(), path);
+
+        let opts = BrowseOpts {
+            multi_session_key,
+            pop_all: true,
+            set_display_offset: Some(0),
+            ..Default::default()
+        };
+
+        self.browse_category = None;
+        self.browse.as_mut()?.browse(opts).await;
+
+        Some(())
+    }
+
+    async fn set_profile(&mut self, items: &[BrowseItem]) -> Option<()> {
+        let (access, profile) = {
+            let mut access = self.access.as_ref()?.lock().unwrap();
+            let profiles = items
+                .iter()
+                .map(|item| item.title.to_owned())
+                .collect::<Vec<_>>();
+
+            access.set_profiles(profiles);
+
+            (access.has_data(), access.has_profile_access())
+        };
+
+        for item in items.iter() {
+            if let Some(subtitle) = item.subtitle.as_ref() {
+                if subtitle == "selected" {
+                    if self.profile.is_none() && access {
+                        self.event_tx
+                            .send(RoonEvent::CorePermitted(item.title.to_owned(), profile))
+                            .await
+                            .unwrap();
+                    }
+
+                    self.profile = Some(item.title.to_owned());
+                    break;
+                }
+            }
+        }
+
+        Some(())
+    }
+
+    async fn send_zone_list(&self) -> Option<()> {
+        let access = RoonApi::load_config(&self.config_path, "access");
+
+        serde_json::from_value::<RoonAccessData>(access).ok()?;
+
         let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.display_name.cmp(&b.display_name);
         let mut zones = self
             .zone_map
@@ -501,6 +622,8 @@ impl RoonHandler {
             .send(RoonEvent::ZonesChanged(zones))
             .await
             .unwrap();
+
+        Some(())
     }
 
     pub async fn handle_mute_list(&mut self) -> Option<()> {

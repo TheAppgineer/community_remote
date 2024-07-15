@@ -20,6 +20,7 @@ mixin _$RoonEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -28,7 +29,6 @@ mixin _$RoonEvent {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -40,6 +40,7 @@ mixin _$RoonEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -48,7 +49,6 @@ mixin _$RoonEvent {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -60,6 +60,7 @@ mixin _$RoonEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -68,7 +69,6 @@ mixin _$RoonEvent {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -81,6 +81,7 @@ mixin _$RoonEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -89,7 +90,6 @@ mixin _$RoonEvent {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -101,6 +101,7 @@ mixin _$RoonEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -109,7 +110,6 @@ mixin _$RoonEvent {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -121,6 +121,7 @@ mixin _$RoonEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -129,7 +130,6 @@ mixin _$RoonEvent {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -234,6 +234,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -242,7 +243,6 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -257,6 +257,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -265,7 +266,6 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -280,6 +280,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -288,7 +289,6 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -307,6 +307,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -315,7 +316,6 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -330,6 +330,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -338,7 +339,6 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -353,6 +353,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -361,7 +362,6 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -465,6 +465,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -473,7 +474,6 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -488,6 +488,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -496,7 +497,6 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -511,6 +511,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -519,7 +520,6 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -538,6 +538,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -546,7 +547,6 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -561,6 +561,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -569,7 +570,6 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -584,6 +584,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -592,7 +593,6 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -617,6 +617,237 @@ abstract class RoonEvent_CoreRegistered extends RoonEvent {
   String get field1;
   @JsonKey(ignore: true)
   _$$RoonEvent_CoreRegisteredImplCopyWith<_$RoonEvent_CoreRegisteredImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RoonEvent_CorePermittedImplCopyWith<$Res> {
+  factory _$$RoonEvent_CorePermittedImplCopyWith(
+          _$RoonEvent_CorePermittedImpl value,
+          $Res Function(_$RoonEvent_CorePermittedImpl) then) =
+      __$$RoonEvent_CorePermittedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0, bool field1});
+}
+
+/// @nodoc
+class __$$RoonEvent_CorePermittedImplCopyWithImpl<$Res>
+    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_CorePermittedImpl>
+    implements _$$RoonEvent_CorePermittedImplCopyWith<$Res> {
+  __$$RoonEvent_CorePermittedImplCopyWithImpl(
+      _$RoonEvent_CorePermittedImpl _value,
+      $Res Function(_$RoonEvent_CorePermittedImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+    Object? field1 = null,
+  }) {
+    return _then(_$RoonEvent_CorePermittedImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == field1
+          ? _value.field1
+          : field1 // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$RoonEvent_CorePermittedImpl extends RoonEvent_CorePermitted {
+  const _$RoonEvent_CorePermittedImpl(this.field0, this.field1) : super._();
+
+  @override
+  final String field0;
+  @override
+  final bool field1;
+
+  @override
+  String toString() {
+    return 'RoonEvent.corePermitted(field0: $field0, field1: $field1)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RoonEvent_CorePermittedImpl &&
+            (identical(other.field0, field0) || other.field0 == field0) &&
+            (identical(other.field1, field1) || other.field1 == field1));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0, field1);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RoonEvent_CorePermittedImplCopyWith<_$RoonEvent_CorePermittedImpl>
+      get copyWith => __$$RoonEvent_CorePermittedImplCopyWithImpl<
+          _$RoonEvent_CorePermittedImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0, String? field1) coreDiscovered,
+    required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
+    required TResult Function(String field0) coreLost,
+    required TResult Function(List<ZoneSummary> field0) zonesChanged,
+    required TResult Function(Zone? field0) zoneChanged,
+    required TResult Function(ZoneSeek field0) zoneSeek,
+    required TResult Function(Map<String, String> field0) outputsChanged,
+    required TResult Function(BrowseItems field0) browseItems,
+    required TResult Function(List<BrowseItem> field0) browseActions,
+    required TResult Function() browseReset,
+    required TResult Function(List<QueueItem> field0) queueItems,
+    required TResult Function(bool field0) pauseOnTrackEnd,
+    required TResult Function(ImageKeyValue field0) image,
+    required TResult Function() settingsSaved,
+    required TResult Function(List<String> field0) services,
+  }) {
+    return corePermitted(field0, field1);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0, String? field1)? coreDiscovered,
+    TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
+    TResult? Function(String field0)? coreLost,
+    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult? Function(Zone? field0)? zoneChanged,
+    TResult? Function(ZoneSeek field0)? zoneSeek,
+    TResult? Function(Map<String, String> field0)? outputsChanged,
+    TResult? Function(BrowseItems field0)? browseItems,
+    TResult? Function(List<BrowseItem> field0)? browseActions,
+    TResult? Function()? browseReset,
+    TResult? Function(List<QueueItem> field0)? queueItems,
+    TResult? Function(bool field0)? pauseOnTrackEnd,
+    TResult? Function(ImageKeyValue field0)? image,
+    TResult? Function()? settingsSaved,
+    TResult? Function(List<String> field0)? services,
+  }) {
+    return corePermitted?.call(field0, field1);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0, String? field1)? coreDiscovered,
+    TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
+    TResult Function(String field0)? coreLost,
+    TResult Function(List<ZoneSummary> field0)? zonesChanged,
+    TResult Function(Zone? field0)? zoneChanged,
+    TResult Function(ZoneSeek field0)? zoneSeek,
+    TResult Function(Map<String, String> field0)? outputsChanged,
+    TResult Function(BrowseItems field0)? browseItems,
+    TResult Function(List<BrowseItem> field0)? browseActions,
+    TResult Function()? browseReset,
+    TResult Function(List<QueueItem> field0)? queueItems,
+    TResult Function(bool field0)? pauseOnTrackEnd,
+    TResult Function(ImageKeyValue field0)? image,
+    TResult Function()? settingsSaved,
+    TResult Function(List<String> field0)? services,
+    required TResult orElse(),
+  }) {
+    if (corePermitted != null) {
+      return corePermitted(field0, field1);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
+    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
+    required TResult Function(RoonEvent_CoreLost value) coreLost,
+    required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
+    required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
+    required TResult Function(RoonEvent_ZoneSeek value) zoneSeek,
+    required TResult Function(RoonEvent_OutputsChanged value) outputsChanged,
+    required TResult Function(RoonEvent_BrowseItems value) browseItems,
+    required TResult Function(RoonEvent_BrowseActions value) browseActions,
+    required TResult Function(RoonEvent_BrowseReset value) browseReset,
+    required TResult Function(RoonEvent_QueueItems value) queueItems,
+    required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
+    required TResult Function(RoonEvent_Image value) image,
+    required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
+    required TResult Function(RoonEvent_Services value) services,
+  }) {
+    return corePermitted(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
+    TResult? Function(RoonEvent_CoreLost value)? coreLost,
+    TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult? Function(RoonEvent_ZoneSeek value)? zoneSeek,
+    TResult? Function(RoonEvent_OutputsChanged value)? outputsChanged,
+    TResult? Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult? Function(RoonEvent_BrowseReset value)? browseReset,
+    TResult? Function(RoonEvent_QueueItems value)? queueItems,
+    TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
+    TResult? Function(RoonEvent_Image value)? image,
+    TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult? Function(RoonEvent_Services value)? services,
+  }) {
+    return corePermitted?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
+    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
+    TResult Function(RoonEvent_CoreLost value)? coreLost,
+    TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
+    TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
+    TResult Function(RoonEvent_ZoneSeek value)? zoneSeek,
+    TResult Function(RoonEvent_OutputsChanged value)? outputsChanged,
+    TResult Function(RoonEvent_BrowseItems value)? browseItems,
+    TResult Function(RoonEvent_BrowseActions value)? browseActions,
+    TResult Function(RoonEvent_BrowseReset value)? browseReset,
+    TResult Function(RoonEvent_QueueItems value)? queueItems,
+    TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
+    TResult Function(RoonEvent_Image value)? image,
+    TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
+    TResult Function(RoonEvent_Services value)? services,
+    required TResult orElse(),
+  }) {
+    if (corePermitted != null) {
+      return corePermitted(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RoonEvent_CorePermitted extends RoonEvent {
+  const factory RoonEvent_CorePermitted(
+      final String field0, final bool field1) = _$RoonEvent_CorePermittedImpl;
+  const RoonEvent_CorePermitted._() : super._();
+
+  String get field0;
+  bool get field1;
+  @JsonKey(ignore: true)
+  _$$RoonEvent_CorePermittedImplCopyWith<_$RoonEvent_CorePermittedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -687,6 +918,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -695,7 +927,6 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -710,6 +941,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -718,7 +950,6 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -733,6 +964,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -741,7 +973,6 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -760,6 +991,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -768,7 +1000,6 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -783,6 +1014,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -791,7 +1023,6 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -806,6 +1037,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -814,7 +1046,6 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -917,6 +1148,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -925,7 +1157,6 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -940,6 +1171,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -948,7 +1180,6 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -963,6 +1194,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -971,7 +1203,6 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -990,6 +1221,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -998,7 +1230,6 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -1013,6 +1244,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1021,7 +1253,6 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -1036,6 +1267,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1044,7 +1276,6 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -1138,6 +1369,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1146,7 +1378,6 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -1161,6 +1392,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1169,7 +1401,6 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -1184,6 +1415,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1192,7 +1424,6 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -1211,6 +1442,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1219,7 +1451,6 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -1234,6 +1465,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1242,7 +1474,6 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -1257,6 +1488,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1265,7 +1497,6 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -1358,6 +1589,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1366,7 +1598,6 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -1381,6 +1612,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1389,7 +1621,6 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -1404,6 +1635,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1412,7 +1644,6 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -1431,6 +1662,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1439,7 +1671,6 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -1454,6 +1685,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1462,7 +1694,6 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -1477,6 +1708,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1485,7 +1717,6 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -1588,6 +1819,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1596,7 +1828,6 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -1611,6 +1842,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1619,7 +1851,6 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -1634,6 +1865,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1642,7 +1874,6 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -1661,6 +1892,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1669,7 +1901,6 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -1684,6 +1915,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1692,7 +1924,6 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -1707,6 +1938,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1715,7 +1947,6 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -1809,6 +2040,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -1817,7 +2049,6 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -1832,6 +2063,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -1840,7 +2072,6 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -1855,6 +2086,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -1863,7 +2095,6 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -1882,6 +2113,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -1890,7 +2122,6 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -1905,6 +2136,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1913,7 +2145,6 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -1928,6 +2159,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -1936,7 +2168,6 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -2039,6 +2270,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2047,7 +2279,6 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -2062,6 +2293,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2070,7 +2302,6 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -2085,6 +2316,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2093,7 +2325,6 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -2112,6 +2343,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2120,7 +2352,6 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -2135,6 +2366,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2143,7 +2375,6 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -2158,6 +2389,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2166,7 +2398,6 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -2234,6 +2465,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2242,7 +2474,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -2257,6 +2488,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2265,7 +2497,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -2280,6 +2511,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2288,7 +2520,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -2307,6 +2538,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2315,7 +2547,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -2330,6 +2561,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2338,7 +2570,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -2353,6 +2584,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2361,7 +2593,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -2379,226 +2610,6 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
 abstract class RoonEvent_BrowseReset extends RoonEvent {
   const factory RoonEvent_BrowseReset() = _$RoonEvent_BrowseResetImpl;
   const RoonEvent_BrowseReset._() : super._();
-}
-
-/// @nodoc
-abstract class _$$RoonEvent_ProfileImplCopyWith<$Res> {
-  factory _$$RoonEvent_ProfileImplCopyWith(_$RoonEvent_ProfileImpl value,
-          $Res Function(_$RoonEvent_ProfileImpl) then) =
-      __$$RoonEvent_ProfileImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String field0});
-}
-
-/// @nodoc
-class __$$RoonEvent_ProfileImplCopyWithImpl<$Res>
-    extends _$RoonEventCopyWithImpl<$Res, _$RoonEvent_ProfileImpl>
-    implements _$$RoonEvent_ProfileImplCopyWith<$Res> {
-  __$$RoonEvent_ProfileImplCopyWithImpl(_$RoonEvent_ProfileImpl _value,
-      $Res Function(_$RoonEvent_ProfileImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? field0 = null,
-  }) {
-    return _then(_$RoonEvent_ProfileImpl(
-      null == field0
-          ? _value.field0
-          : field0 // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
-  const _$RoonEvent_ProfileImpl(this.field0) : super._();
-
-  @override
-  final String field0;
-
-  @override
-  String toString() {
-    return 'RoonEvent.profile(field0: $field0)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RoonEvent_ProfileImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, field0);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RoonEvent_ProfileImplCopyWith<_$RoonEvent_ProfileImpl> get copyWith =>
-      __$$RoonEvent_ProfileImplCopyWithImpl<_$RoonEvent_ProfileImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(String field0, String? field1) coreDiscovered,
-    required TResult Function(String field0, String field1) coreRegistered,
-    required TResult Function(String field0) coreLost,
-    required TResult Function(List<ZoneSummary> field0) zonesChanged,
-    required TResult Function(Zone? field0) zoneChanged,
-    required TResult Function(ZoneSeek field0) zoneSeek,
-    required TResult Function(Map<String, String> field0) outputsChanged,
-    required TResult Function(BrowseItems field0) browseItems,
-    required TResult Function(List<BrowseItem> field0) browseActions,
-    required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
-    required TResult Function(List<QueueItem> field0) queueItems,
-    required TResult Function(bool field0) pauseOnTrackEnd,
-    required TResult Function(ImageKeyValue field0) image,
-    required TResult Function() settingsSaved,
-    required TResult Function(List<String> field0) services,
-  }) {
-    return profile(field0);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String field0, String? field1)? coreDiscovered,
-    TResult? Function(String field0, String field1)? coreRegistered,
-    TResult? Function(String field0)? coreLost,
-    TResult? Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult? Function(Zone? field0)? zoneChanged,
-    TResult? Function(ZoneSeek field0)? zoneSeek,
-    TResult? Function(Map<String, String> field0)? outputsChanged,
-    TResult? Function(BrowseItems field0)? browseItems,
-    TResult? Function(List<BrowseItem> field0)? browseActions,
-    TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
-    TResult? Function(List<QueueItem> field0)? queueItems,
-    TResult? Function(bool field0)? pauseOnTrackEnd,
-    TResult? Function(ImageKeyValue field0)? image,
-    TResult? Function()? settingsSaved,
-    TResult? Function(List<String> field0)? services,
-  }) {
-    return profile?.call(field0);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String field0, String? field1)? coreDiscovered,
-    TResult Function(String field0, String field1)? coreRegistered,
-    TResult Function(String field0)? coreLost,
-    TResult Function(List<ZoneSummary> field0)? zonesChanged,
-    TResult Function(Zone? field0)? zoneChanged,
-    TResult Function(ZoneSeek field0)? zoneSeek,
-    TResult Function(Map<String, String> field0)? outputsChanged,
-    TResult Function(BrowseItems field0)? browseItems,
-    TResult Function(List<BrowseItem> field0)? browseActions,
-    TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
-    TResult Function(List<QueueItem> field0)? queueItems,
-    TResult Function(bool field0)? pauseOnTrackEnd,
-    TResult Function(ImageKeyValue field0)? image,
-    TResult Function()? settingsSaved,
-    TResult Function(List<String> field0)? services,
-    required TResult orElse(),
-  }) {
-    if (profile != null) {
-      return profile(field0);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
-    required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
-    required TResult Function(RoonEvent_CoreLost value) coreLost,
-    required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
-    required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
-    required TResult Function(RoonEvent_ZoneSeek value) zoneSeek,
-    required TResult Function(RoonEvent_OutputsChanged value) outputsChanged,
-    required TResult Function(RoonEvent_BrowseItems value) browseItems,
-    required TResult Function(RoonEvent_BrowseActions value) browseActions,
-    required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
-    required TResult Function(RoonEvent_QueueItems value) queueItems,
-    required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
-    required TResult Function(RoonEvent_Image value) image,
-    required TResult Function(RoonEvent_SettingsSaved value) settingsSaved,
-    required TResult Function(RoonEvent_Services value) services,
-  }) {
-    return profile(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
-    TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
-    TResult? Function(RoonEvent_CoreLost value)? coreLost,
-    TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
-    TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
-    TResult? Function(RoonEvent_ZoneSeek value)? zoneSeek,
-    TResult? Function(RoonEvent_OutputsChanged value)? outputsChanged,
-    TResult? Function(RoonEvent_BrowseItems value)? browseItems,
-    TResult? Function(RoonEvent_BrowseActions value)? browseActions,
-    TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
-    TResult? Function(RoonEvent_QueueItems value)? queueItems,
-    TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
-    TResult? Function(RoonEvent_Image value)? image,
-    TResult? Function(RoonEvent_SettingsSaved value)? settingsSaved,
-    TResult? Function(RoonEvent_Services value)? services,
-  }) {
-    return profile?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
-    TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
-    TResult Function(RoonEvent_CoreLost value)? coreLost,
-    TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
-    TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
-    TResult Function(RoonEvent_ZoneSeek value)? zoneSeek,
-    TResult Function(RoonEvent_OutputsChanged value)? outputsChanged,
-    TResult Function(RoonEvent_BrowseItems value)? browseItems,
-    TResult Function(RoonEvent_BrowseActions value)? browseActions,
-    TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
-    TResult Function(RoonEvent_QueueItems value)? queueItems,
-    TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
-    TResult Function(RoonEvent_Image value)? image,
-    TResult Function(RoonEvent_SettingsSaved value)? settingsSaved,
-    TResult Function(RoonEvent_Services value)? services,
-    required TResult orElse(),
-  }) {
-    if (profile != null) {
-      return profile(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class RoonEvent_Profile extends RoonEvent {
-  const factory RoonEvent_Profile(final String field0) =
-      _$RoonEvent_ProfileImpl;
-  const RoonEvent_Profile._() : super._();
-
-  String get field0;
-  @JsonKey(ignore: true)
-  _$$RoonEvent_ProfileImplCopyWith<_$RoonEvent_ProfileImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2677,6 +2688,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2685,7 +2697,6 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -2700,6 +2711,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2708,7 +2720,6 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -2723,6 +2734,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2731,7 +2743,6 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -2750,6 +2761,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2758,7 +2770,6 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -2773,6 +2784,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2781,7 +2793,6 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -2796,6 +2807,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -2804,7 +2816,6 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -2899,6 +2910,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -2907,7 +2919,6 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -2922,6 +2933,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -2930,7 +2942,6 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -2945,6 +2956,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -2953,7 +2965,6 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -2972,6 +2983,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -2980,7 +2992,6 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -2995,6 +3006,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3003,7 +3015,6 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -3018,6 +3029,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3026,7 +3038,6 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -3119,6 +3130,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -3127,7 +3139,6 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -3142,6 +3153,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -3150,7 +3162,6 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -3165,6 +3176,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -3173,7 +3185,6 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -3192,6 +3203,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -3200,7 +3212,6 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -3215,6 +3226,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3223,7 +3235,6 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -3238,6 +3249,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3246,7 +3258,6 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -3315,6 +3326,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -3323,7 +3335,6 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -3338,6 +3349,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -3346,7 +3358,6 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -3361,6 +3372,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -3369,7 +3381,6 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -3388,6 +3399,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -3396,7 +3408,6 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -3411,6 +3422,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3419,7 +3431,6 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -3434,6 +3445,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3442,7 +3454,6 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,
@@ -3537,6 +3548,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   TResult when<TResult extends Object?>({
     required TResult Function(String field0, String? field1) coreDiscovered,
     required TResult Function(String field0, String field1) coreRegistered,
+    required TResult Function(String field0, bool field1) corePermitted,
     required TResult Function(String field0) coreLost,
     required TResult Function(List<ZoneSummary> field0) zonesChanged,
     required TResult Function(Zone? field0) zoneChanged,
@@ -3545,7 +3557,6 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     required TResult Function(BrowseItems field0) browseItems,
     required TResult Function(List<BrowseItem> field0) browseActions,
     required TResult Function() browseReset,
-    required TResult Function(String field0) profile,
     required TResult Function(List<QueueItem> field0) queueItems,
     required TResult Function(bool field0) pauseOnTrackEnd,
     required TResult Function(ImageKeyValue field0) image,
@@ -3560,6 +3571,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String field0, String? field1)? coreDiscovered,
     TResult? Function(String field0, String field1)? coreRegistered,
+    TResult? Function(String field0, bool field1)? corePermitted,
     TResult? Function(String field0)? coreLost,
     TResult? Function(List<ZoneSummary> field0)? zonesChanged,
     TResult? Function(Zone? field0)? zoneChanged,
@@ -3568,7 +3580,6 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     TResult? Function(BrowseItems field0)? browseItems,
     TResult? Function(List<BrowseItem> field0)? browseActions,
     TResult? Function()? browseReset,
-    TResult? Function(String field0)? profile,
     TResult? Function(List<QueueItem> field0)? queueItems,
     TResult? Function(bool field0)? pauseOnTrackEnd,
     TResult? Function(ImageKeyValue field0)? image,
@@ -3583,6 +3594,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String field0, String? field1)? coreDiscovered,
     TResult Function(String field0, String field1)? coreRegistered,
+    TResult Function(String field0, bool field1)? corePermitted,
     TResult Function(String field0)? coreLost,
     TResult Function(List<ZoneSummary> field0)? zonesChanged,
     TResult Function(Zone? field0)? zoneChanged,
@@ -3591,7 +3603,6 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     TResult Function(BrowseItems field0)? browseItems,
     TResult Function(List<BrowseItem> field0)? browseActions,
     TResult Function()? browseReset,
-    TResult Function(String field0)? profile,
     TResult Function(List<QueueItem> field0)? queueItems,
     TResult Function(bool field0)? pauseOnTrackEnd,
     TResult Function(ImageKeyValue field0)? image,
@@ -3610,6 +3621,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   TResult map<TResult extends Object?>({
     required TResult Function(RoonEvent_CoreDiscovered value) coreDiscovered,
     required TResult Function(RoonEvent_CoreRegistered value) coreRegistered,
+    required TResult Function(RoonEvent_CorePermitted value) corePermitted,
     required TResult Function(RoonEvent_CoreLost value) coreLost,
     required TResult Function(RoonEvent_ZonesChanged value) zonesChanged,
     required TResult Function(RoonEvent_ZoneChanged value) zoneChanged,
@@ -3618,7 +3630,6 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     required TResult Function(RoonEvent_BrowseItems value) browseItems,
     required TResult Function(RoonEvent_BrowseActions value) browseActions,
     required TResult Function(RoonEvent_BrowseReset value) browseReset,
-    required TResult Function(RoonEvent_Profile value) profile,
     required TResult Function(RoonEvent_QueueItems value) queueItems,
     required TResult Function(RoonEvent_PauseOnTrackEnd value) pauseOnTrackEnd,
     required TResult Function(RoonEvent_Image value) image,
@@ -3633,6 +3644,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult? Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult? Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult? Function(RoonEvent_CoreLost value)? coreLost,
     TResult? Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult? Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3641,7 +3653,6 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     TResult? Function(RoonEvent_BrowseItems value)? browseItems,
     TResult? Function(RoonEvent_BrowseActions value)? browseActions,
     TResult? Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult? Function(RoonEvent_Profile value)? profile,
     TResult? Function(RoonEvent_QueueItems value)? queueItems,
     TResult? Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult? Function(RoonEvent_Image value)? image,
@@ -3656,6 +3667,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RoonEvent_CoreDiscovered value)? coreDiscovered,
     TResult Function(RoonEvent_CoreRegistered value)? coreRegistered,
+    TResult Function(RoonEvent_CorePermitted value)? corePermitted,
     TResult Function(RoonEvent_CoreLost value)? coreLost,
     TResult Function(RoonEvent_ZonesChanged value)? zonesChanged,
     TResult Function(RoonEvent_ZoneChanged value)? zoneChanged,
@@ -3664,7 +3676,6 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     TResult Function(RoonEvent_BrowseItems value)? browseItems,
     TResult Function(RoonEvent_BrowseActions value)? browseActions,
     TResult Function(RoonEvent_BrowseReset value)? browseReset,
-    TResult Function(RoonEvent_Profile value)? profile,
     TResult Function(RoonEvent_QueueItems value)? queueItems,
     TResult Function(RoonEvent_PauseOnTrackEnd value)? pauseOnTrackEnd,
     TResult Function(RoonEvent_Image value)? image,

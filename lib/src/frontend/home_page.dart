@@ -138,6 +138,9 @@ class MyHomePageState extends State<MyHomePage> {
       if (appState.token == null) {
         subtitle = 'Use Roon Remote to enable extension';
         stateIcon = const Icon(Icons.info);
+      } else if (!appState.initialized) {
+        subtitle = 'Use Roon Remote to set extension access';
+        stateIcon = const Icon(Icons.lock_outlined);
       } else {
         subtitle = 'Served by: ${appState.serverName}';
         stateIcon = IconButton(
@@ -322,6 +325,8 @@ class QuickAccessButton extends StatelessWidget {
       icon = Icons.link_outlined;
     } else if (appState.token == null) {
       icon = Icons.phone_android_outlined;
+    } else if (!appState.initialized) {
+      icon = Icons.lock_outline;
     } else if (appState.zone == null) {
       icon = Icons.speaker_outlined;
     } else if (appState.pauseOnTrackEnd) {
@@ -351,6 +356,8 @@ class QuickAccessButton extends StatelessWidget {
       tooltip = 'Connect Manually';
     } else if (appState.token == null) {
       tooltip = 'Use Roon Remote to enable extension';
+    } else if (!appState.initialized) {
+      tooltip = 'Use Roon Remote to set extension access';
     } else if (appState.zone == null) {
       tooltip = 'Select Zone';
     } else if (appState.pauseOnTrackEnd) {
@@ -410,7 +417,8 @@ class QuickAccessButton extends StatelessWidget {
           onLongPress();
         },
         child: FloatingActionButton(
-          onPressed: appState.serverName != null && appState.token == null
+          onPressed: (appState.serverName != null && appState.token == null)
+            || (appState.serverName != null && !appState.initialized)
             ? null
             : () => takeAction(context),
           tooltip: getTooltip(),
