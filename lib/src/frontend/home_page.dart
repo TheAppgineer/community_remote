@@ -130,28 +130,42 @@ class MyHomePageState extends State<MyHomePage> {
     IconButton themeModeButton = (theme == ThemeMode.dark ? lightModeButton : darkModeButton);
     String subtitle;
     Widget? stateIcon;
+    String? userName = appState.userName;
 
     if (appState.serverName == null) {
       subtitle = 'No Roon Server discovered!';
-      stateIcon = const Icon(Icons.warning);
-    } else {
-      if (appState.token == null) {
-        subtitle = 'Use Roon Remote to enable extension';
-        stateIcon = const Icon(Icons.info);
-      } else if (!appState.initialized) {
-        subtitle = 'Use Roon Remote to set extension access';
-        stateIcon = const Icon(Icons.lock_outlined);
+      stateIcon = const Icon(Icons.warning, size: 32);
+    } else if (appState.token == null) {
+      if (userName == null) {
+        subtitle = 'Use Roon Remote to enable extension, or request access';
       } else {
-        subtitle = 'Served by: ${appState.serverName}';
-        stateIcon = IconButton(
-          icon: Icon(_profileIcon, size: 32),
-          onPressed: _profileStateEnabled
-            ? () {
-              BrowseLevelState.selectProfile();
-            }
-            : null,
-        );
+        subtitle = 'Hi ${appState.userName}, access is requested';
       }
+
+      stateIcon = const Icon(Icons.info, size: 32);
+    } else if (!appState.initialized) {
+      if (userName == null) {
+        subtitle = 'Use Roon Remote to set access, or request access';
+      } else {
+        subtitle = 'Hi ${appState.userName}, access is requested';
+      }
+
+      stateIcon = const Icon(Icons.info, size: 32);
+    } else {
+      if (userName == null) {
+        subtitle = 'Served by: ${appState.serverName}';
+      } else {
+        subtitle = 'Welcome ${appState.userName}, enjoy the music!';
+      }
+
+      stateIcon = IconButton(
+        icon: Icon(_profileIcon, size: 32),
+        onPressed: _profileStateEnabled
+          ? () {
+            BrowseLevelState.selectProfile();
+          }
+          : null,
+      );
     }
 
     return Scaffold(
@@ -310,6 +324,72 @@ class _SetupState extends State<Setup> {
   }
 }
 
+class Request extends StatefulWidget {
+  const Request({
+    super.key,
+    required this.appState,
+  });
+
+  final MyAppState appState;
+
+  @override
+  State<Request> createState() => _RequestState();
+}
+
+class _RequestState extends State<Request> {
+  String? _userName;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 600,
+      child: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Enter your name to request access',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20)),
+            TextField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                hintText: 'Your Name',
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _userName = value;
+                });
+              },
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20)),
+            ElevatedButton.icon(
+              onPressed: () {
+                if (_userName != null) {
+                  widget.appState.setUserName(_userName!);
+                  String message = '${_userName!} requested access';
+                  setStatusMessage(message: message);
+                }
+
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.lock_open_outlined),
+              label: const Text('Request Access'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class QuickAccessButton extends StatelessWidget {
   const QuickAccessButton({
     super.key,
@@ -318,15 +398,17 @@ class QuickAccessButton extends StatelessWidget {
 
   final MyAppState appState;
 
-  Widget getIcon() {
+  Widget getIcon(String? userName) {
     IconData icon;
 
     if (appState.serverName == null) {
       icon = Icons.link_outlined;
-    } else if (appState.token == null) {
-      icon = Icons.phone_android_outlined;
-    } else if (!appState.initialized) {
-      icon = Icons.lock_outline;
+    } else if (appState.token == null || !appState.initialized) {
+      if (userName == null) {
+        icon = Icons.lock_open_outlined;
+      } else {
+        icon = Icons.timelapse_outlined;
+      }
     } else if (appState.zone == null) {
       icon = Icons.speaker_outlined;
     } else if (appState.pauseOnTrackEnd) {
@@ -349,15 +431,17 @@ class QuickAccessButton extends StatelessWidget {
     return Icon(icon, size: 36);
   }
 
-  String? getTooltip() {
+  String? getTooltip(String? userName) {
     String? tooltip;
 
     if (appState.serverName == null) {
       tooltip = 'Connect Manually';
-    } else if (appState.token == null) {
-      tooltip = 'Use Roon Remote to enable extension';
-    } else if (!appState.initialized) {
-      tooltip = 'Use Roon Remote to set extension access';
+    } else if (appState.token == null || !appState.initialized) {
+      if (userName == null) {
+        tooltip = 'Request Access';
+      } else {
+        tooltip = 'Access is requested';
+      }
     } else if (appState.zone == null) {
       tooltip = 'Select Zone';
     } else if (appState.pauseOnTrackEnd) {
@@ -374,6 +458,13 @@ class QuickAccessButton extends StatelessWidget {
         builder: (context) => const Dialog(
           child: Setup(),
         )
+      );
+    } else if (appState.token == null || !appState.initialized) {
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          child: Request(appState: appState),
+        ),
       );
     } else if (appState.zone == null) {
       showDialog(
@@ -410,6 +501,8 @@ class QuickAccessButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? userName = appState.userName;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -417,12 +510,9 @@ class QuickAccessButton extends StatelessWidget {
           onLongPress();
         },
         child: FloatingActionButton(
-          onPressed: (appState.serverName != null && appState.token == null)
-            || (appState.serverName != null && !appState.initialized)
-            ? null
-            : () => takeAction(context),
-          tooltip: getTooltip(),
-          child: getIcon(),
+          onPressed: appState.token == null && userName != null ? null : () => takeAction(context),
+          tooltip: getTooltip(userName),
+          child: getIcon(userName),
         ),
       ),
     );

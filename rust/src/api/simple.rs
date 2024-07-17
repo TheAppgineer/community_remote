@@ -116,6 +116,14 @@ pub async fn get_server_properties() -> Option<(String, String)> {
     }
 }
 
+pub async fn set_status_message(message: String) {
+    let mut api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_mut() {
+        roon.set_status_message(message).await;
+    }
+}
+
 fn init_logger(support_path: &str, log_level: log::LevelFilter) {
     let log_path = format!("{support_path}/messages.log");
     let time_format = format_description!("[hour]:[minute]:[second].[subsecond]");

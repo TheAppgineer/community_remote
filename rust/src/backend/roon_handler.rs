@@ -6,6 +6,7 @@ use roon_api::browse::ListHint as BrowseListHint;
 use roon_api::{
     browse::{BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
+    status::Status,
     transport::{
         volume::Mute, Control, QueueItem, QueueOperation, State, Transport, Zone, ZoneSeek,
     },
@@ -45,6 +46,7 @@ pub struct RoonHandler {
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
     pub services: Vec<String>,
+    status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
     profile: Option<String>,
     api_token: Option<String>,
@@ -75,6 +77,7 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
+            status: None,
             access: None,
             profile: None,
             api_token: None,
@@ -93,9 +96,18 @@ impl RoonHandler {
         Some(format!("{}-{}", self.api_token.as_deref()?, SESSION_ID))
     }
 
+    pub async fn set_status_message(&self, message: String) {
+        if let Some(status) = self.status.as_ref() {
+            status.set_status(message, false).await;
+        }
+    }
+
     pub async fn handle_core_event(&mut self, core_event: CoreEvent) -> Option<()> {
         match core_event {
-            CoreEvent::Discovered(core, token) => {
+            CoreEvent::Discovered(mut core, token) => {
+                self.status = core.get_status().cloned();
+                self.set_status_message("Select Settings to setup access".to_owned())
+                    .await;
                 self.event_tx
                     .send(RoonEvent::CoreDiscovered(core.display_name, token))
                     .await

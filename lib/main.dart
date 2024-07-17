@@ -28,6 +28,7 @@ Future<void> main() async {
     "theme": "light",
     "view": Category.artists.index,
     "zoneId": null,
+    "userName": null,
   };
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
 

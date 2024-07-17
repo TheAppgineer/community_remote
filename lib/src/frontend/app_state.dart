@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:community_remote/src/frontend/browse.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
@@ -24,6 +26,17 @@ class MyAppState extends ChangeNotifier {
   final Map<String, List<Function>> _pendingImages = {};
   bool pauseOnTrackEnd = false;
   bool initialized = false;
+
+  setUserName(String userName) {
+    settings["userName"] = userName;
+
+    saveSettings(settings: jsonEncode(settings));
+    notifyListeners();
+  }
+
+  String? get userName {
+    return settings["userName"];
+  }
 
   static setBrowseCallback(String route, Function(BrowseItems) callback) {
     _browseCallbacks[route] = callback;
@@ -135,6 +148,13 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_CoreRegistered) {
       serverName = event.field0;
       token = event.field1;
+
+      String? userName = settings["userName"];
+
+      if (userName != null) {
+        String message = '$userName requested access';
+        setStatusMessage(message: message);
+      }
     } else if (event is RoonEvent_CorePermitted) {
       if (_profileCallback != null) {
         _profileCallback!(event.field0, event.field1);
@@ -142,6 +162,13 @@ class MyAppState extends ChangeNotifier {
 
       if (settings["zoneId"] != null) {
         selectZone(zoneId: settings["zoneId"]!);
+      }
+
+      String? userName = settings["userName"];
+
+      if (userName != null) {
+        String message = "$userName's remote";
+        setStatusMessage(message: message);
       }
 
       BrowseLevelState.onDestinationSelected(settings["view"]);

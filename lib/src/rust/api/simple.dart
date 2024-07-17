@@ -25,6 +25,9 @@ Future<void> setServerProperties({required String ip, String? port}) =>
 Future<(String, String)?> getServerProperties() =>
     RustLib.instance.api.crateApiSimpleGetServerProperties();
 
+Future<void> setStatusMessage({required String message}) =>
+    RustLib.instance.api.crateApiSimpleSetStatusMessage(message: message);
+
 Future<void> selectZone({required String zoneId}) =>
     RustLib.instance.api.crateApiSimpleSelectZone(zoneId: zoneId);
 

@@ -83,10 +83,7 @@ impl RoonAccess {
     ) -> Layout<RoonAccessData> {
         let has_error = false;
         let access = access.lock().unwrap();
-        let mut values = vec![ProfileEntry::from(
-            "User Selected".to_string(),
-            "".to_string(),
-        )];
+        let mut values = vec![ProfileEntry::from("Selectable".to_string(), "".to_string())];
 
         if let Some(profiles) = access.profiles.as_ref() {
             for profile in profiles {
@@ -96,7 +93,7 @@ impl RoonAccess {
 
         let dropdown = Dropdown {
             title: "Profile",
-            subtitle: None,
+            subtitle: Some("Allow profile selection or fix profile".to_owned()),
             values,
             setting: "profile",
         };

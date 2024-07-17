@@ -4,6 +4,7 @@ use roon_api::{
     browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
     info, settings,
+    status::{self, Status},
     transport::{
         volume::{ChangeMode, Mute},
         Control, State, Transport,
@@ -68,15 +69,20 @@ impl Roon {
         let server_clone = server.clone();
         tokio::spawn(async move {
             loop {
-                let (svc, settings, access) = RoonAccess::new(config_path_clone.clone(), &roon);
+                let (settings_svc, settings, access) =
+                    RoonAccess::new(config_path_clone.clone(), &roon);
+                let (status_svc, status) = Status::new(&roon);
                 let services = Some(vec![
                     Services::Browse(Browse::new()),
                     Services::Transport(Transport::new()),
                     Services::Image(Image::new()),
                     Services::Settings(settings),
+                    Services::Status(status),
                 ]);
-                let provided: HashMap<String, Svc> =
-                    HashMap::from([(settings::SVCNAME.to_owned(), svc)]);
+                let provided: HashMap<String, Svc> = HashMap::from([
+                    (settings::SVCNAME.to_owned(), settings_svc),
+                    (status::SVCNAME.to_owned(), status_svc),
+                ]);
                 let config_path = config_path_clone.clone();
                 let get_roon_state = Box::new(move || RoonApi::load_roon_state(&config_path));
                 let timeout = Duration::from_secs(20);
@@ -158,6 +164,12 @@ impl Roon {
         let server_props = serde_json::from_value::<ServerProps>(value).ok()?;
 
         Some((server_props.ip?, server_props.port?))
+    }
+
+    pub async fn set_status_message(&self, message: String) {
+        let handler = self.handler.lock().await;
+
+        handler.set_status_message(message).await;
     }
 
     pub async fn get_image(&self, image_key: String) -> Option<()> {
