@@ -1415,20 +1415,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 10:
         return RoonEvent_BrowseReset();
       case 11:
+        return RoonEvent_Profile(
+          dco_decode_String(raw[1]),
+        );
+      case 12:
         return RoonEvent_QueueItems(
           dco_decode_list_queue_item(raw[1]),
         );
-      case 12:
+      case 13:
         return RoonEvent_PauseOnTrackEnd(
           dco_decode_bool(raw[1]),
         );
-      case 13:
+      case 14:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 14:
-        return RoonEvent_SettingsSaved();
       case 15:
+        return RoonEvent_SettingsSaved();
+      case 16:
         return RoonEvent_Services(
           dco_decode_list_String(raw[1]),
         );
@@ -2261,17 +2265,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 10:
         return RoonEvent_BrowseReset();
       case 11:
+        var var_field0 = sse_decode_String(deserializer);
+        return RoonEvent_Profile(var_field0);
+      case 12:
         var var_field0 = sse_decode_list_queue_item(deserializer);
         return RoonEvent_QueueItems(var_field0);
-      case 12:
+      case 13:
         var var_field0 = sse_decode_bool(deserializer);
         return RoonEvent_PauseOnTrackEnd(var_field0);
-      case 13:
+      case 14:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 14:
-        return RoonEvent_SettingsSaved();
       case 15:
+        return RoonEvent_SettingsSaved();
+      case 16:
         var var_field0 = sse_decode_list_String(deserializer);
         return RoonEvent_Services(var_field0);
       default:
@@ -3045,19 +3052,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_list_browse_item(field0, serializer);
       case RoonEvent_BrowseReset():
         sse_encode_i_32(10, serializer);
-      case RoonEvent_QueueItems(field0: final field0):
+      case RoonEvent_Profile(field0: final field0):
         sse_encode_i_32(11, serializer);
+        sse_encode_String(field0, serializer);
+      case RoonEvent_QueueItems(field0: final field0):
+        sse_encode_i_32(12, serializer);
         sse_encode_list_queue_item(field0, serializer);
       case RoonEvent_PauseOnTrackEnd(field0: final field0):
-        sse_encode_i_32(12, serializer);
+        sse_encode_i_32(13, serializer);
         sse_encode_bool(field0, serializer);
       case RoonEvent_Image(field0: final field0):
-        sse_encode_i_32(13, serializer);
+        sse_encode_i_32(14, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
-        sse_encode_i_32(14, serializer);
-      case RoonEvent_Services(field0: final field0):
         sse_encode_i_32(15, serializer);
+      case RoonEvent_Services(field0: final field0):
+        sse_encode_i_32(16, serializer);
         sse_encode_list_String(field0, serializer);
       default:
         throw UnimplementedError('');

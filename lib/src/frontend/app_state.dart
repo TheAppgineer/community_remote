@@ -176,6 +176,10 @@ class MyAppState extends ChangeNotifier {
       if (!initialized) {
         initialized = true;
       }
+    } else if (event is RoonEvent_Profile) {
+      if (_profileCallback != null) {
+        _profileCallback!(event.field0, true);
+      }
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
     } else if (event is RoonEvent_ZoneChanged) {

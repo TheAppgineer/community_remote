@@ -184,6 +184,9 @@ sealed class RoonEvent with _$RoonEvent {
     List<BrowseItem> field0,
   ) = RoonEvent_BrowseActions;
   const factory RoonEvent.browseReset() = RoonEvent_BrowseReset;
+  const factory RoonEvent.profile(
+    String field0,
+  ) = RoonEvent_Profile;
   const factory RoonEvent.queueItems(
     List<QueueItem> field0,
   ) = RoonEvent_QueueItems;

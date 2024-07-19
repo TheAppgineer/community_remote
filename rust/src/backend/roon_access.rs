@@ -77,6 +77,13 @@ impl RoonAccess {
         }
     }
 
+    pub fn get_profile(&self) -> Option<String> {
+        match self.data.as_ref() {
+            Some(data) if !data.profile.is_empty() => Some(data.profile.to_owned()),
+            _ => None,
+        }
+    }
+
     fn make_layout(
         settings: RoonAccessData,
         access: Arc<Mutex<RoonAccess>>,

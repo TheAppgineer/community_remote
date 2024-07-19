@@ -33,6 +33,7 @@ pub enum RoonEvent {
     BrowseItems(BrowseItems),
     BrowseActions(Vec<BrowseItem>),
     BrowseReset,
+    Profile(String),
     QueueItems(Vec<QueueItem>),
     PauseOnTrackEnd(bool),
     Image(ImageKeyValue),

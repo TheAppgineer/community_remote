@@ -29,12 +29,6 @@ class MyHomePageState extends State<MyHomePage> {
   IconData? _profileIcon;
   bool _profileStateEnabled = true;
 
-  _setProfileState(bool enabled) {
-    setState(() {
-      _profileStateEnabled = enabled;
-    });
-  }
-
   _setProfileIcon(String profileName, bool enabled) {
     IconData icon;
 
@@ -181,7 +175,7 @@ class MyHomePageState extends State<MyHomePage> {
           themeModeButton,
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -191,19 +185,19 @@ class MyHomePageState extends State<MyHomePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  HamburgerMenu(profileStateCallback: _setProfileState),
-                  const Expanded(
+                  HamburgerMenu(),
+                  Expanded(
                     flex: 5,
                     child: Browse(),
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 5,
                     child: Queue(),
                   ),
                 ],
               ),
             ),
-            const NowPlayingWidget(),
+            NowPlayingWidget(),
           ],
         ),
       ),
@@ -520,8 +514,7 @@ class QuickAccessButton extends StatelessWidget {
 }
 
 class HamburgerMenu extends StatefulWidget {
-  const HamburgerMenu({super.key, this.profileStateCallback});
-  final Function(bool)? profileStateCallback;
+  const HamburgerMenu({super.key});
 
   @override
   State<HamburgerMenu> createState() => _HamburgerMenuState();
@@ -678,12 +671,6 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
             onDestinationSelected: (value) {
               if (value == 0) {
                 if (_setup) {
-                  if (widget.profileStateCallback != null) {
-                    List hidden = appState.settings['hidden'] ?? [];
-
-                    widget.profileStateCallback!(!hidden.contains(Category.settings.index));
-                  }
-
                   saveSettings(settings: jsonEncode(appState.settings));
 
                   setState(() {

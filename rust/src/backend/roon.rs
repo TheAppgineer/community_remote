@@ -287,7 +287,12 @@ impl Roon {
             };
 
             if item.hint == Some(BrowseItemHint::Action) {
-                opts.zone_or_output_id = handler.zone_id.to_owned();
+                // Only provide zone_id if zone is online
+                opts.zone_or_output_id = handler
+                    .zone_id
+                    .as_ref()
+                    .filter(|zone_id| handler.zone_map.contains_key(*zone_id))
+                    .cloned();
             }
 
             handler.browse_offset = 0;

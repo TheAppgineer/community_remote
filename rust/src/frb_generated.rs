@@ -1964,22 +1964,26 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::BrowseReset;
             }
             11 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::Profile(var_field0);
+            }
+            12 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::QueueItems(var_field0);
             }
-            12 => {
+            13 => {
                 let mut var_field0 = <bool>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::PauseOnTrackEnd(var_field0);
             }
-            13 => {
+            14 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            14 => {
+            15 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
-            15 => {
+            16 => {
                 let mut var_field0 = <Vec<String>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Services(var_field0);
             }
@@ -2677,18 +2681,21 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
                 [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             crate::api::simple::RoonEvent::BrowseReset => [10.into_dart()].into_dart(),
-            crate::api::simple::RoonEvent::QueueItems(field0) => {
+            crate::api::simple::RoonEvent::Profile(field0) => {
                 [11.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
                 [12.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
                 [13.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [14.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Image(field0) => {
+                [14.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::SettingsSaved => [15.into_dart()].into_dart(),
             crate::api::simple::RoonEvent::Services(field0) => {
-                [15.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+                [16.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -3527,23 +3534,27 @@ impl SseEncode for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::BrowseReset => {
                 <i32>::sse_encode(10, serializer);
             }
-            crate::api::simple::RoonEvent::QueueItems(field0) => {
+            crate::api::simple::RoonEvent::Profile(field0) => {
                 <i32>::sse_encode(11, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
+                <i32>::sse_encode(12, serializer);
                 <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
-                <i32>::sse_encode(12, serializer);
+                <i32>::sse_encode(13, serializer);
                 <bool>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::Image(field0) => {
-                <i32>::sse_encode(13, serializer);
+                <i32>::sse_encode(14, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(14, serializer);
+                <i32>::sse_encode(15, serializer);
             }
             crate::api::simple::RoonEvent::Services(field0) => {
-                <i32>::sse_encode(15, serializer);
+                <i32>::sse_encode(16, serializer);
                 <Vec<String>>::sse_encode(field0, serializer);
             }
             _ => {
