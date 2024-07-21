@@ -603,7 +603,7 @@ impl RoonHandler {
         None
     }
 
-    async fn send_zone_list(&self) -> Option<()> {
+    async fn send_zone_list(&self) {
         let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.display_name.cmp(&b.display_name);
         let mut zones = self
             .zone_map
@@ -642,8 +642,6 @@ impl RoonHandler {
             .send(RoonEvent::ZonesChanged(zones))
             .await
             .unwrap();
-
-        Some(())
     }
 
     pub async fn handle_mute_list(&mut self) -> Option<()> {
