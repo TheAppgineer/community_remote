@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -964757133;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 323463929;
 
 // Section: executor
 
@@ -68,13 +68,12 @@ fn wire__crate__api__simple__browse_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_category = <i32>::sse_decode(&mut deserializer);
-            let api_session_id = <i32>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::simple::browse(api_category, api_session_id).await;
+                            crate::api::simple::browse(api_category).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -106,13 +105,12 @@ fn wire__crate__api__simple__browse_back_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_session_id = <i32>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::simple::browse_back(api_session_id).await;
+                            crate::api::simple::browse_back().await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -182,19 +180,13 @@ fn wire__crate__api__simple__browse_with_input_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_category = <i32>::sse_decode(&mut deserializer);
-            let api_session_id = <i32>::sse_decode(&mut deserializer);
             let api_input = <Option<String>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::simple::browse_with_input(
-                                api_category,
-                                api_session_id,
-                                api_input,
-                            )
-                            .await;
+                            crate::api::simple::browse_with_input(api_category, api_input).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -739,44 +731,6 @@ fn wire__crate__api__simple__pause_on_track_end_impl(
         },
     )
 }
-fn wire__crate__api__simple__query_profile_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "query_profile",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_session_id = <i32>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, ()>(
-                    (move || async move {
-                        let output_ok = Result::<_, ()>::Ok({
-                            crate::api::simple::query_profile(api_session_id).await;
-                        })?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
 fn wire__crate__api__simple__save_settings_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -837,14 +791,13 @@ fn wire__crate__api__simple__search_artist_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_session_id = <i32>::sse_decode(&mut deserializer);
             let api_artist = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, ()>(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::simple::search_artist(api_session_id, api_artist).await;
+                            crate::api::simple::search_artist(api_artist).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -876,7 +829,6 @@ fn wire__crate__api__simple__select_browse_item_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_session_id = <i32>::sse_decode(&mut deserializer);
             let api_item =
                 <crate::api::roon_browse_mirror::BrowseItem>::sse_decode(&mut deserializer);
             deserializer.end();
@@ -884,7 +836,7 @@ fn wire__crate__api__simple__select_browse_item_impl(
                 transform_result_sse::<_, ()>(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
-                            crate::api::simple::select_browse_item(api_session_id, api_item).await;
+                            crate::api::simple::select_browse_item(api_item).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -1000,6 +952,44 @@ fn wire__crate__api__simple__set_server_properties_impl(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
                             crate::api::simple::set_server_properties(api_ip, api_port).await;
+                        })?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__simple__set_status_message_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "set_status_message",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_message = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok({
+                            crate::api::simple::set_status_message(api_message).await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -1934,61 +1924,66 @@ impl SseDecode for crate::api::simple::RoonEvent {
             }
             2 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::simple::RoonEvent::CoreLost(var_field0);
+                let mut var_field1 = <bool>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::CorePermitted(var_field0, var_field1);
             }
             3 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::CoreLost(var_field0);
+            }
+            4 => {
                 let mut var_field0 =
                     <Vec<crate::api::simple::ZoneSummary>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::ZonesChanged(var_field0);
             }
-            4 => {
+            5 => {
                 let mut var_field0 =
                     <Option<crate::api::roon_transport_mirror::Zone>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::ZoneChanged(var_field0);
             }
-            5 => {
+            6 => {
                 let mut var_field0 =
                     <crate::api::roon_transport_mirror::ZoneSeek>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::ZoneSeek(var_field0);
             }
-            6 => {
+            7 => {
                 let mut var_field0 =
                     <std::collections::HashMap<String, String>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::OutputsChanged(var_field0);
             }
-            7 => {
+            8 => {
                 let mut var_field0 = <crate::api::simple::BrowseItems>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::BrowseItems(var_field0);
             }
-            8 => {
+            9 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::BrowseActions(var_field0);
             }
-            9 => {
+            10 => {
                 return crate::api::simple::RoonEvent::BrowseReset;
             }
-            10 => {
+            11 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Profile(var_field0);
             }
-            11 => {
+            12 => {
                 let mut var_field0 =
                     <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::QueueItems(var_field0);
             }
-            12 => {
+            13 => {
                 let mut var_field0 = <bool>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::PauseOnTrackEnd(var_field0);
             }
-            13 => {
+            14 => {
                 let mut var_field0 = <crate::api::simple::ImageKeyValue>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Image(var_field0);
             }
-            14 => {
+            15 => {
                 return crate::api::simple::RoonEvent::SettingsSaved;
             }
-            15 => {
+            16 => {
                 let mut var_field0 = <Vec<String>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Services(var_field0);
             }
@@ -2241,15 +2236,15 @@ fn pde_ffi_dispatcher_primary_impl(
         ),
         17 => wire__crate__api__simple__pause_all_impl(port, ptr, rust_vec_len, data_len),
         18 => wire__crate__api__simple__pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__simple__query_profile_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__simple__save_settings_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__simple__search_artist_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__simple__select_browse_item_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__simple__select_queue_item_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire__crate__api__simple__select_zone_impl(port, ptr, rust_vec_len, data_len),
-        25 => {
+        19 => wire__crate__api__simple__save_settings_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__simple__search_artist_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__simple__select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__simple__select_queue_item_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__simple__select_zone_impl(port, ptr, rust_vec_len, data_len),
+        24 => {
             wire__crate__api__simple__set_server_properties_impl(port, ptr, rust_vec_len, data_len)
         }
+        25 => wire__crate__api__simple__set_status_message_impl(port, ptr, rust_vec_len, data_len),
         26 => wire__crate__api__simple__standby_impl(port, ptr, rust_vec_len, data_len),
         27 => wire__crate__api__simple__start_roon_impl(port, ptr, rust_vec_len, data_len),
         28 => wire__crate__api__simple__transfer_from_zone_impl(port, ptr, rust_vec_len, data_len),
@@ -2658,43 +2653,49 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
                 field1.into_into_dart().into_dart(),
             ]
             .into_dart(),
+            crate::api::simple::RoonEvent::CorePermitted(field0, field1) => [
+                2.into_dart(),
+                field0.into_into_dart().into_dart(),
+                field1.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
             crate::api::simple::RoonEvent::CoreLost(field0) => {
-                [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
-            crate::api::simple::RoonEvent::ZonesChanged(field0) => {
                 [3.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::ZoneChanged(field0) => {
+            crate::api::simple::RoonEvent::ZonesChanged(field0) => {
                 [4.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::ZoneSeek(field0) => {
+            crate::api::simple::RoonEvent::ZoneChanged(field0) => {
                 [5.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::OutputsChanged(field0) => {
+            crate::api::simple::RoonEvent::ZoneSeek(field0) => {
                 [6.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseItems(field0) => {
+            crate::api::simple::RoonEvent::OutputsChanged(field0) => {
                 [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseActions(field0) => {
+            crate::api::simple::RoonEvent::BrowseItems(field0) => {
                 [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::BrowseReset => [9.into_dart()].into_dart(),
-            crate::api::simple::RoonEvent::Profile(field0) => {
-                [10.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            crate::api::simple::RoonEvent::BrowseActions(field0) => {
+                [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::QueueItems(field0) => {
+            crate::api::simple::RoonEvent::BrowseReset => [10.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Profile(field0) => {
                 [11.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
+            crate::api::simple::RoonEvent::QueueItems(field0) => {
                 [12.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::Image(field0) => {
+            crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
                 [13.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::SettingsSaved => [14.into_dart()].into_dart(),
+            crate::api::simple::RoonEvent::Image(field0) => {
+                [14.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::SettingsSaved => [15.into_dart()].into_dart(),
             crate::api::simple::RoonEvent::Services(field0) => {
-                [15.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+                [16.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -3497,58 +3498,63 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <String>::sse_encode(field0, serializer);
                 <String>::sse_encode(field1, serializer);
             }
-            crate::api::simple::RoonEvent::CoreLost(field0) => {
+            crate::api::simple::RoonEvent::CorePermitted(field0, field1) => {
                 <i32>::sse_encode(2, serializer);
+                <String>::sse_encode(field0, serializer);
+                <bool>::sse_encode(field1, serializer);
+            }
+            crate::api::simple::RoonEvent::CoreLost(field0) => {
+                <i32>::sse_encode(3, serializer);
                 <String>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::ZonesChanged(field0) => {
-                <i32>::sse_encode(3, serializer);
+                <i32>::sse_encode(4, serializer);
                 <Vec<crate::api::simple::ZoneSummary>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::ZoneChanged(field0) => {
-                <i32>::sse_encode(4, serializer);
+                <i32>::sse_encode(5, serializer);
                 <Option<crate::api::roon_transport_mirror::Zone>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::ZoneSeek(field0) => {
-                <i32>::sse_encode(5, serializer);
+                <i32>::sse_encode(6, serializer);
                 <crate::api::roon_transport_mirror::ZoneSeek>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::OutputsChanged(field0) => {
-                <i32>::sse_encode(6, serializer);
+                <i32>::sse_encode(7, serializer);
                 <std::collections::HashMap<String, String>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseItems(field0) => {
-                <i32>::sse_encode(7, serializer);
+                <i32>::sse_encode(8, serializer);
                 <crate::api::simple::BrowseItems>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseActions(field0) => {
-                <i32>::sse_encode(8, serializer);
+                <i32>::sse_encode(9, serializer);
                 <Vec<crate::api::roon_browse_mirror::BrowseItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::BrowseReset => {
-                <i32>::sse_encode(9, serializer);
+                <i32>::sse_encode(10, serializer);
             }
             crate::api::simple::RoonEvent::Profile(field0) => {
-                <i32>::sse_encode(10, serializer);
+                <i32>::sse_encode(11, serializer);
                 <String>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::QueueItems(field0) => {
-                <i32>::sse_encode(11, serializer);
+                <i32>::sse_encode(12, serializer);
                 <Vec<crate::api::roon_transport_mirror::QueueItem>>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::PauseOnTrackEnd(field0) => {
-                <i32>::sse_encode(12, serializer);
+                <i32>::sse_encode(13, serializer);
                 <bool>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::Image(field0) => {
-                <i32>::sse_encode(13, serializer);
+                <i32>::sse_encode(14, serializer);
                 <crate::api::simple::ImageKeyValue>::sse_encode(field0, serializer);
             }
             crate::api::simple::RoonEvent::SettingsSaved => {
-                <i32>::sse_encode(14, serializer);
+                <i32>::sse_encode(15, serializer);
             }
             crate::api::simple::RoonEvent::Services(field0) => {
-                <i32>::sse_encode(15, serializer);
+                <i32>::sse_encode(16, serializer);
                 <Vec<String>>::sse_encode(field0, serializer);
             }
             _ => {

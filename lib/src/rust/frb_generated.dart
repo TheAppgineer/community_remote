@@ -60,7 +60,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -964757133;
+  int get rustContentHash => 323463929;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -71,15 +71,14 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Future<void> crateApiSimpleBrowse(
-      {required int category, required int sessionId});
+  Future<void> crateApiSimpleBrowse({required int category});
 
-  Future<void> crateApiSimpleBrowseBack({required int sessionId});
+  Future<void> crateApiSimpleBrowseBack();
 
   Future<void> crateApiSimpleBrowseNextPage();
 
   Future<void> crateApiSimpleBrowseWithInput(
-      {required int category, required int sessionId, String? input});
+      {required int category, String? input});
 
   Future<void> crateApiSimpleChangeVolume(
       {required String outputId, required ChangeMode how, required int value});
@@ -114,15 +113,11 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiSimplePauseOnTrackEnd();
 
-  Future<void> crateApiSimpleQueryProfile({required int sessionId});
-
   Future<void> crateApiSimpleSaveSettings({required String settings});
 
-  Future<void> crateApiSimpleSearchArtist(
-      {required int sessionId, required String artist});
+  Future<void> crateApiSimpleSearchArtist({required String artist});
 
-  Future<void> crateApiSimpleSelectBrowseItem(
-      {required int sessionId, required BrowseItem item});
+  Future<void> crateApiSimpleSelectBrowseItem({required BrowseItem item});
 
   Future<void> crateApiSimpleSelectQueueItem({required int queueItemId});
 
@@ -130,6 +125,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiSimpleSetServerProperties(
       {required String ip, String? port});
+
+  Future<void> crateApiSimpleSetStatusMessage({required String message});
 
   Future<void> crateApiSimpleStandby({required String outputId});
 
@@ -149,13 +146,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Future<void> crateApiSimpleBrowse(
-      {required int category, required int sessionId}) {
+  Future<void> crateApiSimpleBrowse({required int category}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(category, serializer);
-        sse_encode_i_32(sessionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 1, port: port_);
       },
@@ -164,22 +159,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiSimpleBrowseConstMeta,
-      argValues: [category, sessionId],
+      argValues: [category],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta get kCrateApiSimpleBrowseConstMeta => const TaskConstMeta(
         debugName: "browse",
-        argNames: ["category", "sessionId"],
+        argNames: ["category"],
       );
 
   @override
-  Future<void> crateApiSimpleBrowseBack({required int sessionId}) {
+  Future<void> crateApiSimpleBrowseBack() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_i_32(sessionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 2, port: port_);
       },
@@ -188,14 +182,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiSimpleBrowseBackConstMeta,
-      argValues: [sessionId],
+      argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta get kCrateApiSimpleBrowseBackConstMeta => const TaskConstMeta(
         debugName: "browse_back",
-        argNames: ["sessionId"],
+        argNames: [],
       );
 
   @override
@@ -224,12 +218,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<void> crateApiSimpleBrowseWithInput(
-      {required int category, required int sessionId, String? input}) {
+      {required int category, String? input}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(category, serializer);
-        sse_encode_i_32(sessionId, serializer);
         sse_encode_opt_String(input, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 4, port: port_);
@@ -239,7 +232,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiSimpleBrowseWithInputConstMeta,
-      argValues: [category, sessionId, input],
+      argValues: [category, input],
       apiImpl: this,
     ));
   }
@@ -247,7 +240,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiSimpleBrowseWithInputConstMeta =>
       const TaskConstMeta(
         debugName: "browse_with_input",
-        argNames: ["category", "sessionId", "input"],
+        argNames: ["category", "input"],
       );
 
   @override
@@ -596,37 +589,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSimpleQueryProfile({required int sessionId}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_i_32(sessionId, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 19, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
-      constMeta: kCrateApiSimpleQueryProfileConstMeta,
-      argValues: [sessionId],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiSimpleQueryProfileConstMeta => const TaskConstMeta(
-        debugName: "query_profile",
-        argNames: ["sessionId"],
-      );
-
-  @override
   Future<void> crateApiSimpleSaveSettings({required String settings}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(settings, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 20, port: port_);
+            funcId: 19, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -644,13 +613,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateApiSimpleSearchArtist(
-      {required int sessionId, required String artist}) {
+  Future<void> crateApiSimpleSearchArtist({required String artist}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_i_32(sessionId, serializer);
         sse_encode_String(artist, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 20, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiSimpleSearchArtistConstMeta,
+      argValues: [artist],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiSimpleSearchArtistConstMeta => const TaskConstMeta(
+        debugName: "search_artist",
+        argNames: ["artist"],
+      );
+
+  @override
+  Future<void> crateApiSimpleSelectBrowseItem({required BrowseItem item}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_browse_item(item, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 21, port: port_);
       },
@@ -658,34 +649,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiSimpleSearchArtistConstMeta,
-      argValues: [sessionId, artist],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta get kCrateApiSimpleSearchArtistConstMeta => const TaskConstMeta(
-        debugName: "search_artist",
-        argNames: ["sessionId", "artist"],
-      );
-
-  @override
-  Future<void> crateApiSimpleSelectBrowseItem(
-      {required int sessionId, required BrowseItem item}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_i_32(sessionId, serializer);
-        sse_encode_box_autoadd_browse_item(item, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 22, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: null,
-      ),
       constMeta: kCrateApiSimpleSelectBrowseItemConstMeta,
-      argValues: [sessionId, item],
+      argValues: [item],
       apiImpl: this,
     ));
   }
@@ -693,7 +658,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiSimpleSelectBrowseItemConstMeta =>
       const TaskConstMeta(
         debugName: "select_browse_item",
-        argNames: ["sessionId", "item"],
+        argNames: ["item"],
       );
 
   @override
@@ -703,7 +668,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_u_32(queueItemId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 23, port: port_);
+            funcId: 22, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -728,7 +693,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(zoneId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 24, port: port_);
+            funcId: 23, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -754,7 +719,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(ip, serializer);
         sse_encode_opt_String(port, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 25, port: port_);
+            funcId: 24, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -770,6 +735,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(
         debugName: "set_server_properties",
         argNames: ["ip", "port"],
+      );
+
+  @override
+  Future<void> crateApiSimpleSetStatusMessage({required String message}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(message, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 25, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiSimpleSetStatusMessageConstMeta,
+      argValues: [message],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiSimpleSetStatusMessageConstMeta =>
+      const TaskConstMeta(
+        debugName: "set_status_message",
+        argNames: ["message"],
       );
 
   @override
@@ -1390,54 +1380,59 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_String(raw[2]),
         );
       case 2:
+        return RoonEvent_CorePermitted(
+          dco_decode_String(raw[1]),
+          dco_decode_bool(raw[2]),
+        );
+      case 3:
         return RoonEvent_CoreLost(
           dco_decode_String(raw[1]),
         );
-      case 3:
+      case 4:
         return RoonEvent_ZonesChanged(
           dco_decode_list_zone_summary(raw[1]),
         );
-      case 4:
+      case 5:
         return RoonEvent_ZoneChanged(
           dco_decode_opt_box_autoadd_zone(raw[1]),
         );
-      case 5:
+      case 6:
         return RoonEvent_ZoneSeek(
           dco_decode_box_autoadd_zone_seek(raw[1]),
         );
-      case 6:
+      case 7:
         return RoonEvent_OutputsChanged(
           dco_decode_Map_String_String(raw[1]),
         );
-      case 7:
+      case 8:
         return RoonEvent_BrowseItems(
           dco_decode_box_autoadd_browse_items(raw[1]),
         );
-      case 8:
+      case 9:
         return RoonEvent_BrowseActions(
           dco_decode_list_browse_item(raw[1]),
         );
-      case 9:
-        return RoonEvent_BrowseReset();
       case 10:
+        return RoonEvent_BrowseReset();
+      case 11:
         return RoonEvent_Profile(
           dco_decode_String(raw[1]),
         );
-      case 11:
+      case 12:
         return RoonEvent_QueueItems(
           dco_decode_list_queue_item(raw[1]),
         );
-      case 12:
+      case 13:
         return RoonEvent_PauseOnTrackEnd(
           dco_decode_bool(raw[1]),
         );
-      case 13:
+      case 14:
         return RoonEvent_Image(
           dco_decode_box_autoadd_image_key_value(raw[1]),
         );
-      case 14:
-        return RoonEvent_SettingsSaved();
       case 15:
+        return RoonEvent_SettingsSaved();
+      case 16:
         return RoonEvent_Services(
           dco_decode_list_String(raw[1]),
         );
@@ -2244,42 +2239,46 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return RoonEvent_CoreRegistered(var_field0, var_field1);
       case 2:
         var var_field0 = sse_decode_String(deserializer);
-        return RoonEvent_CoreLost(var_field0);
+        var var_field1 = sse_decode_bool(deserializer);
+        return RoonEvent_CorePermitted(var_field0, var_field1);
       case 3:
+        var var_field0 = sse_decode_String(deserializer);
+        return RoonEvent_CoreLost(var_field0);
+      case 4:
         var var_field0 = sse_decode_list_zone_summary(deserializer);
         return RoonEvent_ZonesChanged(var_field0);
-      case 4:
+      case 5:
         var var_field0 = sse_decode_opt_box_autoadd_zone(deserializer);
         return RoonEvent_ZoneChanged(var_field0);
-      case 5:
+      case 6:
         var var_field0 = sse_decode_box_autoadd_zone_seek(deserializer);
         return RoonEvent_ZoneSeek(var_field0);
-      case 6:
+      case 7:
         var var_field0 = sse_decode_Map_String_String(deserializer);
         return RoonEvent_OutputsChanged(var_field0);
-      case 7:
+      case 8:
         var var_field0 = sse_decode_box_autoadd_browse_items(deserializer);
         return RoonEvent_BrowseItems(var_field0);
-      case 8:
+      case 9:
         var var_field0 = sse_decode_list_browse_item(deserializer);
         return RoonEvent_BrowseActions(var_field0);
-      case 9:
-        return RoonEvent_BrowseReset();
       case 10:
+        return RoonEvent_BrowseReset();
+      case 11:
         var var_field0 = sse_decode_String(deserializer);
         return RoonEvent_Profile(var_field0);
-      case 11:
+      case 12:
         var var_field0 = sse_decode_list_queue_item(deserializer);
         return RoonEvent_QueueItems(var_field0);
-      case 12:
+      case 13:
         var var_field0 = sse_decode_bool(deserializer);
         return RoonEvent_PauseOnTrackEnd(var_field0);
-      case 13:
+      case 14:
         var var_field0 = sse_decode_box_autoadd_image_key_value(deserializer);
         return RoonEvent_Image(var_field0);
-      case 14:
-        return RoonEvent_SettingsSaved();
       case 15:
+        return RoonEvent_SettingsSaved();
+      case 16:
         var var_field0 = sse_decode_list_String(deserializer);
         return RoonEvent_Services(var_field0);
       default:
@@ -3026,45 +3025,49 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_i_32(1, serializer);
         sse_encode_String(field0, serializer);
         sse_encode_String(field1, serializer);
-      case RoonEvent_CoreLost(field0: final field0):
+      case RoonEvent_CorePermitted(field0: final field0, field1: final field1):
         sse_encode_i_32(2, serializer);
         sse_encode_String(field0, serializer);
-      case RoonEvent_ZonesChanged(field0: final field0):
+        sse_encode_bool(field1, serializer);
+      case RoonEvent_CoreLost(field0: final field0):
         sse_encode_i_32(3, serializer);
+        sse_encode_String(field0, serializer);
+      case RoonEvent_ZonesChanged(field0: final field0):
+        sse_encode_i_32(4, serializer);
         sse_encode_list_zone_summary(field0, serializer);
       case RoonEvent_ZoneChanged(field0: final field0):
-        sse_encode_i_32(4, serializer);
+        sse_encode_i_32(5, serializer);
         sse_encode_opt_box_autoadd_zone(field0, serializer);
       case RoonEvent_ZoneSeek(field0: final field0):
-        sse_encode_i_32(5, serializer);
+        sse_encode_i_32(6, serializer);
         sse_encode_box_autoadd_zone_seek(field0, serializer);
       case RoonEvent_OutputsChanged(field0: final field0):
-        sse_encode_i_32(6, serializer);
+        sse_encode_i_32(7, serializer);
         sse_encode_Map_String_String(field0, serializer);
       case RoonEvent_BrowseItems(field0: final field0):
-        sse_encode_i_32(7, serializer);
+        sse_encode_i_32(8, serializer);
         sse_encode_box_autoadd_browse_items(field0, serializer);
       case RoonEvent_BrowseActions(field0: final field0):
-        sse_encode_i_32(8, serializer);
+        sse_encode_i_32(9, serializer);
         sse_encode_list_browse_item(field0, serializer);
       case RoonEvent_BrowseReset():
-        sse_encode_i_32(9, serializer);
-      case RoonEvent_Profile(field0: final field0):
         sse_encode_i_32(10, serializer);
+      case RoonEvent_Profile(field0: final field0):
+        sse_encode_i_32(11, serializer);
         sse_encode_String(field0, serializer);
       case RoonEvent_QueueItems(field0: final field0):
-        sse_encode_i_32(11, serializer);
+        sse_encode_i_32(12, serializer);
         sse_encode_list_queue_item(field0, serializer);
       case RoonEvent_PauseOnTrackEnd(field0: final field0):
-        sse_encode_i_32(12, serializer);
+        sse_encode_i_32(13, serializer);
         sse_encode_bool(field0, serializer);
       case RoonEvent_Image(field0: final field0):
-        sse_encode_i_32(13, serializer);
+        sse_encode_i_32(14, serializer);
         sse_encode_box_autoadd_image_key_value(field0, serializer);
       case RoonEvent_SettingsSaved():
-        sse_encode_i_32(14, serializer);
-      case RoonEvent_Services(field0: final field0):
         sse_encode_i_32(15, serializer);
+      case RoonEvent_Services(field0: final field0):
+        sse_encode_i_32(16, serializer);
         sse_encode_list_String(field0, serializer);
       default:
         throw UnimplementedError('');

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:community_remote/src/frontend/browse.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
@@ -5,7 +7,6 @@ import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 
 const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
-const exploreId = 0;
 
 class MyAppState extends ChangeNotifier {
   static final Map<String, Function(BrowseItems)> _browseCallbacks = {};
@@ -24,7 +25,18 @@ class MyAppState extends ChangeNotifier {
   Function? _queueRemainingCallback;
   final Map<String, List<Function>> _pendingImages = {};
   bool pauseOnTrackEnd = false;
-  bool _initialized = false;
+  bool initialized = false;
+
+  setUserName(String userName) {
+    settings["userName"] = userName;
+
+    saveSettings(settings: jsonEncode(settings));
+    notifyListeners();
+  }
+
+  String? get userName {
+    return settings["userName"];
+  }
 
   static setBrowseCallback(String route, Function(BrowseItems) callback) {
     _browseCallbacks[route] = callback;
@@ -132,25 +144,41 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_CoreDiscovered) {
       serverName = event.field0;
       token = event.field1;
-      _initialized = false;
+      initialized = false;
     } else if (event is RoonEvent_CoreRegistered) {
       serverName = event.field0;
       token = event.field1;
 
-      queryProfile(sessionId: exploreId);
+      String? userName = settings["userName"];
+
+      if (userName != null) {
+        String message = '$userName requested access';
+        setStatusMessage(message: message);
+      }
+    } else if (event is RoonEvent_CorePermitted) {
+      if (_profileCallback != null) {
+        _profileCallback!(event.field0, event.field1);
+      }
 
       if (settings["zoneId"] != null) {
         selectZone(zoneId: settings["zoneId"]!);
       }
-    } else if (event is RoonEvent_Profile) {
-      if (_profileCallback != null) {
-        List hidden = settings['hidden'] ?? [];
-        _profileCallback!(event.field0, !hidden.contains(Category.settings.index));
+
+      String? userName = settings["userName"];
+
+      if (userName != null) {
+        String message = "$userName's remote";
+        setStatusMessage(message: message);
       }
 
-      if (!_initialized) {
-        _initialized = true;
-        BrowseLevelState.onDestinationSelected(settings["view"]);
+      BrowseLevelState.onDestinationSelected(settings["view"]);
+
+      if (!initialized) {
+        initialized = true;
+      }
+    } else if (event is RoonEvent_Profile) {
+      if (_profileCallback != null) {
+        _profileCallback!(event.field0, true);
       }
     } else if (event is RoonEvent_ZonesChanged) {
       zoneList = event.field0;
@@ -187,7 +215,7 @@ class MyAppState extends ChangeNotifier {
 
       if (actionItems != null && takeDefaultAction) {
         // Take first as default action, at least for now
-        selectBrowseItem(sessionId: exploreId, item: actionItems![2]);
+        selectBrowseItem(item: actionItems![2]);
         takeDefaultAction = false;
       }
     } else if (event is RoonEvent_BrowseReset) {

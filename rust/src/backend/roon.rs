@@ -3,7 +3,8 @@ use roon_api::browse::ItemHint as BrowseItemHint;
 use roon_api::{
     browse::{Browse, BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
-    info,
+    info, settings,
+    status::{self, Status},
     transport::{
         volume::{ChangeMode, Mute},
         Control, State, Transport,
@@ -27,7 +28,10 @@ use tokio::{
 };
 
 use crate::api::simple::RoonEvent;
-use crate::backend::roon_handler::{RoonHandler, BROWSE_PAGE_SIZE};
+use crate::backend::{
+    roon_access::{RoonAccess, RoonAccessData},
+    roon_handler::{RoonHandler, BROWSE_PAGE_SIZE},
+};
 
 const PLAY_NOW: &str = "Play Now";
 const ADD_NEXT: &str = "Add Next";
@@ -65,12 +69,20 @@ impl Roon {
         let server_clone = server.clone();
         tokio::spawn(async move {
             loop {
+                let (settings_svc, settings, access) =
+                    RoonAccess::new(config_path_clone.clone(), &roon);
+                let (status_svc, status) = Status::new(&roon);
                 let services = Some(vec![
                     Services::Browse(Browse::new()),
                     Services::Transport(Transport::new()),
                     Services::Image(Image::new()),
+                    Services::Settings(settings),
+                    Services::Status(status),
                 ]);
-                let provided: HashMap<String, Svc> = HashMap::new();
+                let provided: HashMap<String, Svc> = HashMap::from([
+                    (settings::SVCNAME.to_owned(), settings_svc),
+                    (status::SVCNAME.to_owned(), status_svc),
+                ]);
                 let config_path = config_path_clone.clone();
                 let get_roon_state = Box::new(move || RoonApi::load_roon_state(&config_path));
                 let timeout = Duration::from_secs(20);
@@ -100,7 +112,11 @@ impl Roon {
                 if let Ok(Some((mut handlers, mut core_rx))) = connection {
                     let roon_handler = handler_clone.clone();
 
-                    roon_handler.lock().await.zone_id = None;
+                    {
+                        let mut handler = roon_handler.lock().await;
+                        handler.zone_id = None;
+                        handler.set_access(access);
+                    }
 
                     handlers.spawn(async move {
                         loop {
@@ -148,6 +164,12 @@ impl Roon {
         let server_props = serde_json::from_value::<ServerProps>(value).ok()?;
 
         Some((server_props.ip?, server_props.port?))
+    }
+
+    pub async fn set_status_message(&self, message: String) {
+        let handler = self.handler.lock().await;
+
+        handler.set_status_message(message).await;
     }
 
     pub async fn get_image(&self, image_key: String) -> Option<()> {
@@ -198,12 +220,11 @@ impl Roon {
         Some(())
     }
 
-    pub async fn browse_category(
-        &self,
-        category: i32,
-        session_id: i32,
-        input: Option<String>,
-    ) -> Option<()> {
+    pub async fn browse_category(&self, category: i32, input: Option<String>) -> Option<()> {
+        let access = RoonApi::load_config(&self.config_path, "access");
+
+        serde_json::from_value::<RoonAccessData>(access).ok()?;
+
         let mut handler = self.handler.lock().await;
         let category_paths = HashMap::from([
             (0, vec!["Search", "Library"]),
@@ -220,7 +241,7 @@ impl Roon {
             (11, vec!["TIDAL"]),
             (12, vec!["Settings"]),
         ]);
-        let multi_session_key = handler.get_multi_session_key(session_id);
+        let multi_session_key = handler.get_multi_session_key();
 
         handler.browse_offset = 0;
         handler.browse_level = 0;
@@ -250,9 +271,9 @@ impl Roon {
         Some(())
     }
 
-    pub async fn select_browse_item(&self, session_id: i32, item: BrowseItem) -> Option<()> {
+    pub async fn select_browse_item(&self, item: BrowseItem) -> Option<()> {
         let item_key = item.item_key.as_deref()?;
-        let multi_session_key = self.handler.lock().await.get_multi_session_key(session_id);
+        let multi_session_key = self.handler.lock().await.get_multi_session_key();
 
         if item_key.contains("random") {
             self.handle_random_item(multi_session_key, &item).await;
@@ -266,7 +287,12 @@ impl Roon {
             };
 
             if item.hint == Some(BrowseItemHint::Action) {
-                opts.zone_or_output_id = handler.zone_id.to_owned();
+                // Only provide zone_id if zone is online
+                opts.zone_or_output_id = handler
+                    .zone_id
+                    .as_ref()
+                    .filter(|zone_id| handler.zone_map.contains_key(*zone_id))
+                    .cloned();
             }
 
             handler.browse_offset = 0;
@@ -299,11 +325,11 @@ impl Roon {
         Some(())
     }
 
-    pub async fn browse_back(&self, session_id: i32) -> Option<()> {
+    pub async fn browse_back(&self) -> Option<()> {
         let mut handler = self.handler.lock().await;
 
         if handler.browse_level > 0 {
-            let multi_session_key = handler.get_multi_session_key(session_id);
+            let multi_session_key = handler.get_multi_session_key();
             let opts = BrowseOpts {
                 multi_session_key,
                 pop_levels: Some(1),
@@ -319,7 +345,7 @@ impl Roon {
         Some(())
     }
 
-    pub async fn search_artist(&self, session_id: i32, artist: String) -> Option<()> {
+    pub async fn search_artist(&self, artist: String) -> Option<()> {
         let path = vec![
             artist.to_owned(),
             "Artists".to_owned(),
@@ -327,7 +353,7 @@ impl Roon {
             "Library".to_owned(),
         ];
         let mut handler = self.handler.lock().await;
-        let multi_session_key = handler.get_multi_session_key(session_id);
+        let multi_session_key = handler.get_multi_session_key();
 
         handler
             .browse_path
@@ -345,28 +371,6 @@ impl Roon {
         handler.browse_level = 0;
         handler.artist_search = true;
         handler.browse_input = Some(artist);
-
-        Some(())
-    }
-
-    pub async fn query_profile(&self, session_id: i32) -> Option<()> {
-        let path = vec!["Settings".to_owned()];
-        let mut handler = self.handler.lock().await;
-        let multi_session_key = handler.get_multi_session_key(session_id);
-
-        handler
-            .browse_path
-            .insert(multi_session_key.as_ref()?.to_owned(), path.clone());
-
-        let opts = BrowseOpts {
-            multi_session_key,
-            pop_all: true,
-            set_display_offset: Some(0),
-            ..Default::default()
-        };
-
-        handler.browse_category = None;
-        handler.browse.as_mut()?.browse(opts).await;
 
         Some(())
     }

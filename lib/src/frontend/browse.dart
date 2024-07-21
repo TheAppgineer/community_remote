@@ -149,7 +149,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
 
     _navigator.popUntilRoot();
 
-    browse(category: category, sessionId: exploreId);
+    browse(category: category);
   }
 
   static void selectProfile() {
@@ -157,7 +157,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       _viewChanged = true;
       _toProfile = true;
 
-      browse(category: Category.settings.index, sessionId: exploreId);
+      browse(category: Category.settings.index);
     }
   }
 
@@ -205,7 +205,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
 
               // Delay the browse request to give the pushed route time to register its callback
               Future.delayed(const Duration(milliseconds: 20), () {
-                selectBrowseItem(sessionId: exploreId, item: item);
+                selectBrowseItem(item: item);
               });
               break;
             }
@@ -338,7 +338,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
               onPressed: () {
                 _navigator.pushNamed(Uri.encodeComponent(subtitle));
 
-                searchArtist(sessionId: exploreId, artist: subtitle);
+                searchArtist(artist: subtitle);
               },
               tooltip: 'More by $subtitle',
               icon: const Icon(Symbols.artist_rounded),
@@ -430,7 +430,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
                     controller.close();
                   } else {
                     controller.open();
-                    selectBrowseItem(sessionId: exploreId, item: browseList[index]);
+                    selectBrowseItem(item: browseList[index]);
                   }
                 },
                 icon: const Icon(Icons.more_vert),
@@ -441,7 +441,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
               (index) => MenuItemButton(
                 child: Text(appState.actionItems![index].title),
                 onPressed: () {
-                  selectBrowseItem(sessionId: exploreId, item: appState.actionItems![index]);
+                  selectBrowseItem(item: appState.actionItems![index]);
                   appState.actionItems = null;
                 },
               ),
@@ -474,7 +474,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
 
             // Delay the browse request to give the pushed route time to register its callback
             Future.delayed(const Duration(milliseconds: 20), () {
-              selectBrowseItem(sessionId: exploreId, item: browseList[index]);
+              selectBrowseItem(item: browseList[index]);
             });
           },
         );
@@ -507,7 +507,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       onPopInvoked: (didPop) {
         if (didPop && !_viewChanged) {
           _navigator.routes.removeLast();
-          browseBack(sessionId: exploreId);
+          browseBack();
         }
       },
     );
@@ -545,7 +545,7 @@ class LibSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    browseWithInput(category: Category.search.index, sessionId: exploreId, input: query);
+    browseWithInput(category: Category.search.index, input: query);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       close(context, null);

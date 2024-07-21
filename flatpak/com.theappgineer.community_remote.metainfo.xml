@@ -3,7 +3,7 @@
   <id>com.theappgineer.community_remote</id>
 
   <name>Community Remote</name>
-  <summary>Play Roon the community way</summary>
+  <summary>Roon control for family and friends</summary>
 
   <developer id="com.theappgineer">
     <name>The Appgineer</name>
@@ -22,7 +22,7 @@
   <description>
     <p>
       Community Remote tries to serve those use-cases that are left open by the official Roon Remote.
-      Linux support is the obvious one, others are random album playback and accessibility.
+      Linux support is the obvious one, others are restricted access, random album playback...
     </p>
   </description>
 
@@ -39,6 +39,17 @@
 
   <launchable type="desktop-id">com.theappgineer.community_remote.desktop</launchable>
   <releases>
+    <release version="0.0.5" date="2024-07-21">
+      <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.5</url>
+      <description>
+        <p>
+          This release brings Access Control to Community Remote.
+          First point of control is profile selection, this can remain selectable or given a fixed assignment from a Roon Remote.
+          Access Control will be further extended in future releases.
+        </p>
+        <p>Note: Access has to be granted after installation or update by opening the Community Remote Settings in a Roon Remote (Settings-&gt;Extensions).</p>
+      </description>
+    </release>
     <release version="0.0.4" date="2024-06-29">
       <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.4</url>
     </release>
