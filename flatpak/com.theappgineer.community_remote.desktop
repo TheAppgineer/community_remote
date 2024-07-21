@@ -5,6 +5,7 @@ Type=Application
 Name=Community Remote
 Comment=Play Roon the community way
 Categories=AudioVideo;Player;
+Keywords=roon;extension;remote;audio;player;family;friends;flutter;rust;
 
 Icon=com.theappgineer.community_remote
 Exec=community_remote
