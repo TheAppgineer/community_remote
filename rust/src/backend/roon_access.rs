@@ -49,8 +49,9 @@ impl RoonAccess {
                     serde_json::from_value(value).unwrap_or_default()
                 }
             };
+            let mut access = access_clone.lock().unwrap();
 
-            Self::make_layout(settings, access_clone.clone())
+            Self::make_layout(settings, &mut access)
         };
         let (svc, settings) = Settings::new(&roon, Box::new(get_layout));
 
@@ -84,12 +85,8 @@ impl RoonAccess {
         }
     }
 
-    fn make_layout(
-        settings: RoonAccessData,
-        access: Arc<Mutex<RoonAccess>>,
-    ) -> Layout<RoonAccessData> {
+    fn make_layout(settings: RoonAccessData, access: &mut RoonAccess) -> Layout<RoonAccessData> {
         let has_error = false;
-        let access = access.lock().unwrap();
         let mut values = vec![ProfileEntry::from("Selectable".to_string(), "".to_string())];
 
         if let Some(profiles) = access.profiles.as_ref() {
@@ -100,7 +97,7 @@ impl RoonAccess {
 
         let dropdown = Dropdown {
             title: "Profile",
-            subtitle: Some("Allow profile selection or fix profile".to_owned()),
+            subtitle: Some("Allow profile selection or assign profile".to_owned()),
             values,
             setting: "profile",
         };

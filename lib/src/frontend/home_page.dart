@@ -131,7 +131,7 @@ class MyHomePageState extends State<MyHomePage> {
       stateIcon = const Icon(Icons.warning, size: 32);
     } else if (appState.token == null) {
       if (userName == null) {
-        subtitle = 'Use Roon Remote to enable extension, or request access';
+        subtitle = 'Use Roon Remote to enable extension, or request access below';
       } else {
         subtitle = 'Hi ${appState.userName}, access is requested';
       }
@@ -139,7 +139,7 @@ class MyHomePageState extends State<MyHomePage> {
       stateIcon = const Icon(Icons.info, size: 32);
     } else if (!appState.initialized) {
       if (userName == null) {
-        subtitle = 'Use Roon Remote to set access, or request access';
+        subtitle = 'Use Roon Remote to set access, or request access below';
       } else {
         subtitle = 'Hi ${appState.userName}, access is requested';
       }

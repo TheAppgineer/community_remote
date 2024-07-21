@@ -48,6 +48,7 @@ pub struct RoonHandler {
     pub services: Vec<String>,
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
+    activate_profile: bool,
     api_token: Option<String>,
     config_path: Arc<String>,
     outputs: HashMap<String, String>,
@@ -78,6 +79,7 @@ impl RoonHandler {
             services: Vec::new(),
             status: None,
             access: None,
+            activate_profile: false,
             api_token: None,
             config_path,
             outputs: HashMap::new(),
@@ -164,7 +166,10 @@ impl RoonHandler {
                         self.access.as_ref()?.lock().unwrap().set_data(data);
                     }
 
-                    self.query_profile().await;
+                    self.query_profiles(true).await;
+                }
+                Parsed::SettingsSubscribed(_) => {
+                    self.query_profiles(false).await;
                 }
                 Parsed::SettingsSaved(access) => {
                     match RoonApi::save_config(&self.config_path, "access", access.to_owned()) {
@@ -172,8 +177,7 @@ impl RoonHandler {
                         Ok(()) => {
                             if let Ok(data) = serde_json::from_value::<RoonAccessData>(access) {
                                 self.access.as_ref()?.lock().unwrap().set_data(data);
-                                self.query_profile().await;
-                                self.send_zone_list().await;
+                                self.query_profiles(true).await;
                             }
                         }
                     }
@@ -390,13 +394,14 @@ impl RoonHandler {
                                 (access.has_data(), access.has_profile_access())
                             };
 
-                            if access {
+                            if access && self.activate_profile {
                                 let opts = BrowseOpts {
                                     item_key,
                                     multi_session_key,
                                     ..Default::default()
                                 };
 
+                                self.activate_profile = false;
                                 self.browse.as_mut()?.browse(opts).await;
 
                                 log::info!("Selected profile: {}", profile);
@@ -546,7 +551,7 @@ impl RoonHandler {
         Some(())
     }
 
-    async fn query_profile(&mut self) -> Option<()> {
+    async fn query_profiles(&mut self, activate_profile: bool) -> Option<()> {
         let path = vec!["Profile".to_owned(), "Settings".to_owned()];
         let multi_session_key = self.get_multi_session_key();
 
@@ -560,6 +565,7 @@ impl RoonHandler {
             ..Default::default()
         };
 
+        self.activate_profile = activate_profile;
         self.browse_offset = 0;
         self.browse_category = None;
         self.browse_total = 0;
@@ -598,10 +604,6 @@ impl RoonHandler {
     }
 
     async fn send_zone_list(&self) -> Option<()> {
-        let access = RoonApi::load_config(&self.config_path, "access");
-
-        serde_json::from_value::<RoonAccessData>(access).ok()?;
-
         let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.display_name.cmp(&b.display_name);
         let mut zones = self
             .zone_map
