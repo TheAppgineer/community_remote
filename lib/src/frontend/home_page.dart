@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/frontend/browse.dart';
+import 'package:community_remote/src/frontend/mini_now_playing.dart';
 import 'package:community_remote/src/frontend/now_playing.dart';
 import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/frontend/zones.dart';
@@ -125,6 +126,8 @@ class MyHomePageState extends State<MyHomePage> {
     String subtitle;
     Widget? stateIcon;
     String? userName = appState.userName;
+    bool hasSmallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
+    Widget nowPlaying = hasSmallWidth ? const MiniNowPlayingWidget() : const NowPlayingWidget();
 
     if (appState.serverName == null) {
       subtitle = 'No Roon Server discovered!';
@@ -162,12 +165,27 @@ class MyHomePageState extends State<MyHomePage> {
       );
     }
 
+    List<Widget> children = [
+      const HamburgerMenu(),
+      const Expanded(
+        flex: 5,
+        child: Browse(),
+      ),
+    ];
+
+    if (!hasSmallWidth) {
+      children.add(const Expanded(
+        flex: 5,
+        child: Queue(),
+      ));
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         scrolledUnderElevation: 0,
         title: ListTile(
-          leading: stateIcon,
+          leading: hasSmallWidth ? null : stateIcon,
           title: Text(widget.title),
           subtitle: Text(subtitle),
         ),
@@ -175,7 +193,7 @@ class MyHomePageState extends State<MyHomePage> {
           themeModeButton,
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -184,20 +202,10 @@ class MyHomePageState extends State<MyHomePage> {
               flex: 1,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  HamburgerMenu(),
-                  Expanded(
-                    flex: 5,
-                    child: Browse(),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Queue(),
-                  ),
-                ],
+                children: children,
               ),
             ),
-            NowPlayingWidget(),
+            nowPlaying,
           ],
         ),
       ),
@@ -534,12 +542,16 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    Icon icon = Icon(appState.settings['expand'] || _setup ? Icons.arrow_circle_left_outlined : Icons.arrow_circle_right_outlined);
+    IconData icon = appState.settings['expand'] || _setup
+      ? Icons.arrow_circle_left_outlined
+      : Icons.arrow_circle_right_outlined;
     Map<int, Category> browsePath = {};
+    bool hasSmallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
     var destinations = [
       NavigationRailDestination(
-        icon: icon,
+        icon: Icon(icon),
         label: const Text(""),
+        disabled: hasSmallWidth,
       ),
       _getDivider(label: "Library"),
     ];
@@ -657,14 +669,14 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
     return SingleChildScrollView(
       child: IntrinsicHeight(
         child: GestureDetector(
-          onLongPress: () {
+          onLongPress: hasSmallWidth ? null : () {
             setState(() {
               _setup = true;
             });
           },
           child: NavigationRail(
             extended: appState.settings['expand'] || _setup,
-            minWidth: 72,
+            minWidth: hasSmallWidth ? 56 : 72,
             minExtendedWidth: 192,
             destinations: destinations,
             selectedIndex: selectedIndex,

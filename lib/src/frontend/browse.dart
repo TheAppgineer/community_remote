@@ -287,7 +287,6 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    ListView? listView;
     Widget? browseTitle;
     List<Widget> actions = [
       IconButton(
@@ -306,6 +305,158 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       ),
     ];
 
+    Widget getListView(bool smallWidth) {
+      double dynPadding = smallWidth ? 0 : 10;
+
+      if (_browseItems != null) {
+        var browseList = _browseItems!.items;
+
+        ListTile itemBuilder(context, index) {
+          Widget? leading;
+          Widget? trailing;
+          String? imageKey = browseList[index].imageKey;
+          Image? image = _imageCache[imageKey];
+          String title = browseList[index].title;
+          Text? subtitle;
+          int? disk;
+          int? track;
+
+          (int, String)? leadingNumber(String input, Pattern pattern) {
+            List<String> split = input.split(pattern);
+
+            if (split.isNotEmpty && split[0] != input) {
+              track = int.tryParse(split[0]);
+
+              if (track != null) {
+                return (track!, split.sublist(1).join(' '));
+              }
+            }
+
+            return null;
+          }
+
+          if (browseList[index].hint == BrowseItemHint.actionList) {
+            // Track from single disk: "<track>. <title>"
+            (int, String)? result = leadingNumber(title, '. ');
+
+            if (result != null) {
+              track = result.$1;
+              title = result.$2;
+            } else {
+              // Track from multi disk: "<disk>-<track> <title>"
+              result = leadingNumber(title, '-');
+
+              if (result != null) {
+                disk = result.$1;
+                result = leadingNumber(result.$2, ' ');
+
+                if (result != null) {
+                  track = result.$1;
+                  title = result.$2;
+                }
+              }
+            }
+          }
+
+          if (image != null) {
+            leading = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(width: 48, child: image),
+                Padding(padding: EdgeInsets.fromLTRB(0, 0, dynPadding, 0)),
+              ],
+            );
+          } else if (track != null) {
+            String id = disk != null ? '$disk-$track' : track.toString();
+
+            leading = SizedBox(
+              width: 48,
+              child: Text(id, style: const TextStyle(fontSize: 14)),
+            );
+          } else {
+            if (!_isScrolling && imageKey != null) {
+              appState.requestImage(imageKey, addToImageCache);
+            }
+
+            leading = const SizedBox(width: 48, child: Text(''));
+          }
+
+          if (browseList[index].hint == BrowseItemHint.actionList) {
+            trailing = MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                      selectBrowseItem(item: browseList[index]);
+                    }
+                  },
+                  icon: const Icon(Icons.more_vert),
+                );
+              },
+              menuChildren: List<MenuItemButton>.generate(
+                (appState.actionItems != null ? appState.actionItems!.length : 0),
+                (index) => MenuItemButton(
+                  child: Text(appState.actionItems![index].title),
+                  onPressed: () {
+                    selectBrowseItem(item: appState.actionItems![index]);
+                    appState.actionItems = null;
+                  },
+                ),
+              ),
+            );
+          }
+
+          if (browseList[index].subtitle != null) {
+            subtitle = Text(
+              browseList[index].subtitle!,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: smallWidth ? 13 : 14)
+            );
+          }
+
+          return ListTile(
+            leading: leading,
+            trailing: trailing,
+            title: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: smallWidth ? 15 : 16)),
+            subtitle: subtitle,
+            contentPadding: const EdgeInsets.only(left: 10),
+            focusColor: Colors.transparent,
+            onTap: () {
+              switch (browseList[index].hint) {
+                case BrowseItemHint.action:
+                  break;
+                case BrowseItemHint.actionList:
+                  appState.takeDefaultAction = true;
+                  break;
+                default:
+                  String name = Uri.encodeComponent(browseList[index].title);
+                  _navigator.pushNamed(name);
+                  break;
+              }
+
+              // Delay the browse request to give the pushed route time to register its callback
+              Future.delayed(const Duration(milliseconds: 20), () {
+                selectBrowseItem(item: browseList[index]);
+              });
+            },
+          );
+        }
+
+        return ListView.separated(
+          controller: _controller,
+          padding: EdgeInsets.all(dynPadding),
+          itemBuilder: itemBuilder,
+          separatorBuilder: (context, index) => const Divider(),
+          itemCount: browseList.length,
+        );
+      }
+
+      return const SizedBox.expand();
+    }
+
     if (_toProfile) {
       _toProfile = false;
       appState.settings['view'] = Category.settings.index;
@@ -313,180 +464,42 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
     }
 
     if (_browseItems != null) {
-      var browseList = _browseItems!.items;
-      var subtitle = _browseItems!.list.subtitle;
+        var subtitle = _browseItems!.list.subtitle;
 
-      if (subtitle != null && subtitle.isNotEmpty) {
-        var imageKey = _browseItems!.list.imageKey;
-        Widget? trailing;
+        if (subtitle != null && subtitle.isNotEmpty) {
+          var imageKey = _browseItems!.list.imageKey;
+          Widget? trailing;
 
-        if (imageKey != null) {
-          trailing = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
-        }
-
-        browseTitle = ListTile(
-          title: Text(_browseItems!.list.title),
-          subtitle: Text(subtitle),
-          trailing: trailing,
-          contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
-        );
-
-        if (appState.settings['view'] == Category.albums.index && _browseItems!.list.level == 3) {
-          actions.insert(
-            0,
-            IconButton(
-              onPressed: () {
-                _navigator.pushNamed(Uri.encodeComponent(subtitle));
-
-                searchArtist(artist: subtitle);
-              },
-              tooltip: 'More by $subtitle',
-              icon: const Icon(Symbols.artist_rounded),
-            )
-          );
-        }
-      } else if (_navigator.canPop()) {
-        browseTitle = Text(_browseItems!.list.title);
-      } else {
-        browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
-      }
-
-      ListTile itemBuilder(context, index) {
-        Widget? leading;
-        Widget? trailing;
-        String? imageKey = browseList[index].imageKey;
-        Image? image = _imageCache[imageKey];
-        String title = browseList[index].title;
-        Text? subtitle;
-        int? disk;
-        int? track;
-
-        (int, String)? leadingNumber(String input, Pattern pattern) {
-          List<String> split = input.split(pattern);
-
-          if (split.isNotEmpty && split[0] != input) {
-            track = int.tryParse(split[0]);
-
-            if (track != null) {
-              return (track!, split.sublist(1).join(' '));
-            }
+          if (imageKey != null) {
+            trailing = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
           }
 
-          return null;
-        }
+          browseTitle = ListTile(
+            title: Text(_browseItems!.list.title),
+            subtitle: Text(subtitle),
+            trailing: trailing,
+            contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
+          );
 
-        if (browseList[index].hint == BrowseItemHint.actionList) {
-          // Track from single disk: "<track>. <title>"
-          (int, String)? result = leadingNumber(title, '. ');
+          if (appState.settings['view'] == Category.albums.index && _browseItems!.list.level == 3) {
+            actions.insert(
+              0,
+              IconButton(
+                onPressed: () {
+                  _navigator.pushNamed(Uri.encodeComponent(subtitle));
 
-          if (result != null) {
-            track = result.$1;
-            title = result.$2;
-          } else {
-            // Track from multi disk: "<disk>-<track> <title>"
-            result = leadingNumber(title, '-');
-
-            if (result != null) {
-              disk = result.$1;
-              result = leadingNumber(result.$2, ' ');
-
-              if (result != null) {
-                track = result.$1;
-                title = result.$2;
-              }
-            }
+                  searchArtist(artist: subtitle);
+                },
+                tooltip: 'More by $subtitle',
+                icon: const Icon(Symbols.artist_rounded),
+              )
+            );
           }
-        }
-
-        if (image != null) {
-          leading = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              image,
-              const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
-            ],
-          );
-        } else if (track != null) {
-          String id = disk != null ? '$disk-$track' : track.toString();
-
-          leading = SizedBox(
-            width: 58,
-            child: Text(id, style: const TextStyle(fontSize: 14)),
-          );
+        } else if (_navigator.canPop()) {
+          browseTitle = Text(_browseItems!.list.title);
         } else {
-          if (!_isScrolling && imageKey != null) {
-            appState.requestImage(imageKey, addToImageCache);
-          }
-
-          leading = const Padding(padding: EdgeInsets.fromLTRB(58, 0, 0, 0));
+          browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
         }
-
-        if (browseList[index].hint == BrowseItemHint.actionList) {
-          trailing = MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                    selectBrowseItem(item: browseList[index]);
-                  }
-                },
-                icon: const Icon(Icons.more_vert),
-              );
-            },
-            menuChildren: List<MenuItemButton>.generate(
-              (appState.actionItems != null ? appState.actionItems!.length : 0),
-              (index) => MenuItemButton(
-                child: Text(appState.actionItems![index].title),
-                onPressed: () {
-                  selectBrowseItem(item: appState.actionItems![index]);
-                  appState.actionItems = null;
-                },
-              ),
-            ),
-          );
-        }
-
-        if (browseList[index].subtitle != null) {
-          subtitle = Text(browseList[index].subtitle!);
-        }
-
-        return ListTile(
-          leading: leading,
-          trailing: trailing,
-          title: Text(title),
-          subtitle: subtitle,
-          focusColor: Colors.transparent,
-          onTap: () {
-            switch (browseList[index].hint) {
-              case BrowseItemHint.action:
-                break;
-              case BrowseItemHint.actionList:
-                appState.takeDefaultAction = true;
-                break;
-              default:
-                String name = Uri.encodeComponent(browseList[index].title);
-                _navigator.pushNamed(name);
-                break;
-            }
-
-            // Delay the browse request to give the pushed route time to register its callback
-            Future.delayed(const Duration(milliseconds: 20), () {
-              selectBrowseItem(item: browseList[index]);
-            });
-          },
-        );
-      }
-
-      listView = ListView.separated(
-        controller: _controller,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: itemBuilder,
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: browseList.length,
-      );
     }
 
     return PopScope(
@@ -498,9 +511,12 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         ),
         body: Card(
           margin: const EdgeInsets.all(10),
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: listView ?? const SizedBox.expand(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              bool smallWidth = (constraints.maxWidth < smallWindowMaxWidth);
+
+              return getListView(smallWidth);
+            },
           ),
         ),
       ),

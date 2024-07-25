@@ -57,7 +57,7 @@ class _QueueState extends State<Queue> {
           leading = Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              image,
+              SizedBox(width: 48, child: image),
               const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
             ],
           );

@@ -79,7 +79,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           leading = Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              image,
+              SizedBox(width: 48, child: image),
               const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
             ],
           );
