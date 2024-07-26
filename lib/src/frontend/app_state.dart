@@ -7,7 +7,7 @@ import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 
 const roonAccentColor = Color.fromRGBO(0x75, 0x75, 0xf3, 1.0);
-const smallScreenMaxWidth = 1000;
+const smallScreenMaxWidth = 900;
 const smallWindowMaxWidth = 500;
 
 class MyAppState extends ChangeNotifier {

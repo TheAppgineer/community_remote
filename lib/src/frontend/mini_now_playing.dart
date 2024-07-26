@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/frontend/volume.dart';
 import 'package:community_remote/src/frontend/zones.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
@@ -59,14 +60,22 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
       zoneControl.add(IconButton(
         icon: const Icon(Icons.queue_music_outlined),
         tooltip: 'Queue',
-        onPressed: () {},
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => const Dialog.fullscreen(
+            child: Queue(),
+          ),
+        ),
       ));
 
       zoneControl.add(IconButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => const Dialog(
-            child: Zones(),
+          builder: (context) => const Dialog.fullscreen(
+            child: Card(
+              margin: EdgeInsets.all(10),
+              child: Zones(smallWidth: true),
+            ),
           ),
         ),
         icon: Icon(zone.outputs.length > 1? Icons.speaker_group_outlined: Icons.speaker_outlined),
@@ -94,8 +103,11 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
       zoneControl.add(IconButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => const Dialog(
-            child: VolumeDialog(),
+          builder: (context) => const Dialog.fullscreen(
+            child: Card(
+              margin: EdgeInsets.all(10),
+              child: VolumeDialog(smallWidth: true),
+            ),
           ),
         ),
         icon: Icon(volumeIcon),

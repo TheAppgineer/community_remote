@@ -131,7 +131,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         onPressed: () => showDialog(
           context: context,
           builder: (context) => const Dialog(
-            child: Zones(),
+            child: Zones(smallWidth: false),
           ),
         ),
         icon: Icon(zone.outputs.length > 1? Icons.speaker_group_outlined: Icons.speaker_outlined),
@@ -162,7 +162,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         onPressed: () => showDialog(
           context: context,
           builder: (context) => const Dialog(
-            child: VolumeDialog(),
+            child: VolumeDialog(smallWidth: false),
           ),
         ),
         icon: Icon(volumeIcon),

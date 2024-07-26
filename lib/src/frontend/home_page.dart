@@ -23,10 +23,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> {
   IconData? _profileIcon;
   bool _profileStateEnabled = true;
 
@@ -126,8 +126,8 @@ class MyHomePageState extends State<MyHomePage> {
     String subtitle;
     Widget? stateIcon;
     String? userName = appState.userName;
-    bool hasSmallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
-    Widget nowPlaying = hasSmallWidth ? const MiniNowPlayingWidget() : const NowPlayingWidget();
+    bool smallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
+    Widget nowPlaying = smallWidth ? const MiniNowPlayingWidget() : const NowPlayingWidget();
 
     if (appState.serverName == null) {
       subtitle = 'No Roon Server discovered!';
@@ -168,14 +168,14 @@ class MyHomePageState extends State<MyHomePage> {
     List<Widget> children = [
       const HamburgerMenu(),
       const Expanded(
-        flex: 5,
+        flex: 1,
         child: Browse(),
       ),
     ];
 
-    if (!hasSmallWidth) {
+    if (!smallWidth) {
       children.add(const Expanded(
-        flex: 5,
+        flex: 1,
         child: Queue(),
       ));
     }
@@ -185,7 +185,7 @@ class MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         scrolledUnderElevation: 0,
         title: ListTile(
-          leading: hasSmallWidth ? null : stateIcon,
+          leading: smallWidth ? null : stateIcon,
           title: Text(widget.title),
           subtitle: Text(subtitle),
         ),
@@ -209,7 +209,7 @@ class MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: QuickAccessButton(appState: appState),
+      floatingActionButton: QuickAccessButton(appState: appState, smallWidth: smallWidth,),
     );
   }
 }
@@ -396,9 +396,11 @@ class QuickAccessButton extends StatelessWidget {
   const QuickAccessButton({
     super.key,
     required this.appState,
+    required this.smallWidth,
   });
 
   final MyAppState appState;
+  final bool smallWidth;
 
   Widget getIcon(String? userName) {
     IconData icon;
@@ -471,9 +473,17 @@ class QuickAccessButton extends StatelessWidget {
     } else if (appState.zone == null) {
       showDialog(
         context: context,
-        builder: (context) => const Dialog(
-          child: Zones(),
-        ),
+        builder: (context) {
+          if (smallWidth) {
+            return const Dialog.fullscreen(
+              child: Zones(smallWidth: true),
+            );
+          } else {
+            return const Dialog(
+              child: Zones(smallWidth: false),
+            );
+          }
+        },
       );
     } else {
       switch (appState.zone!.state) {
@@ -546,7 +556,7 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
       ? Icons.arrow_circle_left_outlined
       : Icons.arrow_circle_right_outlined;
     Map<int, Category> browsePath = {};
-    bool hasSmallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
+    bool hasSmallWidth = MediaQuery.sizeOf(context).width < smallWindowMaxWidth;
     var destinations = [
       NavigationRailDestination(
         icon: Icon(icon),
