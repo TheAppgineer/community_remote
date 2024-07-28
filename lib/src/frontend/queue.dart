@@ -49,7 +49,7 @@ class _QueueState extends State<Queue> {
         var imageKey = queue[index].imageKey;
 
         if (imageKey != null) {
-          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+          image = _imageCache[imageKey] ?? appState.requestThumbnail(imageKey, addToImageCache);
         }
 
         leading = Row(

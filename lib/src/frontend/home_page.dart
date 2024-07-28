@@ -459,16 +459,32 @@ class QuickAccessButton extends StatelessWidget {
     if (appState.serverName == null) {
       showDialog(
         context: context,
-        builder: (context) => const Dialog(
-          child: Setup(),
-        )
+        builder: (context) {
+          if (smallWidth) {
+            return const Dialog.fullscreen(
+              child: Setup(),
+            );
+          } else {
+            return const Dialog(
+              child: Setup(),
+            );
+          }
+        }
       );
     } else if (appState.token == null || !appState.initialized) {
       showDialog(
         context: context,
-        builder: (context) => Dialog(
-          child: Request(appState: appState),
-        ),
+        builder: (context) {
+          if (smallWidth) {
+            return Dialog.fullscreen(
+              child: Request(appState: appState),
+            );
+          } else {
+            return Dialog(
+              child: Request(appState: appState),
+            );
+          }
+        }
       );
     } else if (appState.zone == null) {
       showDialog(
@@ -522,7 +538,9 @@ class QuickAccessButton extends StatelessWidget {
           onLongPress();
         },
         child: FloatingActionButton(
-          onPressed: appState.token == null && userName != null ? null : () => takeAction(context),
+          onPressed: appState.serverName != null && appState.token == null && userName != null
+            ? null
+            : () => takeAction(context),
           tooltip: getTooltip(userName),
           child: getIcon(userName),
         ),

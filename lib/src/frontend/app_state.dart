@@ -26,6 +26,7 @@ class MyAppState extends ChangeNotifier {
   Function? _progressCallback;
   Function? _queueRemainingCallback;
   final Map<String, List<Function>> _pendingImages = {};
+  Function? _imageCallback;
   bool pauseOnTrackEnd = false;
   bool initialized = false;
 
@@ -64,15 +65,23 @@ class MyAppState extends ChangeNotifier {
     _queueRemainingCallback = callback;
   }
 
-  requestImage(String? imageKey, Function callback) {
+  requestThumbnail(String? imageKey, Function callback) {
     if (imageKey != null) {
       if (_pendingImages[imageKey] == null) {
         _pendingImages[imageKey] = [callback];
 
-        getImage(imageKey: imageKey);
+        getThumbnail(imageKey: imageKey);
       } else {
         _pendingImages[imageKey]!.add(callback);
       }
+    }
+  }
+
+  requestImage(String? imageKey, Function callback) {
+    if (imageKey != null) {
+      _imageCallback = callback;
+
+      getImage(imageKey: imageKey);
     }
   }
 
@@ -131,6 +140,11 @@ class MyAppState extends ChangeNotifier {
         for (var callback in callbacks) {
           callback(event.field0);
         }
+      }
+
+      if (_imageCallback != null) {
+        _imageCallback!(event.field0);
+        _imageCallback = null;
       }
 
       return;

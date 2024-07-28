@@ -72,7 +72,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         var imageKey = nowPlaying.imageKey;
 
         if (imageKey != null) {
-          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+          image = _imageCache[imageKey] ?? appState.requestThumbnail(imageKey, addToImageCache);
         }
 
         if (image != null) {

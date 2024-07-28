@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 323463929;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 105519473;
 
 // Section: executor
 
@@ -423,6 +423,44 @@ fn wire__crate__api__simple__get_server_properties_impl(
                     (move || async move {
                         let output_ok =
                             Result::<_, ()>::Ok(crate::api::simple::get_server_properties().await)?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__simple__get_thumbnail_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_thumbnail",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_image_key = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok({
+                            crate::api::simple::get_thumbnail(api_image_key).await;
+                        })?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -2223,31 +2261,32 @@ fn pde_ffi_dispatcher_primary_impl(
         10 => {
             wire__crate__api__simple__get_server_properties_impl(port, ptr, rust_vec_len, data_len)
         }
-        11 => wire__crate__api__simple__group_outputs_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__simple__mute_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__simple__mute_all_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__simple__mute_zone_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__simple__pause_after_queue_items_impl(
+        11 => wire__crate__api__simple__get_thumbnail_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__simple__group_outputs_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__simple__mute_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__simple__mute_all_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__simple__mute_zone_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__simple__pause_after_queue_items_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__api__simple__pause_all_impl(port, ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__simple__pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__simple__save_settings_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__simple__search_artist_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__simple__select_browse_item_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__simple__select_queue_item_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__simple__select_zone_impl(port, ptr, rust_vec_len, data_len),
-        24 => {
+        18 => wire__crate__api__simple__pause_all_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__simple__pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__simple__save_settings_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__simple__search_artist_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__simple__select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__simple__select_queue_item_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__simple__select_zone_impl(port, ptr, rust_vec_len, data_len),
+        25 => {
             wire__crate__api__simple__set_server_properties_impl(port, ptr, rust_vec_len, data_len)
         }
-        25 => wire__crate__api__simple__set_status_message_impl(port, ptr, rust_vec_len, data_len),
-        26 => wire__crate__api__simple__standby_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__simple__start_roon_impl(port, ptr, rust_vec_len, data_len),
-        28 => wire__crate__api__simple__transfer_from_zone_impl(port, ptr, rust_vec_len, data_len),
+        26 => wire__crate__api__simple__set_status_message_impl(port, ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__simple__standby_impl(port, ptr, rust_vec_len, data_len),
+        28 => wire__crate__api__simple__start_roon_impl(port, ptr, rust_vec_len, data_len),
+        29 => wire__crate__api__simple__transfer_from_zone_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }

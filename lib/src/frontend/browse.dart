@@ -359,13 +359,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           }
 
           if (image != null) {
-            leading = Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(width: 48, child: image),
-                Padding(padding: EdgeInsets.fromLTRB(0, 0, dynPadding, 0)),
-              ],
-            );
+            leading = SizedBox(width: 48, child: image);
           } else if (track != null) {
             String id = disk != null ? '$disk-$track' : track.toString();
 
@@ -375,10 +369,10 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
             );
           } else {
             if (!_isScrolling && imageKey != null) {
-              appState.requestImage(imageKey, addToImageCache);
+              appState.requestThumbnail(imageKey, addToImageCache);
             }
 
-            leading = const SizedBox(width: 48, child: Text(''));
+            leading = const SizedBox(width: 48);
           }
 
           if (browseList[index].hint == BrowseItemHint.actionList) {
@@ -418,7 +412,13 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           }
 
           return ListTile(
-            leading: leading,
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                leading,
+                Padding(padding: EdgeInsets.fromLTRB(0, 0, dynPadding, 0)),
+              ],
+            ),
             trailing: trailing,
             title: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: smallWidth ? 15 : 16)),
             subtitle: subtitle,
@@ -471,7 +471,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           Widget? trailing;
 
           if (imageKey != null) {
-            trailing = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+            trailing = _imageCache[imageKey] ?? appState.requestThumbnail(imageKey, addToImageCache);
           }
 
           browseTitle = ListTile(

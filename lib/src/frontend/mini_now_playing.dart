@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/now_playing_dialog.dart';
 import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/frontend/volume.dart';
 import 'package:community_remote/src/frontend/zones.dart';
@@ -52,6 +53,12 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
           subtitle: Text(nowPlaying.twoLine.line2, overflow: TextOverflow.ellipsis),
           contentPadding: const EdgeInsets.all(0),
           minTileHeight: 56,
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) => const Dialog.fullscreen(
+              child: NowPlayingDialog(),
+            ),
+          ),
         );
       } else {
         metadata = const ListTile(title: Text('Go find something to play'));

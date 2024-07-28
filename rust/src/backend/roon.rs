@@ -172,9 +172,19 @@ impl Roon {
         handler.set_status_message(message).await;
     }
 
-    pub async fn get_image(&self, image_key: String) -> Option<()> {
+    pub async fn get_thumbnail(&self, image_key: String) -> Option<()> {
         let handler = self.handler.lock().await;
         let scaling = Some(Scaling::new(Scale::Fill, 100, 100));
+        let args = Args::new(scaling, None);
+
+        handler.image.as_ref()?.get_image(&image_key, args).await;
+
+        Some(())
+    }
+
+    pub async fn get_image(&self, image_key: String) -> Option<()> {
+        let handler = self.handler.lock().await;
+        let scaling = Some(Scaling::new(Scale::Fill, 1000, 1000));
         let args = Args::new(scaling, None);
 
         handler.image.as_ref()?.get_image(&image_key, args).await;
@@ -264,6 +274,7 @@ impl Roon {
             ..Default::default()
         };
 
+        handler.browse.as_mut()?.browse_clear();
         handler.browse.as_mut()?.browse(opts).await;
         handler.browse_category = Some(category);
         handler.browse_input = input;
