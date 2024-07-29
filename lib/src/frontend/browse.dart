@@ -314,7 +314,8 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
         ListTile itemBuilder(context, index) {
           Widget? leading;
           Widget? trailing;
-          String? imageKey = browseList[index].imageKey;
+          String? imageKeyTitle = browseList[index].title.contains('Play ') ? _browseItems!.list.imageKey : null;
+          String? imageKey = browseList[index].imageKey ?? (index == 0 ? imageKeyTitle : null);
           Image? image = _imageCache[imageKey];
           String title = browseList[index].title;
           Text? subtitle;
@@ -464,42 +465,34 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
     }
 
     if (_browseItems != null) {
-        var subtitle = _browseItems!.list.subtitle;
+      var subtitle = _browseItems!.list.subtitle;
 
-        if (subtitle != null && subtitle.isNotEmpty) {
-          var imageKey = _browseItems!.list.imageKey;
-          Widget? trailing;
+      if (subtitle != null && subtitle.isNotEmpty) {
+        browseTitle = ListTile(
+          title: Text(_browseItems!.list.title, overflow: TextOverflow.ellipsis),
+          subtitle: Text(subtitle, overflow: TextOverflow.ellipsis),
+          contentPadding: const EdgeInsets.all(0),
+        );
 
-          if (imageKey != null) {
-            trailing = _imageCache[imageKey] ?? appState.requestThumbnail(imageKey, addToImageCache);
-          }
+        if (appState.settings['view'] == Category.albums.index && _browseItems!.list.level == 3) {
+          actions.insert(
+            0,
+            IconButton(
+              onPressed: () {
+                _navigator.pushNamed(Uri.encodeComponent(subtitle));
 
-          browseTitle = ListTile(
-            title: Text(_browseItems!.list.title),
-            subtitle: Text(subtitle),
-            trailing: trailing,
-            contentPadding: const EdgeInsets.fromLTRB(16, 0, 32, 0),
+                searchArtist(artist: subtitle);
+              },
+              tooltip: 'More by $subtitle',
+              icon: const Icon(Symbols.artist_rounded),
+            )
           );
-
-          if (appState.settings['view'] == Category.albums.index && _browseItems!.list.level == 3) {
-            actions.insert(
-              0,
-              IconButton(
-                onPressed: () {
-                  _navigator.pushNamed(Uri.encodeComponent(subtitle));
-
-                  searchArtist(artist: subtitle);
-                },
-                tooltip: 'More by $subtitle',
-                icon: const Icon(Symbols.artist_rounded),
-              )
-            );
-          }
-        } else if (_navigator.canPop()) {
-          browseTitle = Text(_browseItems!.list.title);
-        } else {
-          browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
         }
+      } else if (_navigator.canPop()) {
+        browseTitle = Text(_browseItems!.list.title);
+      } else {
+        browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
+      }
     }
 
     return PopScope(
@@ -509,15 +502,15 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           title: browseTitle,
           actions: actions,
         ),
-        body: Card(
-          margin: const EdgeInsets.all(10),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              bool smallWidth = (constraints.maxWidth < smallWindowMaxWidth);
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            bool smallWidth = (constraints.maxWidth < smallWindowMaxWidth);
 
-              return getListView(smallWidth);
-            },
-          ),
+            return Card(
+              margin: const EdgeInsets.all(10),
+              child: getListView(smallWidth),
+            );
+          },
         ),
       ),
       onPopInvoked: (didPop) {
