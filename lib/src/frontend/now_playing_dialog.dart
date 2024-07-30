@@ -104,6 +104,25 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
       } else {
         metadata = const ListTile(title: Text('Go find something to play'));
       }
+
+      if (zone.isNextAllowed) {
+        tooltipNext = 'Next Track';
+        onNextPressed = () {
+          control(control: Control.next);
+        };
+      } else if (appState.queue != null && appState.queue!.isNotEmpty) {
+        tooltipNext = 'Play from Queue';
+        onNextPressed = () {
+          selectQueueItem(queueItemId: appState.queue![0].queueItemId);
+        };
+      }
+
+      if (zone.isPreviousAllowed) {
+        tooltipPrev = 'Previous Track';
+        onPrevPressed = () {
+          control(control: Control.previous);
+        };
+      }
     }
 
     return Card(
