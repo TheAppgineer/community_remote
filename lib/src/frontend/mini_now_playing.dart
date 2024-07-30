@@ -19,8 +19,8 @@ class MiniNowPlayingWidget extends StatefulWidget {
 class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
   double _progress = 0;
 
-  setProgress(int length, int? elapsed) {
-    setState(() {
+  _setProgress(int length, int? elapsed) {
+    if (mounted) {
       if (elapsed != null) {
         if (length > 0) {
           double progress = (elapsed.toDouble() / length.toDouble());
@@ -31,7 +31,23 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
       } else {
         _progress = 0.0;
       }
-    });
+
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    MyAppState.addProgressCallback(_setProgress);
+  }
+
+  @override
+  void dispose() {
+    MyAppState.removeProgressCallback(_setProgress);
+
+    super.dispose();
   }
 
   @override
@@ -39,8 +55,6 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
     var appState = context.watch<MyAppState>();
     List<Widget> zoneControl = [];
     ListTile metadata = const ListTile(title: Text('No Zone Selected'));
-
-    appState.setProgressCallback(setProgress);
 
     if (appState.zone != null) {
       Zone zone = appState.zone!;

@@ -19,8 +19,8 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
   String? _imageKey;
   Image? _image;
 
-  setProgress(int length, int? elapsed) {
-    setState(() {
+  _setProgress(int length, int? elapsed) {
+    if (mounted) {
       if (elapsed != null) {
         _length = length;
         _elapsed = elapsed;
@@ -36,7 +36,9 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
         _elapsed = 0;
         _progress = 0.0;
       }
-    });
+
+      setState(() {});
+    }
   }
 
   void _setImage(ImageKeyValue keyValue) {
@@ -48,6 +50,20 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    MyAppState.addProgressCallback(_setProgress);
+  }
+
+  @override
+  void dispose() {
+    MyAppState.removeProgressCallback(_setProgress);
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     ListTile metadata = const ListTile(title: Text('No Zone Selected'));
@@ -56,8 +72,6 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
     String? tooltipNext;
     String? tooltipPrev;
     String progress = '';
-
-    appState.setProgressCallback(setProgress);
 
     if (appState.zone != null) {
       Zone zone = appState.zone!;

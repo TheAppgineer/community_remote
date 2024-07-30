@@ -21,8 +21,8 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
   double _progress = 0;
   final Map<String, Image> _imageCache = {};
 
-  setProgress(int length, int? elapsed) {
-    setState(() {
+  _setProgress(int length, int? elapsed) {
+    if (mounted) {
       if (elapsed != null) {
         _length = length;
         _elapsed = elapsed;
@@ -38,7 +38,9 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         _elapsed = 0;
         _progress = 0.0;
       }
-    });
+
+      setState(() {});
+    }
   }
 
   void addToImageCache(ImageKeyValue keyValue) {
@@ -47,6 +49,20 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    MyAppState.addProgressCallback(_setProgress);
+  }
+
+  @override
+  void dispose() {
+    MyAppState.removeProgressCallback(_setProgress);
+
+    super.dispose();
   }
 
   @override
@@ -59,8 +75,6 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
     String? tooltipNext;
     String? tooltipPrev;
     String progress = '';
-
-    appState.setProgressCallback(setProgress);
 
     if (appState.zone != null) {
       Zone zone = appState.zone!;

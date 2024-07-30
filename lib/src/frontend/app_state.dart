@@ -12,6 +12,7 @@ const smallWindowMaxWidth = 500;
 
 class MyAppState extends ChangeNotifier {
   static final Map<String, Function(BrowseItems)> _browseCallbacks = {};
+  static final List<Function(int, int?)> _progressCallbacks = [];
   static Function? _profileCallback;
   String? serverName;
   String? token;
@@ -23,7 +24,6 @@ class MyAppState extends ChangeNotifier {
   Zone? zone;
   List<String> services = [];
   late Map<String, dynamic> settings;
-  Function? _progressCallback;
   Function? _queueRemainingCallback;
   final Map<String, List<Function>> _pendingImages = {};
   Function? _imageCallback;
@@ -53,12 +53,18 @@ class MyAppState extends ChangeNotifier {
     _profileCallback = callback;
   }
 
-  setSettings(settings) {
-    this.settings = settings;
+  static addProgressCallback(Function(int, int?) callback) {
+    if (!_progressCallbacks.contains(callback)) {
+      _progressCallbacks.add(callback);
+    }
   }
 
-  setProgressCallback(Function(int, int?)? callback) {
-    _progressCallback = callback;
+  static removeProgressCallback(Function(int, int?) callback) {
+    _progressCallbacks.remove(callback);
+  }
+
+  setSettings(settings) {
+    this.settings = settings;
   }
 
   setQueueRemainingCallback(Function(int)? callback) {
@@ -116,11 +122,13 @@ class MyAppState extends ChangeNotifier {
     if (event is RoonEvent_ZoneSeek) {
       ZoneSeek seek = event.field0;
 
-      if (_progressCallback != null) {
-        if (zone!.nowPlaying != null && zone!.nowPlaying!.length != null) {
-          _progressCallback!(zone!.nowPlaying!.length, seek.seekPosition);
-        } else if (seek.seekPosition != null) {
-          _progressCallback!(0, seek.seekPosition);
+      if (zone!.nowPlaying != null && zone!.nowPlaying!.length != null) {
+        for (Function callback in _progressCallbacks) {
+          callback(zone!.nowPlaying!.length, seek.seekPosition);
+        }
+      } else if (seek.seekPosition != null) {
+        for (Function callback in _progressCallbacks) {
+          callback(0, seek.seekPosition);
         }
       }
 
@@ -201,17 +209,16 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_ZoneChanged) {
       zone = event.field0;
 
-      if (_progressCallback != null && zone != null) {
-        if (zone!.nowPlaying != null) {
-          var seekPosition = zone!.nowPlaying!.seekPosition;
+      if (zone != null) {
+        int length = 0;
+        int? seekPosition = zone!.nowPlaying?.seekPosition;
 
-          if (zone!.nowPlaying!.length != null) {
-            _progressCallback!(zone!.nowPlaying!.length, seekPosition);
-          } else {
-            _progressCallback!(0, seekPosition);
-          }
-        } else {
-            _progressCallback!(0, null);
+        if (zone!.nowPlaying != null && zone!.nowPlaying!.length != null) {
+          length = zone!.nowPlaying!.length!;
+        }
+
+        for (Function(int, int?) callback in _progressCallbacks) {
+          callback(length, seekPosition);
         }
       }
 
