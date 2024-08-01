@@ -39,9 +39,8 @@ class _QueueState extends State<Queue> {
     var appState = context.watch<MyAppState>();
     Widget? widget;
 
-    appState.setQueueRemainingCallback(setQueueRemaining);
-
-    if (appState.zone != null && appState.queue != null && appState.queue!.isNotEmpty) {
+    Widget getListView(bool smallWidth) {
+      double dynPadding = smallWidth ? 0 : 10;
       List<QueueItem> queue = appState.queue!;
 
       ListTile itemBuilder(context, index) {
@@ -50,26 +49,31 @@ class _QueueState extends State<Queue> {
         var imageKey = queue[index].imageKey;
 
         if (imageKey != null) {
-          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+          image = _imageCache[imageKey] ?? appState.requestThumbnail(imageKey, addToImageCache);
         }
 
-        if (image != null) {
-          leading = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              image,
-              const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
-            ],
-          );
-        } else {
-          leading = const Padding(padding: EdgeInsets.fromLTRB(58, 0, 0, 0));
-        }
+        leading = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 48, child: image),
+            Padding(padding: EdgeInsets.fromLTRB(0, 0, dynPadding, 0)),
+          ],
+        );
 
         return ListTile(
           leading: leading,
-          title: Text(queue[index].twoLine.line1),
-          subtitle: Text(queue[index].twoLine.line2),
+          title: Text(
+            queue[index].twoLine.line1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: smallWidth ? 15 : 16)
+          ),
+          subtitle: Text(
+            queue[index].twoLine.line2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: smallWidth ? 15 : 16)
+          ),
           trailing: Text(appState.getDuration(queue[index].length), style: const TextStyle(fontSize: 14)),
+          contentPadding: const EdgeInsets.only(left: 10),
           onTap: () {
             selectQueueItem(queueItemId: queue[index].queueItemId);
           },
@@ -89,8 +93,8 @@ class _QueueState extends State<Queue> {
         );
       }
 
-      ListView listView = ListView.separated(
-        padding: const EdgeInsets.all(10),
+      return ListView.separated(
+        padding: EdgeInsets.all(dynPadding),
         itemBuilder: itemBuilder,
         separatorBuilder: (_, index) => Divider(
           color: index < queue.length - 1 && stops.contains(queue[index].queueItemId)
@@ -101,7 +105,11 @@ class _QueueState extends State<Queue> {
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
       );
+    }
 
+    appState.setQueueRemainingCallback(setQueueRemaining);
+
+    if (appState.zone != null && appState.queue != null && appState.queue!.isNotEmpty) {
       widget = Column(
         children: [
           ListTile(
@@ -110,7 +118,13 @@ class _QueueState extends State<Queue> {
               ? Text(appState.getDuration(_remaining), style: const TextStyle(fontSize: 14))
               : null,
           ),
-          Expanded(child: listView),
+          Expanded(child: LayoutBuilder(
+            builder: (context, constraints) {
+              bool smallWidth = (constraints.maxWidth < smallWindowMaxWidth);
+
+              return getListView(smallWidth);
+            },
+          )),
         ],
       );
     } else {
@@ -122,10 +136,7 @@ class _QueueState extends State<Queue> {
 
     return Card(
       margin: const EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: widget,
-      ),
+      child: widget,
     );
   }
 }

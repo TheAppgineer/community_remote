@@ -34,6 +34,9 @@ Future<void> selectZone({required String zoneId}) =>
 Future<void> transferFromZone({required String zoneId}) =>
     RustLib.instance.api.crateApiSimpleTransferFromZone(zoneId: zoneId);
 
+Future<void> getThumbnail({required String imageKey}) =>
+    RustLib.instance.api.crateApiSimpleGetThumbnail(imageKey: imageKey);
+
 Future<void> getImage({required String imageKey}) =>
     RustLib.instance.api.crateApiSimpleGetImage(imageKey: imageKey);
 

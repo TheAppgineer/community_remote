@@ -163,6 +163,14 @@ pub async fn transfer_from_zone(zone_id: String) {
     }
 }
 
+pub async fn get_thumbnail(image_key: String) {
+    let api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_ref() {
+        roon.get_thumbnail(image_key).await;
+    }
+}
+
 pub async fn get_image(image_key: String) {
     let api = API.lock().await;
 

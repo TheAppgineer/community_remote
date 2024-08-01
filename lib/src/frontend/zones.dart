@@ -10,7 +10,10 @@ import 'package:provider/provider.dart';
 class Zones extends StatefulWidget {
   const Zones({
     super.key,
+    required this.smallWidth,
   });
+
+  final bool smallWidth;
 
   @override
   State<Zones> createState() => _ZonesState();
@@ -39,30 +42,22 @@ class _ZonesState extends State<Zones> {
         Widget? playState;
         Text? metaData;
         TextStyle? style = const TextStyle(fontWeight: FontWeight.normal);
+        Icon? pause;
 
         if (appState.zone != null && zones[index].zoneId == appState.zone!.zoneId) {
           style = TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary);
         }
 
-        switch (zones[index].state) {
-          case PlayState.playing:
-            playState = IconButton(
-              icon: const Icon(Icons.pause_circle_outline),
-              onPressed: () {
-                controlByZoneId(zoneId: zones[index].zoneId, control: Control.pause);
-              },
-            );
-            break;
-          case PlayState.paused:
-            playState = const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0));
-            break;
-          case PlayState.loading:
-            playState = const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0));
-            break;
-          case PlayState.stopped:
-            playState = const Padding(padding: EdgeInsets.fromLTRB(40, 0, 0, 0));
-            break;
+        if (zones[index].state == PlayState.playing) {
+          pause = const Icon(Icons.pause_circle_outline);
         }
+
+        playState = IconButton(
+          icon: SizedBox(width: 48, child: pause),
+          onPressed: () {
+            controlByZoneId(zoneId: zones[index].zoneId, control: Control.pause);
+          },
+        );
 
         if (appState.zone != null) {
           List<MenuItemButton>? menuChildren;
@@ -125,6 +120,7 @@ class _ZonesState extends State<Zones> {
         }
 
         return ListTile(
+          contentPadding: widget.smallWidth ? EdgeInsets.zero : null,
           leading: playState,
           trailing: trailing,
           title: Text(zones[index].displayName, style: style),
@@ -147,7 +143,7 @@ class _ZonesState extends State<Zones> {
           Flexible(
             child: ListView.separated(
               controller: ScrollController(),
-              padding: const EdgeInsets.all(15),
+              padding: EdgeInsets.all(widget.smallWidth ? 0 : 10),
               itemBuilder: itemBuilder,
               separatorBuilder: (context, index) => const Divider(),
               itemCount: zones.length,

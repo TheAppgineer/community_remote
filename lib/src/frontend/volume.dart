@@ -7,7 +7,10 @@ import 'package:provider/provider.dart';
 class VolumeDialog extends StatefulWidget {
   const VolumeDialog({
     super.key,
+    required this.smallWidth,
   });
+
+  final bool smallWidth;
 
   @override
   State<VolumeDialog> createState() => _VolumeDialogState();
@@ -26,6 +29,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
       var outputs = appState.zone!.outputs;
 
       ListTile itemBuilder(context, index) {
+        double dynPadding = widget.smallWidth ? 0 : 10;
         Output output = outputs[index];
         List<Widget> subtitle = [];
         Widget? volumeSlider;
@@ -104,7 +108,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
                 onPressed: () => mute(outputId: output.outputId, how: Mute.mute),
               )
             );
-            subtitle.add(const Padding(padding: EdgeInsets.only(left: 15)));
+            subtitle.add(Padding(padding: EdgeInsets.only(left: dynPadding)));
           }
 
           var level = _levels[output.outputId];
@@ -112,13 +116,14 @@ class _VolumeDialogState extends State<VolumeDialog> {
           if (level != null) {
             var levelInt = level.toInt();
             var maxInt = max.toInt();
+            String levelString = widget.smallWidth ? '$levelInt' : '$levelInt / $maxInt';
 
             switch (volume.scale) {
               case Scale.number:
-                  subtitle.add(Text('$levelInt / $maxInt', style: const TextStyle(fontSize: 15)));
+                  subtitle.add(Text(levelString, style: TextStyle(fontSize: widget.smallWidth ? 14 : 15)));
                 break;
               case Scale.decibel:
-                  subtitle.add(Text('$levelInt / $maxInt dB', style: const TextStyle(fontSize: 15)));
+                  subtitle.add(Text('$levelString dB', style: TextStyle(fontSize: widget.smallWidth ? 14 : 15)));
                 break;
               case Scale.incremental:
                 break;
@@ -139,6 +144,7 @@ class _VolumeDialogState extends State<VolumeDialog> {
         }
 
         return ListTile(
+          contentPadding: widget.smallWidth ? EdgeInsets.zero : null,
           title: Text(outputs[index].displayName),
           subtitle: Row(
             children: subtitle,

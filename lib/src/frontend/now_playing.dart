@@ -21,8 +21,8 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
   double _progress = 0;
   final Map<String, Image> _imageCache = {};
 
-  setProgress(int length, int? elapsed) {
-    setState(() {
+  _setProgress(int length, int? elapsed) {
+    if (mounted) {
       if (elapsed != null) {
         _length = length;
         _elapsed = elapsed;
@@ -38,7 +38,9 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         _elapsed = 0;
         _progress = 0.0;
       }
-    });
+
+      setState(() {});
+    }
   }
 
   void addToImageCache(ImageKeyValue keyValue) {
@@ -47,6 +49,20 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    MyAppState.addProgressCallback(_setProgress);
+  }
+
+  @override
+  void dispose() {
+    MyAppState.removeProgressCallback(_setProgress);
+
+    super.dispose();
   }
 
   @override
@@ -60,8 +76,6 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
     String? tooltipPrev;
     String progress = '';
 
-    appState.setProgressCallback(setProgress);
-
     if (appState.zone != null) {
       Zone zone = appState.zone!;
 
@@ -72,14 +86,14 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         var imageKey = nowPlaying.imageKey;
 
         if (imageKey != null) {
-          image = _imageCache[imageKey] ?? appState.requestImage(imageKey, addToImageCache);
+          image = _imageCache[imageKey] ?? appState.requestThumbnail(imageKey, addToImageCache);
         }
 
         if (image != null) {
           leading = Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              image,
+              SizedBox(width: 48, child: image),
               const Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0)),
             ],
           );
@@ -131,7 +145,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         onPressed: () => showDialog(
           context: context,
           builder: (context) => const Dialog(
-            child: Zones(),
+            child: Zones(smallWidth: false),
           ),
         ),
         icon: Icon(zone.outputs.length > 1? Icons.speaker_group_outlined: Icons.speaker_outlined),
@@ -162,7 +176,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
         onPressed: () => showDialog(
           context: context,
           builder: (context) => const Dialog(
-            child: VolumeDialog(),
+            child: VolumeDialog(smallWidth: false),
           ),
         ),
         icon: Icon(volumeIcon),

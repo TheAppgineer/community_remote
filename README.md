@@ -1,24 +1,30 @@
 # Community Remote
 Play Roon the community way
 
+Community Remote has a focus on use-cases not covered by the official Roon Remote. Linux support is the obvious one, others are access control, random album playback and more.
+
 ## Early Development Stage
-Community Remote is in early development, with a current focus on Linux support. To be able to use on other platforms things like, Android sideloading, Windows security warnings, etc. should not scare you off.
+Community Remote is in early development. To be able to use it, things like, Android sideloading, Windows security warnings, etc. should not scare you off.
 
 ## Supported Platforms
-Currently supported platforms are Linux, Android and Windows, with a fixed desktop layout (i.e. PC, tablet only).
+Currently supported platforms are Linux, Android and Windows.
 
 The project is named Community Remote to emphasize that, in order to have maximum platform support, community collaboration is necessary.
 
 ### Linux
-![Linux screenshot light](images/linux-light.png)
+<img src="images/linux-light.png" alt="Linux light theme" width="800"/>
 
-![Linux screenshot dark](images/linux-dark.png)
+<img src="images/linux-dark.png" alt="Linux dark theme" width="800"/>
 
 ### Android
-![Android screenshot](images/android-dark.png)
+<img src="images/android-dark.png" alt="Android dark theme" width="800"/>
+
+|||
+|---|---|
+|<img src="images/android-mobile-home.png" alt="Android mobile" width="300"/>|<img src="images/android-mobile-nowplaying.png" alt="Android mobile nowplaying" width="300"/>|
 
 ### Windows
-![Windows screenshot](images/windows-dark.png)
+<img src="images/windows-dark.png" alt="Windows dark theme" width="800"/>
 
 ## Developers Helicopter View
 The Community Remote consists out of three main buidling blocks.
