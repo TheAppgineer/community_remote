@@ -161,7 +161,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
     }
   }
 
-  void addToImageCache(ImageKeyValue keyValue) {
+  void _addToImageCache(ImageKeyValue keyValue) {
     if (mounted) {
       setState(() {
         _imageCache[keyValue.imageKey] = Image.memory(keyValue.image);
@@ -187,8 +187,11 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
     position.isScrollingNotifier.removeListener(_handleScrollChange);
   }
 
-  void _setBrowseItems(BrowseItems newItems) {
-    if (_browseItems == null || _viewChanged) {
+  void _setBrowseItems(BrowseItems? newItems) {
+    if (newItems == null) {
+      _navigator.popUntilRoot();
+      _browseItems = null;
+    } else if (_browseItems == null || _viewChanged) {
       if (_controller.positions.isNotEmpty) {
         _controller.jumpTo(0);
       }
@@ -370,7 +373,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
             );
           } else {
             if (!_isScrolling && imageKey != null) {
-              appState.requestThumbnail(imageKey, addToImageCache);
+              appState.requestThumbnail(imageKey, _addToImageCache);
             }
 
             leading = const SizedBox(width: 48);

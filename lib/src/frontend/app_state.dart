@@ -11,7 +11,7 @@ const smallScreenMaxWidth = 900;
 const smallWindowMaxWidth = 500;
 
 class MyAppState extends ChangeNotifier {
-  static final Map<String, Function(BrowseItems)> _browseCallbacks = {};
+  static final Map<String, Function(BrowseItems?)> _browseCallbacks = {};
   static final List<Function(int, int?)> _progressCallbacks = [];
   static Function? _profileCallback;
   String? serverName;
@@ -41,7 +41,7 @@ class MyAppState extends ChangeNotifier {
     return settings["userName"];
   }
 
-  static setBrowseCallback(String route, Function(BrowseItems) callback) {
+  static setBrowseCallback(String route, Function(BrowseItems?) callback) {
     _browseCallbacks[route] = callback;
   }
 
@@ -199,6 +199,16 @@ class MyAppState extends ChangeNotifier {
 
       if (!initialized) {
         initialized = true;
+      }
+    } else if (event is RoonEvent_CoreLost) {
+      serverName = null;
+      token = null;
+      initialized = false;
+      zoneList = null;
+      zone = null;
+
+      for (var entry in _browseCallbacks.entries) {
+        entry.value(null);
       }
     } else if (event is RoonEvent_Profile) {
       if (_profileCallback != null) {
