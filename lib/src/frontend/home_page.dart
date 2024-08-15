@@ -17,16 +17,16 @@ const kkbox = "KKBOX";
 const qobuz = "Qobuz";
 const tidal = "TIDAL";
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   IconData? _profileIcon;
   bool _profileStateEnabled = true;
 
@@ -574,12 +574,12 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
       ? Icons.arrow_circle_left_outlined
       : Icons.arrow_circle_right_outlined;
     Map<int, Category> browsePath = {};
-    bool hasSmallWidth = MediaQuery.sizeOf(context).width < smallWindowMaxWidth;
+    bool smallWidth = MediaQuery.sizeOf(context).width < smallWindowMaxWidth;
     var destinations = [
       NavigationRailDestination(
         icon: Icon(icon),
         label: const Text(""),
-        disabled: hasSmallWidth,
+        disabled: smallWidth,
       ),
       _getDivider(label: "Library"),
     ];
@@ -667,6 +667,10 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
       );
     }
 
+    if (smallWidth && _setup) {
+      _setup = false;
+    }
+
     for (var category in Category.values) {
       if (category == Category.search) {
         continue;
@@ -697,14 +701,14 @@ class _HamburgerMenuState extends State<HamburgerMenu> {
     return SingleChildScrollView(
       child: IntrinsicHeight(
         child: GestureDetector(
-          onLongPress: hasSmallWidth ? null : () {
+          onLongPress: smallWidth ? null : () {
             setState(() {
               _setup = true;
             });
           },
           child: NavigationRail(
-            extended: appState.settings['expand'] || _setup,
-            minWidth: hasSmallWidth ? 56 : 72,
+            extended: (appState.settings['expand'] || _setup) && !smallWidth,
+            minWidth: smallWidth ? 56 : 72,
             minExtendedWidth: 192,
             destinations: destinations,
             selectedIndex: selectedIndex,

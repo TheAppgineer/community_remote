@@ -21,6 +21,7 @@ Future<void> main() async {
   await RustLib.init();
 
   Directory supportPath = await getApplicationSupportDirectory();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
   String jsonString = await startRoon(supportPath: supportPath.path, cb: appState.cb);
   Map<String, dynamic> stored = jsonDecode(jsonString) as Map<String, dynamic>;
   Map<String, dynamic> settings = stored.isNotEmpty ? stored : {
@@ -30,28 +31,27 @@ Future<void> main() async {
     "zoneId": null,
     "userName": null,
   };
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
   appState.setSettings(settings);
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => appState,
-      child: MyApp(title: 'Community Remote v${packageInfo.version}'),
+      child: Main(title: 'Community Remote v${packageInfo.version}'),
     )
   );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.title});
+class Main extends StatefulWidget {
+  const Main({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<Main> createState() => _MainState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MainState extends State<Main> with WidgetsBindingObserver {
   StreamSubscription<HardwareButton>? _volumeListener;
 
   _registerVolumeListener() {
@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.values.byName(appState.settings['theme']),
-      home: MyHomePage(title: widget.title),
+      home: HomePage(title: widget.title),
     );
   }
 }
