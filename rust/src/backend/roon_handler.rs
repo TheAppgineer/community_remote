@@ -178,6 +178,7 @@ impl RoonHandler {
                             if let Ok(data) = serde_json::from_value::<RoonAccessData>(access) {
                                 self.access.as_ref()?.lock().unwrap().set_data(data);
                                 self.query_profiles(true).await;
+                                self.send_zone_list().await;
                             }
                         }
                     }
@@ -210,6 +211,7 @@ impl RoonHandler {
                         self.zone_map.insert(zone.zone_id.to_owned(), zone);
                     }
 
+                    self.set_access_zones();
                     self.send_zone_list().await;
 
                     if let Some(zone) = curr_zone.as_ref() {
@@ -245,6 +247,7 @@ impl RoonHandler {
                         self.zone_map.remove(zone_id);
                     }
 
+                    self.set_access_zones();
                     self.send_zone_list().await;
 
                     if zone_ids.contains(self.zone_id.as_ref()?) {
@@ -603,12 +606,31 @@ impl RoonHandler {
         None
     }
 
+    fn set_access_zones(&mut self) {
+        if let Some(access) = self.access.as_mut() {
+            let mut access = access.lock().unwrap();
+            let zones = self
+                .zone_map
+                .iter()
+                .map(|(_, zone)| (zone.display_name.to_owned(), zone.zone_id.to_owned()))
+                .collect::<Vec<_>>();
+
+            access.set_zones(&zones);
+        }
+    }
+
     async fn send_zone_list(&self) {
         let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.display_name.cmp(&b.display_name);
+        let zone_ids = if let Some(access) = self.access.as_ref() {
+            let access = access.lock().unwrap();
+            access.get_zone_ids()
+        } else {
+            None
+        };
         let mut zones = self
             .zone_map
             .iter()
-            .map(|(zone_id, zone)| {
+            .filter_map(|(zone_id, zone)| {
                 let (image_key, now_playing) = if let Some(now_playing) = zone.now_playing.as_ref()
                 {
                     (
@@ -624,14 +646,23 @@ impl RoonHandler {
                     .iter()
                     .map(|output| output.output_id.to_owned())
                     .collect::<Vec<_>>();
-
-                ZoneSummary {
+                let summary = ZoneSummary {
                     zone_id: zone_id.to_owned(),
                     output_ids,
                     display_name: zone.display_name.to_owned(),
                     state: zone.state.to_owned(),
                     now_playing,
                     image_key,
+                };
+
+                if let Some(zone_ids) = zone_ids.as_ref() {
+                    if zone_ids.contains(zone_id) {
+                        Some(summary)
+                    } else {
+                        None
+                    }
+                } else {
+                    Some(summary)
                 }
             })
             .collect::<Vec<_>>();
