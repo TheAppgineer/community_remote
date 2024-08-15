@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Community Remote"
-#define MyAppVersion "0.0.6"
+#define MyAppVersion "0.0.7"
 #define MyAppPublisher "The Appgineer"
 #define MyAppURL "https://theappgineer.com/community_remote/"
 #define MyAppExeName "community_remote.exe"
