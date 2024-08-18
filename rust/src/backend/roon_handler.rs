@@ -524,6 +524,14 @@ impl RoonHandler {
                     result.offset
                 } as u32;
 
+                for item in &mut items {
+                    if let Some(subtitle) = item.subtitle.as_mut() {
+                        if let Some(cleaned) = Self::cleanup_subtitle(subtitle) {
+                            *subtitle = cleaned;
+                        }
+                    }
+                }
+
                 match title.as_str() {
                     "Search" | "Artists" => {
                         if list.subtitle.is_some() {
@@ -541,15 +549,6 @@ impl RoonHandler {
                                 Self::update_subtitle(subtitle, old_len, items.len())
                             } else {
                                 list.subtitle
-                            }
-                        }
-                    }
-                    "KKBOX" | "Qobuz" | "TIDAL" => {
-                        for item in &mut items {
-                            if let Some(subtitle) = item.subtitle.as_mut() {
-                                if let Some(cleaned) = Self::cleanup_subtitle(subtitle) {
-                                    *subtitle = cleaned;
-                                }
                             }
                         }
                     }
