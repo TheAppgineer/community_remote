@@ -1,8 +1,10 @@
 use rand::Rng;
+use regex::Regex;
 use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
 use roon_api::browse::ListHint as BrowseListHint;
+use roon_api::browse::LoadResult;
 use roon_api::{
     browse::{BrowseOpts, LoadOpts},
     image::{Args, Image, Scale, Scaling},
@@ -325,173 +327,7 @@ impl RoonHandler {
                     _ => {}
                 },
                 Parsed::LoadResult(result, multi_session_key) => {
-                    let key = multi_session_key.as_deref()?;
-
-                    self.browse.as_mut()?.browse_result().await;
-
-                    if result.list.title == "Explore" {
-                        for item in &result.items {
-                            let title = item.title.to_owned();
-
-                            if !self.services.contains(&title)
-                                && (title == "KKBOX" || title == "Qobuz" || title == "TIDAL")
-                            {
-                                self.services.push(title);
-                                self.event_tx
-                                    .send(RoonEvent::Services(self.services.to_owned()))
-                                    .await
-                                    .unwrap();
-                            }
-                        }
-                    }
-
-                    if let Some(path) = self.browse_path.get_mut(key) {
-                        if let Some(category) = path.pop() {
-                            let input = if category == "Search" {
-                                self.browse_input.take()
-                            } else {
-                                None
-                            };
-                            let item = result.items.iter().find(|item| item.title == *category)?;
-                            let (zone_id, pop_levels) = if item.hint == Some(BrowseItemHint::Action)
-                            {
-                                // Only provide zone_id if zone is online
-                                let zone_id = self
-                                    .zone_id
-                                    .as_ref()
-                                    .filter(|zone_id| self.zone_map.contains_key(*zone_id));
-
-                                if result.list.title == "Play Album" {
-                                    (zone_id, Some(1))
-                                } else {
-                                    (zone_id, None)
-                                }
-                            } else {
-                                (None, None)
-                            };
-
-                            self.browse_offset = 0;
-                            self.pop_levels = pop_levels;
-
-                            let opts = BrowseOpts {
-                                input,
-                                item_key: item.item_key.to_owned(),
-                                multi_session_key,
-                                set_display_offset: Some(self.browse_offset),
-                                zone_or_output_id: zone_id.cloned(),
-                                ..Default::default()
-                            };
-
-                            self.browse.as_mut()?.browse(opts).await;
-
-                            return Some(());
-                        }
-
-                        self.browse_path.remove(key);
-
-                        if result.list.title == "Profile" {
-                            let (profile, item_key) = self.process_profiles(&result.items).await?;
-                            let (access, profile_access) = {
-                                let access = self.access.as_ref()?.lock().unwrap();
-
-                                (access.has_data(), access.has_profile_access())
-                            };
-
-                            if access && self.activate_profile {
-                                let opts = BrowseOpts {
-                                    item_key,
-                                    multi_session_key,
-                                    ..Default::default()
-                                };
-
-                                self.activate_profile = false;
-                                self.browse.as_mut()?.browse(opts).await;
-
-                                log::info!("Selected profile: {}", profile);
-                                self.event_tx
-                                    .send(RoonEvent::CorePermitted(profile, profile_access))
-                                    .await
-                                    .unwrap();
-                            }
-
-                            return Some(());
-                        }
-                    }
-
-                    if result.list.title == "Explore"
-                        || result.list.title == "Library"
-                        || (self.artist_search && result.list.title == "Artists")
-                    {
-                        self.artist_search = false;
-                        self.browse_category = None;
-                        self.browse.as_mut()?.browse_clear();
-                        self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
-                    } else {
-                        if self.browse_category.is_some() {
-                            let event = if result.list.hint == Some(BrowseListHint::ActionList) {
-                                RoonEvent::BrowseActions(result.items)
-                            } else {
-                                let new_offset = result.offset + result.items.len();
-                                let title = result.list.title.to_owned();
-
-                                self.browse_id = multi_session_key;
-                                self.browse_offset = new_offset;
-                                self.browse_total = result.list.count;
-
-                                let mut items = result.items;
-
-                                let offset = if title == "Albums" || title == "Tracks" {
-                                    if result.offset == 0 {
-                                        let len = title.len() - 1;
-                                        let title = &title[..len];
-
-                                        items = self.prepend_random_play_entry(title, &items)?;
-
-                                        result.offset
-                                    } else {
-                                        result.offset + 1
-                                    }
-                                } else {
-                                    result.offset
-                                } as u32;
-
-                                if title == "Settings" {
-                                    if let Some(access) = &self.access {
-                                        let access = access.lock().unwrap();
-
-                                        if !access.has_profile_access() {
-                                            let index = items
-                                                .iter()
-                                                .position(|item| item.title == "Profile")?;
-
-                                            items.remove(index);
-                                        }
-                                    }
-
-                                    for item in items.iter() {
-                                        if item.title == "Profile" {
-                                            if let Some(subtitle) = item.subtitle.as_ref() {
-                                                self.event_tx
-                                                    .send(RoonEvent::Profile(subtitle.to_owned()))
-                                                    .await
-                                                    .unwrap();
-                                            }
-                                        }
-                                    }
-                                }
-
-                                let browse_items = BrowseItems {
-                                    list: result.list,
-                                    offset,
-                                    items,
-                                };
-
-                                RoonEvent::BrowseItems(browse_items)
-                            };
-
-                            self.event_tx.send(event).await.unwrap();
-                        }
-                    }
+                    self.on_load_results(result, multi_session_key).await;
                 }
                 Parsed::Queue(queue) => {
                     self.queue = Some(queue.to_owned());
@@ -552,6 +388,252 @@ impl RoonHandler {
         }
 
         Some(())
+    }
+
+    async fn on_load_results(
+        &mut self,
+        result: LoadResult,
+        multi_session_key: Option<String>,
+    ) -> Option<()> {
+        let key = multi_session_key.as_deref()?;
+
+        self.browse.as_mut()?.browse_result().await;
+
+        if result.list.title == "Explore" {
+            for item in &result.items {
+                let title = item.title.to_owned();
+
+                if !self.services.contains(&title)
+                    && (title == "KKBOX" || title == "Qobuz" || title == "TIDAL")
+                {
+                    self.services.push(title);
+                    self.event_tx
+                        .send(RoonEvent::Services(self.services.to_owned()))
+                        .await
+                        .unwrap();
+                }
+            }
+        }
+
+        if let Some(path) = self.browse_path.get_mut(key) {
+            if let Some(category) = path.pop() {
+                let input = if category == "Search" {
+                    self.browse_input.take()
+                } else {
+                    None
+                };
+                let item = result.items.iter().find(|item| item.title == *category)?;
+                let (zone_id, pop_levels) = if item.hint == Some(BrowseItemHint::Action) {
+                    // Only provide zone_id if zone is online
+                    let zone_id = self
+                        .zone_id
+                        .as_ref()
+                        .filter(|zone_id| self.zone_map.contains_key(*zone_id));
+
+                    if result.list.title == "Play Album" {
+                        (zone_id, Some(1))
+                    } else {
+                        (zone_id, None)
+                    }
+                } else {
+                    (None, None)
+                };
+
+                self.browse_offset = 0;
+                self.pop_levels = pop_levels;
+
+                let opts = BrowseOpts {
+                    input,
+                    item_key: item.item_key.to_owned(),
+                    multi_session_key,
+                    set_display_offset: Some(self.browse_offset),
+                    zone_or_output_id: zone_id.cloned(),
+                    ..Default::default()
+                };
+
+                self.browse.as_mut()?.browse(opts).await;
+
+                return Some(());
+            }
+
+            self.browse_path.remove(key);
+
+            if result.list.title == "Profile" {
+                let (profile, item_key) = self.process_profiles(&result.items).await?;
+                let (access, profile_access) = {
+                    let access = self.access.as_ref()?.lock().unwrap();
+
+                    (access.has_data(), access.has_profile_access())
+                };
+
+                if access && self.activate_profile {
+                    let opts = BrowseOpts {
+                        item_key,
+                        multi_session_key,
+                        ..Default::default()
+                    };
+
+                    self.activate_profile = false;
+                    self.browse.as_mut()?.browse(opts).await;
+
+                    log::info!("Selected profile: {}", profile);
+                    self.event_tx
+                        .send(RoonEvent::CorePermitted(profile, profile_access))
+                        .await
+                        .unwrap();
+                }
+
+                return Some(());
+            }
+        }
+
+        if result.list.title == "Explore"
+            || result.list.title == "Library"
+            || (self.artist_search && result.list.title == "Artists")
+        {
+            self.artist_search = false;
+            self.browse_category = None;
+            self.browse.as_mut()?.browse_clear();
+            self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
+        } else if self.browse_category.is_some() {
+            let event = if result.list.hint == Some(BrowseListHint::ActionList) {
+                RoonEvent::BrowseActions(result.items)
+            } else {
+                let new_offset = result.offset + result.items.len();
+                let title = result.list.title.to_owned();
+
+                self.browse_id = multi_session_key;
+                self.browse_offset = new_offset;
+                self.browse_total = result.list.count;
+
+                let mut items = result.items;
+                let mut list = result.list;
+
+                let offset = if title == "Albums" || title == "Tracks" {
+                    if result.offset == 0 {
+                        let len = title.len() - 1;
+                        let title = &title[..len];
+
+                        items = self.prepend_random_play_entry(title, &items)?;
+
+                        result.offset
+                    } else {
+                        result.offset + 1
+                    }
+                } else {
+                    result.offset
+                } as u32;
+
+                match title.as_str() {
+                    "Search" | "Artists" => {
+                        if list.subtitle.is_some() {
+                            let old_len = items.len();
+
+                            items = items
+                                .iter()
+                                .filter_map(|item| match item.subtitle.as_deref() {
+                                    Some(subtitle) if subtitle == "0 Albums" => None,
+                                    _ => Some(item.to_owned()),
+                                })
+                                .collect::<Vec<_>>();
+
+                            list.subtitle = if let Some(subtitle) = list.subtitle.as_mut() {
+                                Self::update_subtitle(subtitle, old_len, items.len())
+                            } else {
+                                list.subtitle
+                            }
+                        }
+                    }
+                    "KKBOX" | "Qobuz" | "TIDAL" => {
+                        for item in &mut items {
+                            if let Some(subtitle) = item.subtitle.as_mut() {
+                                if let Some(cleaned) = Self::cleanup_subtitle(subtitle) {
+                                    *subtitle = cleaned;
+                                }
+                            }
+                        }
+                    }
+                    "Settings" => {
+                        if let Some(access) = &self.access {
+                            let access = access.lock().unwrap();
+
+                            if !access.has_profile_access() {
+                                let index =
+                                    items.iter().position(|item| item.title == "Profile")?;
+
+                                items.remove(index);
+                            }
+                        }
+
+                        for item in items.iter() {
+                            if item.title == "Profile" {
+                                if let Some(subtitle) = item.subtitle.as_ref() {
+                                    self.event_tx
+                                        .send(RoonEvent::Profile(subtitle.to_owned()))
+                                        .await
+                                        .unwrap();
+                                }
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+
+                let browse_items = BrowseItems {
+                    list,
+                    offset,
+                    items,
+                };
+
+                RoonEvent::BrowseItems(browse_items)
+            };
+
+            self.event_tx.send(event).await.unwrap();
+        }
+
+        Some(())
+    }
+
+    fn cleanup_subtitle(subtitle: &str) -> Option<String> {
+        if subtitle.starts_with("[[") && subtitle.ends_with("]]") {
+            const SUBTITLE_SPLITTER: &'static str = r"^\[\[[0-9]+\|([^\]]+)\]\][ /+]*";
+            let regex = Regex::new(SUBTITLE_SPLITTER).unwrap();
+            let mut results = vec![];
+            let mut subtitle = subtitle;
+
+            while !subtitle.is_empty() {
+                subtitle = if let Some((match_str, [capture])) =
+                    regex.captures(subtitle).map(|c| c.extract())
+                {
+                    results.push(capture);
+                    subtitle.strip_prefix(match_str)
+                } else {
+                    None
+                }?;
+            }
+
+            Some(results.join(", "))
+        } else {
+            None
+        }
+    }
+
+    fn update_subtitle(subtitle: &str, old_len: usize, new_len: usize) -> Option<String> {
+        let mut split = subtitle.split(' ');
+        let mut subtitle = subtitle.to_owned();
+
+        if let Ok(count) = split.next()?.parse::<usize>() {
+            let mut remainder = split.next()?;
+
+            if split.next().is_none() && count == old_len && new_len < old_len {
+                if remainder.ends_with('s') && new_len == 1 {
+                    remainder = &remainder[0..remainder.len() - 1];
+                }
+                subtitle = format!("{} {}", new_len, remainder);
+            }
+        }
+
+        Some(subtitle)
     }
 
     async fn query_profiles(&mut self, activate_profile: bool) -> Option<()> {
