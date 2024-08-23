@@ -222,7 +222,7 @@ impl RoonAccess {
             widgets.push(Widget::Group(Group {
                 title: group_title,
                 subtitle: Some(zone_whitelist),
-                collapsable: true,
+                collapsable: false,
                 items: items,
             }));
         }
