@@ -14,7 +14,7 @@ use roon_api::{
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::HashMap,
     net::{IpAddr, Ipv4Addr},
     str::FromStr,
     sync::Arc,
@@ -198,21 +198,23 @@ impl Roon {
         if handler.zone_id.as_deref() != Some(zone_id) {
             let zone = handler.zone_map.get(zone_id).cloned();
 
-            handler.zone_id = Some(zone_id.to_owned());
+            if !handler.is_blocked_zone(&zone_id).await {
+                handler.zone_id = Some(zone_id.to_owned());
 
-            if zone.is_some() {
+                if zone.is_some() {
+                    handler
+                        .transport
+                        .as_ref()?
+                        .subscribe_queue(zone_id, 100)
+                        .await;
+                }
+
                 handler
-                    .transport
-                    .as_ref()?
-                    .subscribe_queue(zone_id, 100)
-                    .await;
+                    .event_tx
+                    .send(RoonEvent::ZoneChanged(zone))
+                    .await
+                    .unwrap();
             }
-
-            handler
-                .event_tx
-                .send(RoonEvent::ZoneChanged(zone))
-                .await
-                .unwrap();
         }
 
         Some(())
@@ -453,7 +455,7 @@ impl Roon {
     pub async fn pause_all(&self) -> Option<()> {
         let handler = self.handler.lock().await;
 
-        handler.transport.as_ref()?.pause_all().await;
+        handler.pause_whitelisted_zones().await;
 
         Some(())
     }
@@ -489,15 +491,6 @@ impl Roon {
 
     pub async fn mute_zone(&self) -> Option<()> {
         let mut handler = self.handler.lock().await;
-        let zone_id = handler.zone_id.as_ref()?;
-        let outputs = &handler.zone_map.get(zone_id)?.outputs;
-        let mut mute_list = VecDeque::new();
-
-        for output in outputs {
-            mute_list.push_back(output.output_id.clone());
-        }
-
-        handler.mute_list = mute_list;
 
         handler.handle_mute_list().await;
 

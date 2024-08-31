@@ -36,7 +36,6 @@ pub struct RoonHandler {
     pub transport: Option<Transport>,
     pub zone_map: HashMap<String, Zone>,
     pub zone_id: Option<String>,
-    pub mute_list: VecDeque<String>,
     pub browse_id: Option<String>,
     pub browse_path: HashMap<String, Vec<String>>,
     pub browse_category: Option<i32>,
@@ -48,6 +47,7 @@ pub struct RoonHandler {
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
     pub services: Vec<String>,
+    mute_list: VecDeque<String>,
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
     activate_profile: bool,
@@ -67,7 +67,6 @@ impl RoonHandler {
             transport: None,
             zone_map: HashMap::new(),
             zone_id: None,
-            mute_list: VecDeque::new(),
             browse_id: None,
             browse_path: HashMap::new(),
             browse_category: None,
@@ -79,6 +78,7 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
+            mute_list: VecDeque::new(),
             status: None,
             access: None,
             activate_profile: false,
@@ -181,6 +181,22 @@ impl RoonHandler {
                                 self.access.as_ref()?.lock().unwrap().set_data(data);
                                 self.query_profiles(true).await;
                                 self.send_zone_list().await;
+
+                                let zone_id = self.zone_id.as_ref()?;
+
+                                if self.is_blocked_zone(zone_id).await {
+                                    self.event_tx
+                                        .send(RoonEvent::ZoneChanged(None))
+                                        .await
+                                        .unwrap();
+                                } else {
+                                    let curr_zone = self.zone_map.get(zone_id).cloned();
+
+                                    self.event_tx
+                                        .send(RoonEvent::ZoneChanged(curr_zone))
+                                        .await
+                                        .unwrap();
+                                }
                             }
                         }
                     }
@@ -201,13 +217,15 @@ impl RoonHandler {
 
                     for zone in zones {
                         if Some(&zone.zone_id) == self.zone_id.as_ref() {
-                            curr_zone = Some(zone.to_owned());
+                            if !self.is_blocked_zone(&zone.zone_id).await {
+                                curr_zone = Some(zone.to_owned());
 
-                            if prev_zone_state.is_none() {
-                                self.transport
-                                    .as_ref()?
-                                    .subscribe_queue(&zone.zone_id, 100)
-                                    .await;
+                                if prev_zone_state.is_none() {
+                                    self.transport
+                                        .as_ref()?
+                                        .subscribe_queue(&zone.zone_id, 100)
+                                        .await;
+                                }
                             }
                         }
                         self.zone_map.insert(zone.zone_id.to_owned(), zone);
@@ -261,14 +279,17 @@ impl RoonHandler {
                 }
                 Parsed::ZonesSeek(seeks) => {
                     let zone_id = self.zone_id.as_ref()?;
-                    let seek = seeks.iter().find(|seek| &seek.zone_id == zone_id)?;
 
-                    self.handle_pause_on_track_end(seek).await;
+                    if !self.is_blocked_zone(zone_id).await {
+                        let seek = seeks.iter().find(|seek| &seek.zone_id == zone_id)?;
 
-                    self.event_tx
-                        .send(RoonEvent::ZoneSeek(seek.to_owned()))
-                        .await
-                        .unwrap();
+                        self.handle_pause_on_track_end(seek).await;
+
+                        self.event_tx
+                            .send(RoonEvent::ZoneSeek(seek.to_owned()))
+                            .await
+                            .unwrap();
+                    }
                 }
                 Parsed::Outputs(outputs) => {
                     for output in outputs {
@@ -388,6 +409,66 @@ impl RoonHandler {
         }
 
         Some(())
+    }
+
+    pub async fn is_blocked_zone(&self, zone_id: &str) -> bool {
+        if let Some(access) = self.access.as_ref() {
+            match access.lock().unwrap().get_zone_ids() {
+                Some(whitelist) if !whitelist.contains(&zone_id.to_owned()) => true,
+                _ => false,
+            }
+        } else {
+            true
+        }
+    }
+
+    pub async fn pause_whitelisted_zones(&self) -> Option<()> {
+        let zone_ids = self.access.as_ref()?.lock().unwrap().get_zone_ids()?;
+
+        for zone_id in zone_ids {
+            self.transport
+                .as_ref()?
+                .control(&zone_id, &Control::Pause)
+                .await;
+        }
+
+        Some(())
+    }
+
+    pub async fn handle_mute_list(&mut self) -> Option<()> {
+        let zone_id = self.zone_id.as_ref()?;
+        let outputs = &self.zone_map.get(zone_id)?.outputs;
+        let mut mute_list = VecDeque::new();
+
+        for output in outputs {
+            mute_list.push_back(output.output_id.clone());
+        }
+
+        self.mute_list = mute_list;
+
+        loop {
+            let output_id = self.mute_list.get(0)?;
+
+            for output in outputs {
+                if output.output_id == *output_id {
+                    if let Some(volume) = output.volume.as_ref() {
+                        let is_muted = volume.is_muted.unwrap_or(true);
+
+                        if is_muted {
+                            self.mute_list.pop_front();
+                        } else {
+                            self.transport.as_ref()?.mute(&output_id, &Mute::Mute).await;
+
+                            return Some(());
+                        }
+                    } else {
+                        self.mute_list.pop_front();
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
     async fn on_load_results(
@@ -702,12 +783,6 @@ impl RoonHandler {
 
     async fn send_zone_list(&self) {
         let name_sort = |a: &ZoneSummary, b: &ZoneSummary| a.display_name.cmp(&b.display_name);
-        let zone_ids = if let Some(access) = self.access.as_ref() {
-            let access = access.lock().unwrap();
-            access.get_zone_ids()
-        } else {
-            None
-        };
         let mut zones = self
             .zone_map
             .iter()
@@ -721,7 +796,6 @@ impl RoonHandler {
                 } else {
                     (None, None)
                 };
-
                 let output_ids = zone
                     .outputs
                     .iter()
@@ -736,14 +810,16 @@ impl RoonHandler {
                     image_key,
                 };
 
-                if let Some(zone_ids) = zone_ids.as_ref() {
-                    if zone_ids.contains(zone_id) {
-                        Some(summary)
-                    } else {
-                        None
+                if let Some(access) = self.access.as_ref() {
+                    let zone_ids = access.lock().unwrap().get_zone_ids();
+
+                    match zone_ids {
+                        Some(zone_ids) if zone_ids.contains(zone_id) => Some(summary),
+                        None => Some(summary),
+                        Some(_) => None,
                     }
                 } else {
-                    Some(summary)
+                    None
                 }
             })
             .collect::<Vec<_>>();
@@ -754,35 +830,6 @@ impl RoonHandler {
             .send(RoonEvent::ZonesChanged(zones))
             .await
             .unwrap();
-    }
-
-    pub async fn handle_mute_list(&mut self) -> Option<()> {
-        let zone_id = self.zone_id.as_ref()?;
-        let outputs = &self.zone_map.get(zone_id)?.outputs;
-
-        loop {
-            let output_id = self.mute_list.get(0)?;
-
-            for output in outputs {
-                if output.output_id == *output_id {
-                    if let Some(volume) = output.volume.as_ref() {
-                        let is_muted = volume.is_muted.unwrap_or(true);
-
-                        if is_muted {
-                            self.mute_list.pop_front();
-                        } else {
-                            self.transport.as_ref()?.mute(&output_id, &Mute::Mute).await;
-
-                            return Some(());
-                        }
-                    } else {
-                        self.mute_list.pop_front();
-                    }
-
-                    break;
-                }
-            }
-        }
     }
 
     async fn handle_pause_on_track_end(&mut self, seek: &ZoneSeek) -> Option<()> {
