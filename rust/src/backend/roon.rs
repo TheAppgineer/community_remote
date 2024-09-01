@@ -195,29 +195,7 @@ impl Roon {
     pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
         let mut handler = self.handler.lock().await;
 
-        if handler.zone_id.as_deref() != Some(zone_id) {
-            let zone = handler.zone_map.get(zone_id).cloned();
-
-            if !handler.is_blocked_zone(&zone_id).await {
-                handler.zone_id = Some(zone_id.to_owned());
-
-                if zone.is_some() {
-                    handler
-                        .transport
-                        .as_ref()?
-                        .subscribe_queue(zone_id, 100)
-                        .await;
-                }
-
-                handler
-                    .event_tx
-                    .send(RoonEvent::ZoneChanged(zone))
-                    .await
-                    .unwrap();
-            }
-        }
-
-        Some(())
+        handler.select_zone(zone_id).await
     }
 
     pub async fn transfer_from_zone(&self, zone_id: &str) -> Option<()> {
@@ -455,7 +433,7 @@ impl Roon {
     pub async fn pause_all(&self) -> Option<()> {
         let handler = self.handler.lock().await;
 
-        handler.pause_whitelisted_zones().await;
+        handler.pause_whitelisted_outputs().await;
 
         Some(())
     }
@@ -489,12 +467,10 @@ impl Roon {
         Some(())
     }
 
-    pub async fn mute_zone(&self) -> Option<()> {
+    pub async fn mute_zone(&self) {
         let mut handler = self.handler.lock().await;
 
         handler.handle_mute_list().await;
-
-        Some(())
     }
 
     pub async fn change_volume(&self, output_id: &str, how: &ChangeMode, value: i32) -> Option<()> {
