@@ -47,6 +47,15 @@
 
   <launchable type="desktop-id">com.theappgineer.community_remote.desktop</launchable>
   <releases>
+    <release version="0.0.8" date="2024-09-06">
+      <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.8</url>
+      <description>
+        <p>
+          This release extends Access Control with Roon Output whitelisting.
+          Only zones that have all its outputs on the whitelist can be controlled.
+        </p>
+      </description>
+    </release>
     <release version="0.0.7" date="2024-08-23">
       <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.7</url>
     </release>
