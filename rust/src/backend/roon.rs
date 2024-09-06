@@ -470,6 +470,7 @@ impl Roon {
     pub async fn mute_zone(&self) {
         let mut handler = self.handler.lock().await;
 
+        handler.set_mute_list();
         handler.handle_mute_list().await;
     }
 

@@ -47,6 +47,7 @@ pub struct RoonHandler {
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
     pub services: Vec<String>,
+    mute_list: VecDeque<String>,
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
     activate_profile: bool,
@@ -77,6 +78,7 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
+            mute_list: VecDeque::new(),
             status: None,
             access: None,
             activate_profile: false,
@@ -445,17 +447,25 @@ impl RoonHandler {
         Some(())
     }
 
+    pub fn set_mute_list(&mut self) -> Option<()> {
+        let zone_id = self.zone_id.as_ref()?;
+        let outputs = &self.zone_map.get(zone_id)?.outputs;
+
+        self.mute_list.clear();
+
+        for output in outputs {
+            self.mute_list.push_back(output.output_id.clone());
+        }
+
+        Some(())
+    }
+
     pub async fn handle_mute_list(&mut self) -> Option<()> {
         let zone_id = self.zone_id.as_ref()?;
         let outputs = &self.zone_map.get(zone_id)?.outputs;
-        let mut mute_list = VecDeque::new();
-
-        for output in outputs {
-            mute_list.push_back(output.output_id.clone());
-        }
 
         loop {
-            let output_id = mute_list.get(0)?;
+            let output_id = self.mute_list.get(0)?;
 
             for output in outputs {
                 if output.output_id == *output_id {
@@ -463,14 +473,14 @@ impl RoonHandler {
                         let is_muted = volume.is_muted.unwrap_or(true);
 
                         if is_muted {
-                            mute_list.pop_front();
+                            self.mute_list.pop_front();
                         } else {
                             self.transport.as_ref()?.mute(&output_id, &Mute::Mute).await;
 
                             return Some(());
                         }
                     } else {
-                        mute_list.pop_front();
+                        self.mute_list.pop_front();
                     }
 
                     break;
