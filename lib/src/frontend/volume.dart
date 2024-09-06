@@ -62,7 +62,8 @@ class _VolumeDialogState extends State<VolumeDialog> {
             _changing[output.outputId] ??= false;
 
             if (!_changing[output.outputId]!) {
-              _levels[output.outputId] = volume.value!;
+              double level = volume.value!;
+              _levels[output.outputId] = level > max ? max : level;
             }
 
             volumeSlider = SliderTheme(

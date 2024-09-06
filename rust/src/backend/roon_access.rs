@@ -7,14 +7,14 @@ use std::sync::{Arc, Mutex};
 
 pub struct RoonAccess {
     profiles: Option<Vec<String>>,
-    zones: Option<Vec<(String, String)>>,
+    outputs: Option<Vec<(String, String)>>,
     data: Option<RoonAccessData>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct RoonAccessData {
     pub profile: String,
-    pub zone_whitelist: Option<Vec<String>>,
+    pub output_whitelist: Option<Vec<String>>,
     whitelist_remove: Option<String>,
     whitelist_add: Option<String>,
 }
@@ -41,31 +41,31 @@ impl RoonAccess {
     ) -> (Svc, Settings, Arc<Mutex<RoonAccess>>) {
         let access = Arc::new(Mutex::new(RoonAccess {
             profiles: None,
-            zones: None,
+            outputs: None,
             data: None,
         }));
         let access_clone = access.clone();
         let get_layout = move |settings: Option<RoonAccessData>| -> Layout<RoonAccessData> {
             fn update_whitelist(
                 mut settings: RoonAccessData,
-                zones: Option<&[(String, String)]>,
+                outputs: Option<&[(String, String)]>,
             ) -> RoonAccessData {
                 let remove = settings.whitelist_remove.take();
                 let add = settings.whitelist_add.take();
                 let mut drop_whitelist = false;
 
-                if (remove.is_some() || add.is_some()) && settings.zone_whitelist.is_none() {
-                    if let Some(zones) = zones {
-                        let whitelist = zones
+                if (remove.is_some() || add.is_some()) && settings.output_whitelist.is_none() {
+                    if let Some(outputs) = outputs {
+                        let whitelist = outputs
                             .iter()
                             .map(|(_, id)| id.to_owned())
                             .collect::<Vec<_>>();
 
-                        settings.zone_whitelist = Some(whitelist);
+                        settings.output_whitelist = Some(whitelist);
                     }
                 }
 
-                if let Some(whitelist) = settings.zone_whitelist.as_mut() {
+                if let Some(whitelist) = settings.output_whitelist.as_mut() {
                     if let Some(remove) = remove.as_ref() {
                         if let Some(index) = whitelist.iter().position(|id| id == remove) {
                             whitelist.remove(index);
@@ -81,7 +81,7 @@ impl RoonAccess {
                 }
 
                 if drop_whitelist {
-                    settings.zone_whitelist = None;
+                    settings.output_whitelist = None;
                 }
 
                 settings
@@ -89,7 +89,7 @@ impl RoonAccess {
 
             let mut access = access_clone.lock().unwrap();
             let settings = match settings {
-                Some(settings) => update_whitelist(settings, access.zones.as_deref()),
+                Some(settings) => update_whitelist(settings, access.outputs.as_deref()),
                 None => {
                     let value = RoonApi::load_config(&config_path, "access");
 
@@ -108,8 +108,8 @@ impl RoonAccess {
         self.profiles = Some(profiles);
     }
 
-    pub fn set_zones(&mut self, zones: &[(String, String)]) {
-        self.zones = Some(Vec::from(zones));
+    pub fn set_output_list(&mut self, outputs: &[(String, String)]) {
+        self.outputs = Some(Vec::from(outputs));
     }
 
     pub fn set_data(&mut self, data: RoonAccessData) {
@@ -135,11 +135,11 @@ impl RoonAccess {
         }
     }
 
-    pub fn get_zone_ids(&self) -> Option<Vec<String>> {
+    pub fn get_output_ids(&self) -> Option<Vec<String>> {
         let ids = self
             .data
             .as_ref()?
-            .zone_whitelist
+            .output_whitelist
             .as_ref()?
             .iter()
             .map(|id| id.to_owned())
@@ -156,7 +156,7 @@ impl RoonAccess {
             "Selectable".to_string(),
             "".to_string(),
         )];
-        let mut zone_whitelist = String::new();
+        let mut output_whitelist = String::new();
 
         if let Some(profiles) = access.profiles.as_ref() {
             for profile in profiles {
@@ -171,32 +171,32 @@ impl RoonAccess {
             setting: "profile",
         })];
 
-        if let Some(zones) = access.zones.as_ref() {
+        if let Some(outputs) = access.outputs.as_ref() {
             let (group_title, remove_title, remove_subtitle) =
-                if let Some(whitelist) = settings.zone_whitelist.as_ref() {
-                    for (name, id) in zones {
+                if let Some(whitelist) = settings.output_whitelist.as_ref() {
+                    for (name, id) in outputs {
                         if whitelist.contains(id) {
                             remove_values.push(DropdownEntry::from(name.to_owned(), id.to_owned()));
-                            zone_whitelist.push_str(name);
-                            zone_whitelist.push('\n');
+                            output_whitelist.push_str(name);
+                            output_whitelist.push('\n');
                         } else {
                             add_values.push(DropdownEntry::from(name.to_owned(), id.to_owned()));
                         }
                     }
 
                     (
-                        "Whitelisted zones:",
+                        "Whitelisted outputs:",
                         "Remove from whitelist",
-                        Some("Remove all to allow all zones".to_owned()),
+                        Some("Remove all to allow all outputs".to_owned()),
                     )
                 } else {
-                    for (name, id) in zones {
+                    for (name, id) in outputs {
                         remove_values.push(DropdownEntry::from(name.to_owned(), id.to_owned()));
-                        zone_whitelist.push_str(name);
-                        zone_whitelist.push('\n');
+                        output_whitelist.push_str(name);
+                        output_whitelist.push('\n');
                     }
 
-                    ("All zones allowed", "Remove from zone list", None)
+                    ("All outputs allowed", "Remove from output list", None)
                 };
 
             let mut items = Vec::new();
@@ -221,7 +221,7 @@ impl RoonAccess {
 
             widgets.push(Widget::Group(Group {
                 title: group_title,
-                subtitle: Some(zone_whitelist),
+                subtitle: Some(output_whitelist),
                 collapsable: false,
                 items: items,
             }));
