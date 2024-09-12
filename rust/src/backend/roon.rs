@@ -269,25 +269,7 @@ impl Roon {
         if item_key.contains("random") {
             self.handle_random_item(multi_session_key, &item).await;
         } else {
-            let mut handler = self.handler.lock().await;
-            let mut opts = BrowseOpts {
-                item_key: item.item_key,
-                multi_session_key,
-                set_display_offset: Some(0),
-                ..Default::default()
-            };
-
-            if item.hint == Some(BrowseItemHint::Action) {
-                // Only provide zone_id if zone is online
-                opts.zone_or_output_id = handler
-                    .zone_id
-                    .as_ref()
-                    .filter(|zone_id| handler.zone_map.contains_key(*zone_id))
-                    .cloned();
-            }
-
-            handler.browse_offset = 0;
-            handler.browse.as_mut()?.browse(opts).await;
+            self.handler.lock().await.select_browse_item(item).await;
         }
 
         Some(())

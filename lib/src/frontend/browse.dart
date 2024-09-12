@@ -516,7 +516,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           },
         ),
       ),
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, _) {
         if (didPop && !_viewChanged) {
           _navigator.routes.removeLast();
           browseBack();

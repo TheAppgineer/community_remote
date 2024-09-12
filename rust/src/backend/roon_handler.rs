@@ -50,6 +50,7 @@ pub struct RoonHandler {
     mute_list: VecDeque<String>,
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
+    track_down_actionlist: bool,
     activate_profile: bool,
     api_token: Option<String>,
     config_path: Arc<String>,
@@ -81,6 +82,7 @@ impl RoonHandler {
             mute_list: VecDeque::new(),
             status: None,
             access: None,
+            track_down_actionlist: false,
             activate_profile: false,
             api_token: None,
             config_path,
@@ -489,6 +491,35 @@ impl RoonHandler {
         }
     }
 
+    pub async fn select_browse_item(&mut self, item: BrowseItem) {
+        let mut opts = BrowseOpts {
+            item_key: item.item_key,
+            multi_session_key: self.get_multi_session_key(),
+            set_display_offset: Some(0),
+            ..Default::default()
+        };
+
+        match item.hint {
+            Some(BrowseItemHint::Action) => {
+                // Only provide zone_id if zone is online
+                opts.zone_or_output_id = self
+                    .zone_id
+                    .as_ref()
+                    .filter(|zone_id| self.zone_map.contains_key(*zone_id))
+                    .cloned();
+            }
+            Some(BrowseItemHint::ActionList) => {
+                self.track_down_actionlist = true;
+            }
+            _ => {}
+        }
+
+        self.browse_offset = 0;
+        if let Some(browse) = self.browse.as_mut() {
+            browse.browse(opts).await;
+        }
+    }
+
     async fn on_load_results(
         &mut self,
         result: LoadResult,
@@ -595,98 +626,113 @@ impl RoonHandler {
             self.browse.as_mut()?.browse_clear();
             self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
         } else if self.browse_category.is_some() {
-            let event = if result.list.hint == Some(BrowseListHint::ActionList) {
-                RoonEvent::BrowseActions(result.items)
+            let is_action_list = result.list.hint == Some(BrowseListHint::ActionList);
+
+            if !is_action_list && self.track_down_actionlist {
+                let opts = BrowseOpts {
+                    item_key: result.items.get(0).as_ref()?.item_key.clone(),
+                    multi_session_key,
+                    ..Default::default()
+                };
+
+                self.browse.as_mut()?.browse(opts).await;
             } else {
-                let new_offset = result.offset + result.items.len();
-                let title = result.list.title.to_owned();
-
-                self.browse_id = multi_session_key;
-                self.browse_offset = new_offset;
-                self.browse_total = result.list.count;
-
-                let mut items = result.items;
-                let mut list = result.list;
-
-                let offset = if title == "Albums" || title == "Tracks" {
-                    if result.offset == 0 {
-                        let len = title.len() - 1;
-                        let title = &title[..len];
-
-                        items = self.prepend_random_play_entry(title, &items)?;
-
-                        result.offset
-                    } else {
-                        result.offset + 1
-                    }
+                let event = if is_action_list {
+                    self.track_down_actionlist = false;
+                    RoonEvent::BrowseActions(result.items)
                 } else {
-                    result.offset
-                } as u32;
+                    let new_offset = result.offset + result.items.len();
+                    let title = result.list.title.to_owned();
 
-                for item in &mut items {
-                    if let Some(subtitle) = item.subtitle.as_mut() {
-                        if let Some(cleaned) = Self::cleanup_subtitle(subtitle) {
-                            *subtitle = cleaned;
+                    self.browse_id = multi_session_key;
+                    self.browse_offset = new_offset;
+                    self.browse_total = result.list.count;
+
+                    let mut items = result.items;
+                    let mut list = result.list;
+
+                    let offset = if title == "Albums" || title == "Tracks" {
+                        // TODO: This is also used in search results where subtitle is set
+                        if result.offset == 0 {
+                            let len = title.len() - 1;
+                            let title = &title[..len];
+
+                            items = self.prepend_random_play_entry(title, &items)?;
+
+                            result.offset
+                        } else {
+                            result.offset + 1
                         }
-                    }
-                }
+                    } else {
+                        result.offset
+                    } as u32;
 
-                match title.as_str() {
-                    "Search" | "Artists" => {
-                        if list.subtitle.is_some() {
-                            let old_len = items.len();
-
-                            items = items
-                                .iter()
-                                .filter_map(|item| match item.subtitle.as_deref() {
-                                    Some(subtitle) if subtitle == "0 Albums" => None,
-                                    _ => Some(item.to_owned()),
-                                })
-                                .collect::<Vec<_>>();
-
-                            list.subtitle = if let Some(subtitle) = list.subtitle.as_mut() {
-                                Self::update_subtitle(subtitle, old_len, items.len())
-                            } else {
-                                list.subtitle
+                    for item in &mut items {
+                        if let Some(subtitle) = item.subtitle.as_mut() {
+                            if let Some(cleaned) = Self::cleanup_subtitle(subtitle) {
+                                *subtitle = cleaned;
                             }
                         }
                     }
-                    "Settings" => {
-                        if let Some(access) = &self.access {
-                            let access = access.lock().unwrap();
 
-                            if !access.has_profile_access() {
-                                let index =
-                                    items.iter().position(|item| item.title == "Profile")?;
+                    match title.as_str() {
+                        "Search" | "Artists" => {
+                            // TODO: Similar case for Composers having 0 Compositions
+                            if list.subtitle.is_some() {
+                                let old_len = items.len();
 
-                                items.remove(index);
-                            }
-                        }
+                                items = items
+                                    .iter()
+                                    .filter_map(|item| match item.subtitle.as_deref() {
+                                        Some(subtitle) if subtitle == "0 Albums" => None,
+                                        _ => Some(item.to_owned()),
+                                    })
+                                    .collect::<Vec<_>>();
 
-                        for item in items.iter() {
-                            if item.title == "Profile" {
-                                if let Some(subtitle) = item.subtitle.as_ref() {
-                                    self.event_tx
-                                        .send(RoonEvent::Profile(subtitle.to_owned()))
-                                        .await
-                                        .unwrap();
+                                list.subtitle = if let Some(subtitle) = list.subtitle.as_mut() {
+                                    Self::update_subtitle(subtitle, old_len, items.len())
+                                } else {
+                                    list.subtitle
                                 }
                             }
                         }
-                    }
-                    _ => {}
-                }
+                        "Settings" => {
+                            if let Some(access) = &self.access {
+                                let access = access.lock().unwrap();
 
-                let browse_items = BrowseItems {
-                    list,
-                    offset,
-                    items,
+                                if !access.has_profile_access() {
+                                    let index =
+                                        items.iter().position(|item| item.title == "Profile")?;
+
+                                    items.remove(index);
+                                }
+                            }
+
+                            for item in items.iter() {
+                                if item.title == "Profile" {
+                                    if let Some(subtitle) = item.subtitle.as_ref() {
+                                        self.event_tx
+                                            .send(RoonEvent::Profile(subtitle.to_owned()))
+                                            .await
+                                            .unwrap();
+                                    }
+                                }
+                            }
+                        }
+                        _ => {}
+                    }
+
+                    let browse_items = BrowseItems {
+                        list,
+                        offset,
+                        items,
+                    };
+
+                    RoonEvent::BrowseItems(browse_items)
                 };
 
-                RoonEvent::BrowseItems(browse_items)
-            };
-
-            self.event_tx.send(event).await.unwrap();
+                self.event_tx.send(event).await.unwrap();
+            }
         }
 
         Some(())
