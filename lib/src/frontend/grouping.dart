@@ -115,7 +115,7 @@ class _GroupingState extends State<Grouping> {
         width: 600,
         child: listView,
       ),
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, _) {
         if (didPop) {
           setGrouping();
         }

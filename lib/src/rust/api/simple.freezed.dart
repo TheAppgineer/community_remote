@@ -161,6 +161,9 @@ class _$RoonEventCopyWithImpl<$Res, $Val extends RoonEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -182,6 +185,8 @@ class __$$RoonEvent_CoreDiscoveredImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_CoreDiscoveredImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -228,7 +233,9 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
   @override
   int get hashCode => Object.hash(runtimeType, field0, field1);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_CoreDiscoveredImplCopyWith<_$RoonEvent_CoreDiscoveredImpl>
@@ -395,7 +402,10 @@ abstract class RoonEvent_CoreDiscovered extends RoonEvent {
 
   String get field0;
   String? get field1;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_CoreDiscoveredImplCopyWith<_$RoonEvent_CoreDiscoveredImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -419,6 +429,8 @@ class __$$RoonEvent_CoreRegisteredImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_CoreRegisteredImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -465,7 +477,9 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
   @override
   int get hashCode => Object.hash(runtimeType, field0, field1);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_CoreRegisteredImplCopyWith<_$RoonEvent_CoreRegisteredImpl>
@@ -633,7 +647,10 @@ abstract class RoonEvent_CoreRegistered extends RoonEvent {
 
   String get field0;
   String get field1;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_CoreRegisteredImplCopyWith<_$RoonEvent_CoreRegisteredImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -657,6 +674,8 @@ class __$$RoonEvent_CorePermittedImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_CorePermittedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -703,7 +722,9 @@ class _$RoonEvent_CorePermittedImpl extends RoonEvent_CorePermitted {
   @override
   int get hashCode => Object.hash(runtimeType, field0, field1);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_CorePermittedImplCopyWith<_$RoonEvent_CorePermittedImpl>
@@ -870,7 +891,10 @@ abstract class RoonEvent_CorePermitted extends RoonEvent {
 
   String get field0;
   bool get field1;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_CorePermittedImplCopyWith<_$RoonEvent_CorePermittedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -892,6 +916,8 @@ class __$$RoonEvent_CoreLostImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_CoreLostImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -930,7 +956,9 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_CoreLostImplCopyWith<_$RoonEvent_CoreLostImpl> get copyWith =>
@@ -1096,7 +1124,10 @@ abstract class RoonEvent_CoreLost extends RoonEvent {
   const RoonEvent_CoreLost._() : super._();
 
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_CoreLostImplCopyWith<_$RoonEvent_CoreLostImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1120,6 +1151,8 @@ class __$$RoonEvent_ZonesChangedImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_ZonesChangedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1166,7 +1199,9 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_ZonesChangedImplCopyWith<_$RoonEvent_ZonesChangedImpl>
@@ -1332,7 +1367,10 @@ abstract class RoonEvent_ZonesChanged extends RoonEvent {
   const RoonEvent_ZonesChanged._() : super._();
 
   List<ZoneSummary> get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_ZonesChangedImplCopyWith<_$RoonEvent_ZonesChangedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1355,6 +1393,8 @@ class __$$RoonEvent_ZoneChangedImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_ZoneChangedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1393,7 +1433,9 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_ZoneChangedImplCopyWith<_$RoonEvent_ZoneChangedImpl>
@@ -1559,7 +1601,10 @@ abstract class RoonEvent_ZoneChanged extends RoonEvent {
   const RoonEvent_ZoneChanged._() : super._();
 
   Zone? get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_ZoneChangedImplCopyWith<_$RoonEvent_ZoneChangedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1581,6 +1626,8 @@ class __$$RoonEvent_ZoneSeekImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_ZoneSeekImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1619,7 +1666,9 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_ZoneSeekImplCopyWith<_$RoonEvent_ZoneSeekImpl> get copyWith =>
@@ -1785,7 +1834,10 @@ abstract class RoonEvent_ZoneSeek extends RoonEvent {
   const RoonEvent_ZoneSeek._() : super._();
 
   ZoneSeek get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_ZoneSeekImplCopyWith<_$RoonEvent_ZoneSeekImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1809,6 +1861,8 @@ class __$$RoonEvent_OutputsChangedImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_OutputsChangedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1855,7 +1909,9 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_OutputsChangedImplCopyWith<_$RoonEvent_OutputsChangedImpl>
@@ -2021,7 +2077,10 @@ abstract class RoonEvent_OutputsChanged extends RoonEvent {
   const RoonEvent_OutputsChanged._() : super._();
 
   Map<String, String> get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_OutputsChangedImplCopyWith<_$RoonEvent_OutputsChangedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2044,6 +2103,8 @@ class __$$RoonEvent_BrowseItemsImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_BrowseItemsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2082,7 +2143,9 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_BrowseItemsImplCopyWith<_$RoonEvent_BrowseItemsImpl>
@@ -2248,7 +2311,10 @@ abstract class RoonEvent_BrowseItems extends RoonEvent {
   const RoonEvent_BrowseItems._() : super._();
 
   BrowseItems get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_BrowseItemsImplCopyWith<_$RoonEvent_BrowseItemsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2272,6 +2338,8 @@ class __$$RoonEvent_BrowseActionsImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_BrowseActionsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2318,7 +2386,9 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_BrowseActionsImplCopyWith<_$RoonEvent_BrowseActionsImpl>
@@ -2484,7 +2554,10 @@ abstract class RoonEvent_BrowseActions extends RoonEvent {
   const RoonEvent_BrowseActions._() : super._();
 
   List<BrowseItem> get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_BrowseActionsImplCopyWith<_$RoonEvent_BrowseActionsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2504,6 +2577,9 @@ class __$$RoonEvent_BrowseResetImplCopyWithImpl<$Res>
   __$$RoonEvent_BrowseResetImplCopyWithImpl(_$RoonEvent_BrowseResetImpl _value,
       $Res Function(_$RoonEvent_BrowseResetImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -2701,6 +2777,8 @@ class __$$RoonEvent_ProfileImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_ProfileImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2739,7 +2817,9 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_ProfileImplCopyWith<_$RoonEvent_ProfileImpl> get copyWith =>
@@ -2905,7 +2985,10 @@ abstract class RoonEvent_Profile extends RoonEvent {
   const RoonEvent_Profile._() : super._();
 
   String get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_ProfileImplCopyWith<_$RoonEvent_ProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2927,6 +3010,8 @@ class __$$RoonEvent_QueueItemsImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_QueueItemsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2973,7 +3058,9 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_QueueItemsImplCopyWith<_$RoonEvent_QueueItemsImpl>
@@ -3140,7 +3227,10 @@ abstract class RoonEvent_QueueItems extends RoonEvent {
   const RoonEvent_QueueItems._() : super._();
 
   List<QueueItem> get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_QueueItemsImplCopyWith<_$RoonEvent_QueueItemsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -3164,6 +3254,8 @@ class __$$RoonEvent_PauseOnTrackEndImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_PauseOnTrackEndImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3202,7 +3294,9 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_PauseOnTrackEndImplCopyWith<_$RoonEvent_PauseOnTrackEndImpl>
@@ -3368,7 +3462,10 @@ abstract class RoonEvent_PauseOnTrackEnd extends RoonEvent {
   const RoonEvent_PauseOnTrackEnd._() : super._();
 
   bool get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_PauseOnTrackEndImplCopyWith<_$RoonEvent_PauseOnTrackEndImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -3390,6 +3487,8 @@ class __$$RoonEvent_ImageImplCopyWithImpl<$Res>
       _$RoonEvent_ImageImpl _value, $Res Function(_$RoonEvent_ImageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3428,7 +3527,9 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_ImageImplCopyWith<_$RoonEvent_ImageImpl> get copyWith =>
@@ -3594,7 +3695,10 @@ abstract class RoonEvent_Image extends RoonEvent {
   const RoonEvent_Image._() : super._();
 
   ImageKeyValue get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_ImageImplCopyWith<_$RoonEvent_ImageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -3615,6 +3719,9 @@ class __$$RoonEvent_SettingsSavedImplCopyWithImpl<$Res>
       _$RoonEvent_SettingsSavedImpl _value,
       $Res Function(_$RoonEvent_SettingsSavedImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -3812,6 +3919,8 @@ class __$$RoonEvent_ServicesImplCopyWithImpl<$Res>
       $Res Function(_$RoonEvent_ServicesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3858,7 +3967,9 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_field0));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RoonEvent_ServicesImplCopyWith<_$RoonEvent_ServicesImpl> get copyWith =>
@@ -4024,7 +4135,10 @@ abstract class RoonEvent_Services extends RoonEvent {
   const RoonEvent_Services._() : super._();
 
   List<String> get field0;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RoonEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RoonEvent_ServicesImplCopyWith<_$RoonEvent_ServicesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
