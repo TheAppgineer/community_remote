@@ -834,13 +834,15 @@ impl RoonHandler {
 
     fn set_access_output_list(&mut self) {
         if let Some(access) = self.access.as_mut() {
+            let name_sort = |(a, _): &(String, String), (b, _): &(String, String)| a.cmp(b);
             let mut access = access.lock().unwrap();
-            let outputs = self
+            let mut outputs = self
                 .outputs
                 .iter()
                 .map(|(output_id, display_name)| (display_name.to_owned(), output_id.to_owned()))
                 .collect::<Vec<_>>();
 
+            outputs.sort_by(name_sort);
             access.set_output_list(&outputs);
         }
     }

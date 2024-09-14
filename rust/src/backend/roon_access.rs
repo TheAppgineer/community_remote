@@ -17,6 +17,7 @@ pub struct RoonAccessData {
     pub output_whitelist: Option<Vec<String>>,
     whitelist_remove: Option<String>,
     whitelist_add: Option<String>,
+    whitelist_initial: Option<String>,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -52,22 +53,29 @@ impl RoonAccess {
             ) -> RoonAccessData {
                 let remove = settings.whitelist_remove.take();
                 let add = settings.whitelist_add.take();
+                let init = settings.whitelist_initial.take();
                 let mut drop_whitelist = false;
 
-                if (remove.is_some() || add.is_some()) && settings.output_whitelist.is_none() {
-                    if let Some(outputs) = outputs {
-                        let whitelist = outputs
-                            .iter()
-                            .map(|(_, id)| id.to_owned())
-                            .collect::<Vec<_>>();
+                if settings.output_whitelist.is_none() {
+                    if init.is_some() {
+                        settings.output_whitelist = init.map(|init| vec![init]);
+                    } else if remove.is_some() || add.is_some() {
+                        if let Some(outputs) = outputs {
+                            let whitelist = outputs
+                                .iter()
+                                .map(|(_, id)| id.to_owned())
+                                .collect::<Vec<_>>();
 
-                        settings.output_whitelist = Some(whitelist);
+                            settings.output_whitelist = Some(whitelist);
+                        }
                     }
                 }
 
                 if let Some(whitelist) = settings.output_whitelist.as_mut() {
                     if let Some(remove) = remove.as_ref() {
-                        if let Some(index) = whitelist.iter().position(|id| id == remove) {
+                        if remove == "all" {
+                            drop_whitelist = true;
+                        } else if let Some(index) = whitelist.iter().position(|id| id == remove) {
                             whitelist.remove(index);
                             drop_whitelist = whitelist.is_empty();
                         }
@@ -150,6 +158,7 @@ impl RoonAccess {
 
     fn make_layout(settings: RoonAccessData, access: &mut RoonAccess) -> Layout<RoonAccessData> {
         let has_error = false;
+        let mut initial_values = Vec::new();
         let mut remove_values = Vec::new();
         let mut add_values = Vec::new();
         let mut profile_values = vec![DropdownEntry::from(
@@ -174,6 +183,11 @@ impl RoonAccess {
         if let Some(outputs) = access.outputs.as_ref() {
             let (group_title, remove_title, remove_subtitle) =
                 if let Some(whitelist) = settings.output_whitelist.as_ref() {
+                    remove_values.push(DropdownEntry::from(
+                        "Remove All".to_owned(),
+                        "all".to_owned(),
+                    ));
+
                     for (name, id) in outputs {
                         if whitelist.contains(id) {
                             remove_values.push(DropdownEntry::from(name.to_owned(), id.to_owned()));
@@ -191,6 +205,7 @@ impl RoonAccess {
                     )
                 } else {
                     for (name, id) in outputs {
+                        initial_values.push(DropdownEntry::from(name.to_owned(), id.to_owned()));
                         remove_values.push(DropdownEntry::from(name.to_owned(), id.to_owned()));
                         output_whitelist.push_str(name);
                         output_whitelist.push('\n');
@@ -200,6 +215,15 @@ impl RoonAccess {
                 };
 
             let mut items = Vec::new();
+
+            if !initial_values.is_empty() {
+                items.push(Widget::Dropdown(Dropdown {
+                    title: "Initialize whitelist",
+                    subtitle: None,
+                    values: initial_values,
+                    setting: "whitelist_initial",
+                }));
+            }
 
             if !remove_values.is_empty() {
                 items.push(Widget::Dropdown(Dropdown {
