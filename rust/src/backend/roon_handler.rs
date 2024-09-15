@@ -651,8 +651,7 @@ impl RoonHandler {
                     let mut items = result.items;
                     let mut list = result.list;
 
-                    let offset = if title == "Albums" || title == "Tracks" {
-                        // TODO: This is also used in search results where subtitle is set
+                    let offset = if list.level == 2 && (title == "Albums" || title == "Tracks") {
                         if result.offset == 0 {
                             let len = title.len() - 1;
                             let title = &title[..len];
@@ -676,8 +675,7 @@ impl RoonHandler {
                     }
 
                     match title.as_str() {
-                        "Search" | "Artists" => {
-                            // TODO: Similar case for Composers having 0 Compositions
+                        "Search" | "Artists" | "Composers" => {
                             if list.subtitle.is_some() {
                                 let old_len = items.len();
 
@@ -685,6 +683,7 @@ impl RoonHandler {
                                     .iter()
                                     .filter_map(|item| match item.subtitle.as_deref() {
                                         Some(subtitle) if subtitle == "0 Albums" => None,
+                                        Some(subtitle) if subtitle == "0 Compositions" => None,
                                         _ => Some(item.to_owned()),
                                     })
                                     .collect::<Vec<_>>();
