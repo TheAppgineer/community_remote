@@ -1,6 +1,6 @@
 id: com.theappgineer.community_remote
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: community_remote
 finish-args:
@@ -24,10 +24,10 @@ modules:
       - type: archive
         only-arches:
           - x86_64
-        path: ../community_remote-linux-x86_64.tar.gz
-        sha256: 42c57781c8bebf3d32edf5a0b0fe16f071412b83cb25dae9bf1fdf55ac0af56c
+        path: ../build/community_remote-linux-x86_64.tar.gz
+        sha256: d7b5c150a0b98495afcf42a00207796ab40bb6cc73896d23b451bb1000031d04
       - type: archive
         only-arches:
           - aarch64
-        path: ../community_remote-linux-aarch64.tar.gz
-        sha256: c5f85959f8862ac7b19338a30b4789e501dc18e84902ecd22988226818c05218
+        path: ../build/community_remote-linux-aarch64.tar.gz
+        sha256: ea2a21b64a5eaf16a9c19ecc68f8cb8b78b1418d9af2b4f334889ab0ba881dd8
