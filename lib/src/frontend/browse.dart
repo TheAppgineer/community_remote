@@ -138,6 +138,7 @@ class BrowseLevel extends StatefulWidget {
 class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
   static bool _viewChanged = false;
   static bool _toProfile = false;
+  static int _category = 0;
   late final ScrollController _controller;
   late String _route;
   BrowseItems? _browseItems;
@@ -148,6 +149,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
     _viewChanged = true;
 
     _navigator.popUntilRoot();
+    _category = category;
 
     browse(category: category);
   }
@@ -519,7 +521,14 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       onPopInvokedWithResult: (didPop, _) {
         if (didPop && !_viewChanged) {
           _navigator.routes.removeLast();
-          browseBack();
+
+          if (!_navigator.canPop() && _browseItems?.list.title == "Search") {
+            // Refresh selected category when leaving Search
+            _viewChanged = true;
+            browse(category: _category);
+          } else {
+            browseBack();
+          }
         }
       },
     );
