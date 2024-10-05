@@ -39,6 +39,8 @@ pub enum RoonEvent {
     Image(ImageKeyValue),
     SettingsSaved,
     Services(Vec<String>),
+    WikiExtract(String),
+    About(BrowseItems),
 }
 
 pub struct BrowseItems {
@@ -335,5 +337,13 @@ pub async fn group_outputs(output_ids: Vec<String>) {
 
     if let Some(roon) = api.roon.as_ref() {
         roon.group_outputs(output_ids).await;
+    }
+}
+
+pub async fn get_about() {
+    let mut api = API.lock().await;
+
+    if let Some(roon) = api.roon.as_mut() {
+        roon.get_about().await;
     }
 }

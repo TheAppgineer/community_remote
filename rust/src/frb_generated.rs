@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.3.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 105519473;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -765459591;
 
 // Section: executor
 
@@ -348,6 +348,43 @@ fn wire__crate__api__simple__control_by_zone_id_impl(
                     (move || async move {
                         let output_ok = Result::<_, ()>::Ok({
                             crate::api::simple::control_by_zone_id(api_zone_id, api_control).await;
+                        })?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__simple__get_about_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_about",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok({
+                            crate::api::simple::get_about().await;
                         })?;
                         Ok(output_ok)
                     })()
@@ -2025,6 +2062,14 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 let mut var_field0 = <Vec<String>>::sse_decode(deserializer);
                 return crate::api::simple::RoonEvent::Services(var_field0);
             }
+            17 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::WikiExtract(var_field0);
+            }
+            18 => {
+                let mut var_field0 = <crate::api::simple::BrowseItems>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::About(var_field0);
+            }
             _ => {
                 unimplemented!("");
             }
@@ -2257,36 +2302,37 @@ fn pde_ffi_dispatcher_primary_impl(
         6 => wire__crate__api__simple__change_zone_volume_impl(port, ptr, rust_vec_len, data_len),
         7 => wire__crate__api__simple__control_impl(port, ptr, rust_vec_len, data_len),
         8 => wire__crate__api__simple__control_by_zone_id_impl(port, ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__simple__get_image_impl(port, ptr, rust_vec_len, data_len),
-        10 => {
+        9 => wire__crate__api__simple__get_about_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__simple__get_image_impl(port, ptr, rust_vec_len, data_len),
+        11 => {
             wire__crate__api__simple__get_server_properties_impl(port, ptr, rust_vec_len, data_len)
         }
-        11 => wire__crate__api__simple__get_thumbnail_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__simple__group_outputs_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__simple__mute_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__simple__mute_all_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__simple__mute_zone_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__simple__pause_after_queue_items_impl(
+        12 => wire__crate__api__simple__get_thumbnail_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__simple__group_outputs_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__simple__mute_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__simple__mute_all_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__simple__mute_zone_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__simple__pause_after_queue_items_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__api__simple__pause_all_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__simple__pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__simple__save_settings_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__simple__search_artist_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__simple__select_browse_item_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__simple__select_queue_item_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire__crate__api__simple__select_zone_impl(port, ptr, rust_vec_len, data_len),
-        25 => {
+        19 => wire__crate__api__simple__pause_all_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__simple__pause_on_track_end_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__simple__save_settings_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__simple__search_artist_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__simple__select_browse_item_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__simple__select_queue_item_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__simple__select_zone_impl(port, ptr, rust_vec_len, data_len),
+        26 => {
             wire__crate__api__simple__set_server_properties_impl(port, ptr, rust_vec_len, data_len)
         }
-        26 => wire__crate__api__simple__set_status_message_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__simple__standby_impl(port, ptr, rust_vec_len, data_len),
-        28 => wire__crate__api__simple__start_roon_impl(port, ptr, rust_vec_len, data_len),
-        29 => wire__crate__api__simple__transfer_from_zone_impl(port, ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__simple__set_status_message_impl(port, ptr, rust_vec_len, data_len),
+        28 => wire__crate__api__simple__standby_impl(port, ptr, rust_vec_len, data_len),
+        29 => wire__crate__api__simple__start_roon_impl(port, ptr, rust_vec_len, data_len),
+        30 => wire__crate__api__simple__transfer_from_zone_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -2735,6 +2781,12 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::SettingsSaved => [15.into_dart()].into_dart(),
             crate::api::simple::RoonEvent::Services(field0) => {
                 [16.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::WikiExtract(field0) => {
+                [17.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::simple::RoonEvent::About(field0) => {
+                [18.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -3595,6 +3647,14 @@ impl SseEncode for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::Services(field0) => {
                 <i32>::sse_encode(16, serializer);
                 <Vec<String>>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::WikiExtract(field0) => {
+                <i32>::sse_encode(17, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::simple::RoonEvent::About(field0) => {
+                <i32>::sse_encode(18, serializer);
+                <crate::api::simple::BrowseItems>::sse_encode(field0, serializer);
             }
             _ => {
                 unimplemented!("");

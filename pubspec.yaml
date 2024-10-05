@@ -48,6 +48,7 @@ dependencies:
       ref: 724769f
   mdi: ^5.0.0-nullsafety.0
   package_info_plus: ^8.0.0
+  flutter_html: ^3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:

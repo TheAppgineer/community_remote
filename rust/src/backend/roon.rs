@@ -268,6 +268,16 @@ impl Roon {
 
         if item_key.contains("random") {
             self.handle_random_item(multi_session_key, &item).await;
+        } else if item_key.contains("about") {
+            let about = item_key.split('_').nth(1)?;
+
+            self.handler
+                .lock()
+                .await
+                .event_tx
+                .send(RoonEvent::WikiExtract(about.to_owned()))
+                .await
+                .unwrap();
         } else {
             self.handler.lock().await.select_browse_item(item).await;
         }
@@ -527,6 +537,10 @@ impl Roon {
         }
 
         Some(())
+    }
+
+    pub async fn get_about(&mut self) -> Option<()> {
+        self.handler.lock().await.get_about().await
     }
 
     async fn handle_random_item(

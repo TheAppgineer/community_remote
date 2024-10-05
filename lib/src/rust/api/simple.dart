@@ -104,6 +104,8 @@ Future<void> standby({required String outputId}) =>
 Future<void> groupOutputs({required List<String> outputIds}) =>
     RustLib.instance.api.crateApiSimpleGroupOutputs(outputIds: outputIds);
 
+Future<void> getAbout() => RustLib.instance.api.crateApiSimpleGetAbout();
+
 class BrowseItems {
   final BrowseList list;
   final int offset;
@@ -203,6 +205,12 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.services(
     List<String> field0,
   ) = RoonEvent_Services;
+  const factory RoonEvent.wikiExtract(
+    String field0,
+  ) = RoonEvent_WikiExtract;
+  const factory RoonEvent.about(
+    BrowseItems field0,
+  ) = RoonEvent_About;
 }
 
 class ZoneSummary {

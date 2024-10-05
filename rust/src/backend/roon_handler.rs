@@ -3,6 +3,7 @@ use regex::Regex;
 use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
+use roon_api::browse::List as BrowseList;
 use roon_api::browse::ListHint as BrowseListHint;
 use roon_api::browse::LoadResult;
 use roon_api::{
@@ -24,6 +25,7 @@ use tokio::sync::mpsc::Sender;
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
 use super::browse_helper::BrowseHelper;
+use super::mediawiki::{self, MediaHint};
 use super::roon_access::{RoonAccess, RoonAccessData};
 
 pub const BROWSE_PAGE_SIZE: usize = 100;
@@ -57,6 +59,7 @@ pub struct RoonHandler {
     outputs: HashMap<String, String>,
     pop_levels: Option<u32>,
     queue: Option<Vec<QueueItem>>,
+    about: Option<(String, MediaHint)>,
 }
 
 impl RoonHandler {
@@ -89,6 +92,7 @@ impl RoonHandler {
             outputs: HashMap::new(),
             pop_levels: None,
             queue: None,
+            about: None,
         }
     }
 
@@ -256,6 +260,8 @@ impl RoonHandler {
                                     .await
                                     .unwrap();
                             }
+
+                            self.update_wikipedia_extract(&prev_zone_state, zone).await;
                         }
 
                         self.event_tx
@@ -430,6 +436,23 @@ impl RoonHandler {
                     .send(RoonEvent::ZoneChanged(self.restrict_grouping_list(zone?)))
                     .await
                     .unwrap();
+
+                let now_playing = zone?.now_playing.as_ref()?;
+
+                if now_playing.length.is_some() {
+                    let title = now_playing.three_line.line3.as_str();
+                    let extract = mediawiki::get_extract(
+                        title,
+                        1000,
+                        &mediawiki::MediaHint::Album(now_playing.three_line.line2.to_owned()),
+                    )
+                    .await?;
+
+                    self.event_tx
+                        .send(RoonEvent::WikiExtract(extract))
+                        .await
+                        .unwrap();
+                }
             }
         }
 
@@ -718,7 +741,21 @@ impl RoonHandler {
                                 }
                             }
                         }
-                        _ => {}
+                        _ => {
+                            let item = items.get_mut(0)?;
+
+                            if item.title == "Play Artist" || item.title == "Play Album" {
+                                self.about = if item.title == "Play Album" {
+                                    let artist = list.subtitle.as_ref()?.to_owned();
+
+                                    Some((list.title.to_owned(), MediaHint::Album(artist)))
+                                } else {
+                                    Some((list.title.to_owned(), MediaHint::Artist))
+                                };
+
+                                item.title = format!("About {}", list.title);
+                            }
+                        }
                     }
 
                     let browse_items = BrowseItems {
@@ -733,6 +770,29 @@ impl RoonHandler {
                 self.event_tx.send(event).await.unwrap();
             }
         }
+
+        Some(())
+    }
+
+    pub async fn get_about(&mut self) -> Option<()> {
+        let (title, hint) = self.about.take()?;
+        let extract = mediawiki::get_extract(&title, 1200, &hint)
+            .await
+            .unwrap_or_default();
+        let list = BrowseList {
+            title: format!("About {}", title),
+            ..Default::default()
+        };
+        let item = BrowseItem {
+            title: extract,
+            ..Default::default()
+        };
+        let about = BrowseItems {
+            list,
+            offset: 0,
+            items: vec![item],
+        };
+        self.event_tx.send(RoonEvent::About(about)).await.unwrap();
 
         Some(())
     }
@@ -992,5 +1052,25 @@ impl RoonHandler {
         };
 
         Some([&[item], items].concat())
+    }
+
+    async fn update_wikipedia_extract(&self, prev: &Zone, curr: &Zone) -> Option<()> {
+        let now_playing = curr.now_playing.as_ref()?;
+        let prev = prev.now_playing.as_ref()?.three_line.line3.as_str();
+        let curr = now_playing.three_line.line3.as_str();
+        let artist = now_playing.three_line.line2.to_owned();
+
+        if
+        /*now_playing.length.is_some() &&*/
+        curr != prev {
+            let extract = mediawiki::get_extract(&curr, 1000, &MediaHint::Album(artist)).await?;
+
+            self.event_tx
+                .send(RoonEvent::WikiExtract(extract))
+                .await
+                .unwrap();
+        }
+
+        Some(())
     }
 }
