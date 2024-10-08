@@ -441,12 +441,8 @@ impl RoonHandler {
 
                 if now_playing.length.is_some() {
                     let title = now_playing.three_line.line3.as_str();
-                    let extract = mediawiki::get_extract(
-                        title,
-                        1000,
-                        &mediawiki::MediaHint::Album(now_playing.three_line.line2.to_owned()),
-                    )
-                    .await?;
+                    let artist = now_playing.three_line.line2.to_owned();
+                    let extract = mediawiki::get_extract(title, &MediaHint::Album(artist)).await?;
 
                     self.event_tx
                         .send(RoonEvent::WikiExtract(extract))
@@ -776,7 +772,7 @@ impl RoonHandler {
 
     pub async fn get_about(&mut self) -> Option<()> {
         let (title, hint) = self.about.take()?;
-        let extract = mediawiki::get_extract(&title, 1200, &hint)
+        let extract = mediawiki::get_extract(&title, &hint)
             .await
             .unwrap_or_default();
         let list = BrowseList {
@@ -1060,10 +1056,8 @@ impl RoonHandler {
         let curr = now_playing.three_line.line3.as_str();
         let artist = now_playing.three_line.line2.to_owned();
 
-        if
-        /*now_playing.length.is_some() &&*/
-        curr != prev {
-            let extract = mediawiki::get_extract(&curr, 1000, &MediaHint::Album(artist)).await?;
+        if now_playing.length.is_some() && curr != prev {
+            let extract = mediawiki::get_extract(&curr, &MediaHint::Album(artist)).await?;
 
             self.event_tx
                 .send(RoonEvent::WikiExtract(extract))
