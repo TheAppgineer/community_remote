@@ -1,7 +1,5 @@
 use any_ascii::any_ascii;
-use mediawiki::MediaWikiError;
 use regex::Regex;
-use serde_json::Value;
 
 const API_URL: &'static str = "https://en.wikipedia.org/w/api.php";
 const DISAMBIGUATION: &str = " (disambiguation)";
@@ -13,45 +11,32 @@ pub enum MediaHint {
 }
 
 pub async fn get_extract(title: &str, hint: &MediaHint) -> Option<String> {
-    const TITLE_SPLITTER: &'static str = r"^([(]*[^\[(]+)";
-    let regex = Regex::new(TITLE_SPLITTER).unwrap();
-    let title = match regex.captures(title).map(|c| c.extract()) {
-        Some((_, [capture])) => capture,
-        _ => title,
-    };
+    let title = get_page_title(title, hint).await?;
 
-    let results = search(title, hint).await;
-    let title = match results {
-        Some(results) if results.is_empty() => match hint {
-            MediaHint::Album(_) => Some(format!("{title} (album)")),
-            _ => None,
-        },
-        Some(results) => match disambiguate(&results, hint).await {
-            Some(title) => Some(title),
-            None => Some(results[0].to_owned()),
-        },
+    log::info!("Taking extract from: {title}");
+
+    get_html_extract(&title).await
+}
+
+async fn get_page_title(title: &str, hint: &MediaHint) -> Option<String> {
+    match search(title, hint).await {
+        Some(results) => disambiguate(results, hint).await,
         None => match hint {
             MediaHint::Album(_) => Some(format!("{title} (album)")),
             _ => None,
         },
-    }?;
-
-    log::info!("Taking extract from: {title}");
-
-    let mut res = get_html_extract(&title).await.ok()?;
-
-    if let Some(to_title) = res["query"]["normalized"][0]["to"].as_str() {
-        res = get_html_extract(to_title).await.ok()?;
     }
-
-    res["query"]["pages"][0]["extract"]
-        .as_str()
-        .map(|str| str.to_owned())
 }
 
-async fn disambiguate(titles: &[String], hint: &MediaHint) -> Option<String> {
+async fn disambiguate(mut titles: Vec<String>, hint: &MediaHint) -> Option<String> {
     let mut matching: Option<String> = None;
     let mut first_non_overview = None;
+
+    if let MediaHint::Album(artist) = hint {
+        if let Some(index) = titles.iter().position(|title| title == artist) {
+            titles.remove(index);
+        }
+    }
 
     for (index, title) in titles.iter().enumerate() {
         if let Some(wikitext) = get_wikitext(title).await {
@@ -73,9 +58,10 @@ async fn disambiguate(titles: &[String], hint: &MediaHint) -> Option<String> {
                     let regex = Regex::new(LINK_SPLITTER).unwrap();
 
                     if let Some((_, [capture])) = regex.captures(line).map(|c| c.extract()) {
-                        let (artist, album) = has_artist_or_album_suffix(capture, hint);
+                        let (artist_suffix, album_suffix) =
+                            has_artist_or_album_suffix(capture, hint);
 
-                        if capture.contains(title) && (artist || album) {
+                        if capture.contains(title) && (artist_suffix || album_suffix) {
                             let option = capture.split('|').next()?.to_owned();
 
                             if by_artist(&option, hint).is_some() {
@@ -105,7 +91,6 @@ async fn disambiguate(titles: &[String], hint: &MediaHint) -> Option<String> {
                             MediaHint::Artist => header.contains("people"),
                             _ => false,
                         };
-                        println!("{}", line);
 
                         if artist
                             || header.contains("music")
@@ -137,12 +122,20 @@ async fn disambiguate(titles: &[String], hint: &MediaHint) -> Option<String> {
 }
 
 async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
+    const SUFFIX_SPLITTER: &'static str = r"^([(]*[^\[(]+)[(\[]+([^)\]]+)";
     let api = mediawiki::api::Api::new(API_URL).await.unwrap();
+    let regex = Regex::new(SUFFIX_SPLITTER).unwrap();
+    let (search, search_str) = match regex.captures(search).map(|c| c.extract::<2>()) {
+        Some((_, captures)) => (
+            captures[0].trim(),
+            format!("{} AND {}", captures[0].trim(), captures[1]),
+        ),
+        _ => (search, search.to_owned()),
+    };
     let search_str = match hint {
-        MediaHint::Album(artist) => &format!("{search} AND {artist} AND album"),
+        MediaHint::Album(artist) => &format!("{search_str} AND {artist} AND album"),
         _ => search,
     };
-
     let params = api.params_into(&[
         ("action", "query"),
         ("list", "search"),
@@ -154,7 +147,7 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
     let res = api.get_query_api_json(&params).await.unwrap();
     log::info!("Search results: {}", res["query"]["search"]);
 
-    let res = res["query"]["search"]
+    let mut res = res["query"]["search"]
         .as_array()?
         .iter()
         .filter_map(|res| {
@@ -172,26 +165,45 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
                 None
             }
         })
-        .rev()
         .collect::<Vec<_>>();
+    let preference_suffix = match hint {
+        MediaHint::Artist => "band)",
+        MediaHint::Album(_) => "album)",
+    };
+
+    if res
+        .iter()
+        .find(|title| title.starts_with(search) && title.contains(preference_suffix))
+        .is_some()
+    {
+        if let Some(index) = res.iter().position(|title| title == search) {
+            res.remove(index);
+        }
+    }
 
     log::info!("Selected: {:?}", res);
 
-    Some(res)
+    if res.is_empty() {
+        None
+    } else {
+        Some(res)
+    }
 }
 
-async fn get_html_extract(title: &str) -> Result<Value, MediaWikiError> {
+async fn get_html_extract(title: &str) -> Option<String> {
     let api = mediawiki::api::Api::new(API_URL).await.unwrap();
-
     let params = api.params_into(&[
         ("action", "query"),
         ("prop", "extracts"),
-        ("titles", &any_ascii(title)),
+        ("titles", title),
         ("exlimit", "1"),
         ("formatversion", "2"),
     ]);
+    let res = api.get_query_api_json(&params).await.ok()?;
 
-    api.get_query_api_json(&params).await
+    res["query"]["pages"][0]["extract"]
+        .as_str()
+        .map(|str| str.to_owned())
 }
 
 async fn get_wikitext(title: &str) -> Option<String> {
@@ -202,7 +214,7 @@ async fn get_wikitext(title: &str) -> Option<String> {
         ("page", title),
         ("formatversion", "2"),
     ]);
-    let res = api.get_query_api_json(&rev_params).await.unwrap();
+    let res = api.get_query_api_json(&rev_params).await.ok()?;
 
     if res["parse"]["title"] == title {
         Some(res["parse"]["wikitext"].as_str()?.to_owned())
@@ -244,5 +256,56 @@ fn by_artist(title: &str, hint: &MediaHint) -> Option<()> {
         MediaHint::Album(artist) if title.contains(artist) => Some(()),
         MediaHint::Artist => Some(()),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn artist_tests() {
+        const ARTIST_TESTS: &[(&str, &str)] = &[
+            ("Air", "Air (French band)"),
+            ("Black", "Black (singer)"),
+            ("BLØF", "BLØF"),
+            ("Fish", "Fish (singer)"),
+            ("Garbage", "Garbage (band)"),
+            ("Sam Brown", "Sam Brown (singer)"),
+            ("Tracy Chapman", "Tracy Chapman"),
+        ];
+
+        for test in ARTIST_TESTS {
+            assert_eq!(
+                Some(String::from(test.1)),
+                get_page_title(test.0, &MediaHint::Artist).await
+            );
+        }
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn album_tests() {
+        const ALBUM_TESTS: &[(&str, &str, &str)] = &[
+            (
+                "Duran Duran (The Wedding Album)",
+                "Duran Duran",
+                "Duran Duran (1993 album)",
+            ),
+            ("Hotel California", "Eagles", "Hotel California (album)"),
+            ("Stop!", "Sam Brown", "Stop! (album)"),
+            (
+                "The Common Linnets",
+                "The Common Linnets",
+                "The Common Linnets (album)",
+            ),
+            ("Tracy Chapman", "Tracy Chapman", "Tracy Chapman (album)"),
+        ];
+
+        for test in ALBUM_TESTS {
+            assert_eq!(
+                Some(String::from(test.2)),
+                get_page_title(test.0, &MediaHint::Album(String::from(test.1))).await
+            );
+        }
     }
 }
