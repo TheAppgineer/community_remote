@@ -152,13 +152,14 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
         .iter()
         .filter_map(|res| {
             let result = simplified(res["title"].as_str().unwrap());
-            let search = simplified(search);
+            let search = search.replace(" + ", "and").replace(" & ", "and");
+            let search = simplified(&search);
             let (artist_suffix, album_suffix) = has_artist_or_album_suffix(&result, hint);
             let album_disambiguation = result.contains("disambiguation");
 
             if result == search
                 || (result.starts_with(&search)
-                    && (album_disambiguation || artist_suffix || album_suffix))
+                    && (album_disambiguation || artist_suffix || album_suffix || search.len() > 20))
             {
                 res["title"].as_str().map(|str| str.to_owned())
             } else {
@@ -166,18 +167,22 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
             }
         })
         .collect::<Vec<_>>();
-    let preference_suffix = match hint {
-        MediaHint::Artist => "band)",
-        MediaHint::Album(_) => "album)",
+    let preference_suffixes: &[&str] = match hint {
+        MediaHint::Artist => &["band)", "singer)"],
+        MediaHint::Album(_) => &["album)"],
     };
 
-    if res
-        .iter()
-        .find(|title| title.starts_with(search) && title.contains(preference_suffix))
-        .is_some()
-    {
-        if let Some(index) = res.iter().position(|title| title == search) {
-            res.remove(index);
+    for preference_suffix in preference_suffixes {
+        if res
+            .iter()
+            .find(|title| title.starts_with(search) && title.contains(preference_suffix))
+            .is_some()
+        {
+            if let Some(index) = res.iter().position(|title| title == search) {
+                res.remove(index);
+            }
+
+            break;
         }
     }
 
@@ -271,7 +276,12 @@ mod tests {
             ("BLØF", "BLØF"),
             ("Fish", "Fish (singer)"),
             ("Garbage", "Garbage (band)"),
+            ("Mike + the Mechanics", "Mike and the Mechanics"),
             ("Sam Brown", "Sam Brown (singer)"),
+            (
+                "Tom Petty & the Heartbreakers",
+                "Tom Petty and the Heartbreakers",
+            ),
             ("Tracy Chapman", "Tracy Chapman"),
         ];
 
@@ -286,6 +296,18 @@ mod tests {
     #[tokio::test(flavor = "current_thread")]
     async fn album_tests() {
         const ALBUM_TESTS: &[(&str, &str, &str)] = &[
+            ("+", "Ed Sheeran", "+ (album)"),
+            ("101", "Depeche Mode", "101 (album)"),
+            (
+                "1492: Conquest of Paradise [Music from the Original Soundtrack]",
+                "Vangelis",
+                "1492: Conquest of Paradise (album)",
+            ),
+            (
+                "Across a Wire: Live in New York",
+                "Counting Crows",
+                "Across a Wire: Live in New York City",
+            ),
             (
                 "Duran Duran (The Wedding Album)",
                 "Duran Duran",
