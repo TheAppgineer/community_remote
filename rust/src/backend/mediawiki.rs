@@ -13,19 +13,13 @@ pub enum MediaHint {
 pub async fn get_extract(title: &str, hint: &MediaHint) -> Option<String> {
     let title = get_page_title(title, hint).await?;
 
-    log::info!("Taking extract from: {title}");
-
     get_html_extract(&title).await
 }
 
 async fn get_page_title(title: &str, hint: &MediaHint) -> Option<String> {
-    match search(title, hint).await {
-        Some(results) => disambiguate(results, hint).await,
-        None => match hint {
-            MediaHint::Album(_) => Some(format!("{title} (album)")),
-            _ => None,
-        },
-    }
+    let results = search(title, hint).await?;
+
+    disambiguate(results, hint).await
 }
 
 async fn disambiguate(mut titles: Vec<String>, hint: &MediaHint) -> Option<String> {
@@ -134,7 +128,7 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
     };
     let search_str = match hint {
         MediaHint::Album(artist) => &format!("{search_str} AND {artist} AND album"),
-        _ => search,
+        _ => &search_str,
     };
     let params = api.params_into(&[
         ("action", "query"),
@@ -143,8 +137,8 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
         ("srprop", ""),
         ("utf8", ""),
     ]);
-
     let res = api.get_query_api_json(&params).await.unwrap();
+
     log::info!("Search results: {}", res["query"]["search"]);
 
     let mut res = res["query"]["search"]
@@ -152,7 +146,6 @@ async fn search(search: &str, hint: &MediaHint) -> Option<Vec<String>> {
         .iter()
         .filter_map(|res| {
             let result = simplified(res["title"].as_str().unwrap());
-            let search = search.replace(" + ", "and").replace(" & ", "and");
             let search = simplified(&search);
             let (artist_suffix, album_suffix) = has_artist_or_album_suffix(&result, hint);
             let album_disambiguation = result.contains("disambiguation");
@@ -206,6 +199,8 @@ async fn get_html_extract(title: &str) -> Option<String> {
     ]);
     let res = api.get_query_api_json(&params).await.ok()?;
 
+    log::info!("Taking extract from: {title}");
+
     res["query"]["pages"][0]["extract"]
         .as_str()
         .map(|str| str.to_owned())
@@ -229,7 +224,13 @@ async fn get_wikitext(title: &str) -> Option<String> {
 }
 
 fn simplified(input: &str) -> String {
-    any_ascii(input).to_lowercase().replace(' ', "")
+    any_ascii(input)
+        .to_lowercase()
+        .replace(" + ", "and")
+        .replace(" & ", "and")
+        .replace(' ', "")
+        .replace(':', "")
+        .replace('-', "")
 }
 
 fn has_artist_or_album_suffix(title: &str, hint: &MediaHint) -> (bool, bool) {
@@ -278,6 +279,7 @@ mod tests {
             ("Garbage", "Garbage (band)"),
             ("Mike + the Mechanics", "Mike and the Mechanics"),
             ("Sam Brown", "Sam Brown (singer)"),
+            ("Simon & Garfunkel", "Simon & Garfunkel"),
             (
                 "Tom Petty & the Heartbreakers",
                 "Tom Petty and the Heartbreakers",
@@ -312,6 +314,11 @@ mod tests {
                 "Duran Duran (The Wedding Album)",
                 "Duran Duran",
                 "Duran Duran (1993 album)",
+            ),
+            (
+                "From Time to Time: The Singles Collection",
+                "Paul Young",
+                "From Time to Time – The Singles Collection",
             ),
             ("Hotel California", "Eagles", "Hotel California (album)"),
             ("Stop!", "Sam Brown", "Stop! (album)"),
