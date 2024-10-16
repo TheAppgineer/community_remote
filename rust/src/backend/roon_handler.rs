@@ -25,11 +25,12 @@ use tokio::sync::mpsc::Sender;
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
 use super::browse_helper::BrowseHelper;
-use super::mediawiki::{self, MediaHint};
+use super::mediawiki::{MediaHint, MediaWiki};
 use super::roon_access::{RoonAccess, RoonAccessData};
 
 pub const BROWSE_PAGE_SIZE: usize = 100;
 pub const SESSION_ID: i32 = 0;
+pub const COUNTRY_CODE: &'static str = "en";
 
 pub struct RoonHandler {
     pub event_tx: Sender<RoonEvent>,
@@ -49,6 +50,7 @@ pub struct RoonHandler {
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
     pub services: Vec<String>,
+    pub mediawiki: MediaWiki,
     mute_list: VecDeque<String>,
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
@@ -63,7 +65,12 @@ pub struct RoonHandler {
 }
 
 impl RoonHandler {
-    pub fn new(event_tx: Sender<RoonEvent>, config_path: Arc<String>) -> Self {
+    pub fn new(
+        event_tx: Sender<RoonEvent>,
+        config_path: Arc<String>,
+        country_code: &'static str,
+        cache: Value,
+    ) -> Self {
         Self {
             event_tx,
             browse: None,
@@ -82,6 +89,7 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
+            mediawiki: MediaWiki::new(country_code, cache),
             mute_list: VecDeque::new(),
             status: None,
             access: None,
@@ -262,6 +270,12 @@ impl RoonHandler {
                             }
 
                             self.update_wikipedia_extract(&prev_zone_state, zone).await;
+
+                            if let Some(value) = self.mediawiki.get_changed_cache() {
+                                let path = self.config_path.replace("config", "wikipedia");
+
+                                RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+                            }
                         }
 
                         self.event_tx
@@ -442,7 +456,10 @@ impl RoonHandler {
                 if now_playing.length.is_some() {
                     let title = now_playing.three_line.line3.as_str();
                     let artist = now_playing.three_line.line2.to_owned();
-                    let extract = mediawiki::get_extract(title, &MediaHint::Album(artist)).await?;
+                    let extract = self
+                        .mediawiki
+                        .get_extract(title, &MediaHint::Album(artist))
+                        .await?;
 
                     self.event_tx
                         .send(RoonEvent::WikiExtract(extract))
@@ -772,7 +789,9 @@ impl RoonHandler {
 
     pub async fn get_about(&mut self) -> Option<()> {
         let (title, hint) = self.about.take()?;
-        let extract = mediawiki::get_extract(&title, &hint)
+        let extract = self
+            .mediawiki
+            .get_extract(&title, &hint)
             .await
             .unwrap_or_default();
         let list = BrowseList {
@@ -1050,14 +1069,17 @@ impl RoonHandler {
         Some([&[item], items].concat())
     }
 
-    async fn update_wikipedia_extract(&self, prev: &Zone, curr: &Zone) -> Option<()> {
+    async fn update_wikipedia_extract(&mut self, prev: &Zone, curr: &Zone) -> Option<()> {
         let now_playing = curr.now_playing.as_ref()?;
         let prev = prev.now_playing.as_ref()?.three_line.line3.as_str();
         let curr = now_playing.three_line.line3.as_str();
         let artist = now_playing.three_line.line2.to_owned();
 
         if now_playing.length.is_some() && curr != prev {
-            let extract = mediawiki::get_extract(&curr, &MediaHint::Album(artist)).await?;
+            let extract = self
+                .mediawiki
+                .get_extract(&curr, &MediaHint::Album(artist))
+                .await?;
 
             self.event_tx
                 .send(RoonEvent::WikiExtract(extract))

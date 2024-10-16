@@ -30,7 +30,7 @@ use tokio::{
 use crate::api::simple::RoonEvent;
 use crate::backend::{
     roon_access::{RoonAccess, RoonAccessData},
-    roon_handler::{RoonHandler, BROWSE_PAGE_SIZE},
+    roon_handler::{RoonHandler, BROWSE_PAGE_SIZE, COUNTRY_CODE},
 };
 
 const PLAY_NOW: &str = "Play Now";
@@ -39,6 +39,7 @@ const QUEUE: &str = "Queue";
 
 pub struct Roon {
     config_path: Arc<String>,
+    support_path: String,
     handler: Arc<Mutex<RoonHandler>>,
     server: Arc<Mutex<ServerProps>>,
 }
@@ -50,17 +51,20 @@ struct ServerProps {
 }
 
 impl Roon {
-    pub async fn start(config_path: String) -> (Roon, Receiver<RoonEvent>, String) {
+    pub async fn start(support_path: String) -> (Roon, Receiver<RoonEvent>, String) {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
-        let config_path = Arc::new(config_path);
+        let wikipedia = format!("{}/wikipedia.json", support_path);
+        let cache = RoonApi::load_config(&wikipedia, COUNTRY_CODE);
+        let config_path = Arc::new(support_path.clone() + "/config.json");
         let value = RoonApi::load_config(&config_path, "settings");
         let server = RoonApi::load_config(&config_path, "server");
         let server = Arc::new(Mutex::new(
             serde_json::from_value::<ServerProps>(server).unwrap_or_default(),
         ));
-        let handler = Arc::new(Mutex::new(RoonHandler::new(tx, config_path.clone())));
+        let handler = RoonHandler::new(tx, config_path.clone(), COUNTRY_CODE, cache);
+        let handler = Arc::new(Mutex::new(handler));
 
         log::info!("Loading config from: {config_path}");
 
@@ -138,6 +142,7 @@ impl Roon {
 
         let roon = Self {
             config_path,
+            support_path,
             handler,
             server,
         };
@@ -195,7 +200,15 @@ impl Roon {
     pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
         let mut handler = self.handler.lock().await;
 
-        handler.select_zone(zone_id).await
+        let result = handler.select_zone(zone_id).await;
+
+        if let Some(value) = handler.mediawiki.get_changed_cache() {
+            let path = format!("{}/wikipedia.json", self.support_path);
+
+            RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+        }
+
+        result
     }
 
     pub async fn transfer_from_zone(&self, zone_id: &str) -> Option<()> {
@@ -540,7 +553,16 @@ impl Roon {
     }
 
     pub async fn get_about(&mut self) -> Option<()> {
-        self.handler.lock().await.get_about().await
+        let mut handler = self.handler.lock().await;
+        let result = handler.get_about().await;
+
+        if let Some(value) = handler.mediawiki.get_changed_cache() {
+            let path = format!("{}/wikipedia.json", self.support_path);
+
+            RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+        }
+
+        result
     }
 
     async fn handle_random_item(

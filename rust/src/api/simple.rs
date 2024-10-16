@@ -84,8 +84,7 @@ pub async fn start_roon(
 ) -> String {
     init_logger(&support_path, log::LevelFilter::Info);
 
-    let config_path = support_path + "/config.json";
-    let (roon, mut rx, settings) = Roon::start(config_path).await;
+    let (roon, mut rx, settings) = Roon::start(support_path).await;
     let mut api = API.lock().await;
 
     api.roon = Some(roon);
