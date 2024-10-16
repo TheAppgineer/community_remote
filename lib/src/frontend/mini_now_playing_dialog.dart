@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
-class NowPlayingDialog extends StatefulWidget {
-  const NowPlayingDialog({super.key});
+class MiniNowPlayingDialog extends StatefulWidget {
+  const MiniNowPlayingDialog({super.key});
 
   @override
-  State<NowPlayingDialog> createState() => _NowPlayingDialogState();
+  State<MiniNowPlayingDialog> createState() => _MiniNowPlayingDialogState();
 }
 
-class _NowPlayingDialogState extends State<NowPlayingDialog> {
+class _MiniNowPlayingDialogState extends State<MiniNowPlayingDialog> {
   int _length = 0;
   int _elapsed = 0;
   double _progress = 0;
@@ -98,11 +98,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
         );
 
         if (_length > 0) {
-          if (appState.pauseOnTrackEnd) {
-            progress = appState.getDuration(_length - _elapsed);
-          } else {
-            progress = '${appState.getDuration(_elapsed)} / ${appState.getDuration(_length)}';
-          }
+          progress = appState.getDuration(_length - _elapsed);
         } else {
           progress = appState.getDuration(_elapsed);
         }
@@ -134,54 +130,40 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
       margin: const EdgeInsets.all(10),
       child: Padding(
         padding: const EdgeInsets.all(6),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 1, child: SizedBox(child: _image)),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: SingleChildScrollView(child: Html(data: appState.wikiExtract ?? '')),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Column(
+                  children: [
+                    Expanded(child: SizedBox(child: _image)),
+                    Html(data: appState.wikiExtract ?? ''),
+                    metadata,
+                    Row(
+                      children: [
+                        Expanded(child: LinearProgressIndicator(value: _progress)),
+                        const Padding(padding: EdgeInsets.only(left: 10)),
+                        Text(progress),
+                        IconButton(
+                          icon: const Icon(Icons.skip_previous, size: 32),
+                          tooltip: tooltipPrev,
+                          onPressed: onPrevPressed,
                         ),
-                      ),
-                    ],
-                  ),
+                        IconButton(
+                          icon: const Icon(Icons.skip_next, size: 32),
+                          tooltip: tooltipNext,
+                          onPressed: onNextPressed,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(top: 20)),
-              metadata,
-              Row(
-                children: [
-                  Expanded(child: LinearProgressIndicator(value: _progress)),
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                  Text(progress),
-                  const Padding(padding: EdgeInsets.only(left: 20)),
-                  IconButton(
-                    icon: const Icon(Icons.skip_previous, size: 32),
-                    tooltip: tooltipPrev,
-                    onPressed: onPrevPressed,
-                  ),
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                  IconButton(
-                    icon: const Icon(Icons.skip_next, size: 32),
-                    tooltip: tooltipNext,
-                    onPressed: onNextPressed,
-                  ),
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                  QuickAccessButton(appState: appState, smallWidth: true),
-                ],
-              ),
-            ],
-          ),
+            ),
+            QuickAccessButton(appState: appState, smallWidth: true),
+          ],
         ),
       ),
     );

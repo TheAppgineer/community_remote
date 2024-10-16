@@ -1,5 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
-import 'package:community_remote/src/frontend/now_playing_dialog.dart';
+import 'package:community_remote/src/frontend/mini_now_playing_dialog.dart';
 import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/frontend/volume.dart';
 import 'package:community_remote/src/frontend/zones.dart';
@@ -70,7 +70,7 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
           onTap: () => showDialog(
             context: context,
             builder: (context) => const Dialog.fullscreen(
-              child: NowPlayingDialog(),
+              child: MiniNowPlayingDialog(),
             ),
           ),
         );

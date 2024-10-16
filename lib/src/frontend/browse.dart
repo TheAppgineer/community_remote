@@ -322,7 +322,10 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
             data = 'Not found';
           }
 
-          return SizedBox.expand(child: Html(data: data));
+          return SizedBox.expand(child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(child: Html(data: data)),
+          ));
         }
 
         var browseList = _browseItems!.items;
