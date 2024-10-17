@@ -68,7 +68,7 @@ impl RoonHandler {
     pub fn new(
         event_tx: Sender<RoonEvent>,
         config_path: Arc<String>,
-        country_code: &'static str,
+        country_code: &str,
         cache: Value,
     ) -> Self {
         Self {
@@ -788,7 +788,7 @@ impl RoonHandler {
     }
 
     pub async fn get_about(&mut self) -> Option<()> {
-        let (title, hint) = self.about.take()?;
+        let (title, hint) = self.about.to_owned()?;
         let extract = self
             .mediawiki
             .get_extract(&title, &hint)
