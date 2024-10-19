@@ -32,6 +32,14 @@ pub const BROWSE_PAGE_SIZE: usize = 100;
 pub const SESSION_ID: i32 = 0;
 pub const COUNTRY_CODE: &'static str = "en";
 
+#[derive(Clone)]
+struct About {
+    title: String,
+    hint: MediaHint,
+    actions: Option<Vec<BrowseItem>>,
+    level: u32,
+}
+
 pub struct RoonHandler {
     pub event_tx: Sender<RoonEvent>,
     pub browse: Option<BrowseHelper>,
@@ -61,7 +69,7 @@ pub struct RoonHandler {
     outputs: HashMap<String, String>,
     pop_levels: Option<u32>,
     queue: Option<Vec<QueueItem>>,
-    about: Option<(String, MediaHint)>,
+    about: Option<About>,
 }
 
 impl RoonHandler {
@@ -675,6 +683,11 @@ impl RoonHandler {
             } else {
                 let event = if is_action_list {
                     self.track_down_actionlist = false;
+
+                    if let Some(about) = self.about.as_mut() {
+                        about.actions = Some(result.items.to_owned());
+                    }
+
                     RoonEvent::BrowseActions(result.items)
                 } else {
                     let new_offset = result.offset + result.items.len();
@@ -758,13 +771,18 @@ impl RoonHandler {
                             let item = items.get_mut(0)?;
 
                             if item.title == "Play Artist" || item.title == "Play Album" {
-                                self.about = if item.title == "Play Album" {
-                                    let artist = list.subtitle.as_ref()?.to_owned();
-
-                                    Some((list.title.to_owned(), MediaHint::Album(artist)))
+                                let hint = if item.title == "Play Album" {
+                                    MediaHint::Album(list.subtitle.as_ref()?.to_owned())
                                 } else {
-                                    Some((list.title.to_owned(), MediaHint::Artist))
+                                    MediaHint::Artist
                                 };
+
+                                self.about = Some(About {
+                                    title: list.title.to_owned(),
+                                    hint,
+                                    actions: None,
+                                    level: list.level + 1,
+                                });
 
                                 item.title = format!("About {}", list.title);
                             }
@@ -788,14 +806,15 @@ impl RoonHandler {
     }
 
     pub async fn get_about(&mut self) -> Option<()> {
-        let (title, hint) = self.about.to_owned()?;
+        let about = self.about.to_owned()?;
         let extract = self
             .mediawiki
-            .get_extract(&title, &hint)
+            .get_extract(&about.title, &about.hint)
             .await
             .unwrap_or_default();
         let list = BrowseList {
-            title: format!("About {}", title),
+            title: format!("About {}", about.title),
+            level: about.level,
             ..Default::default()
         };
         let item = BrowseItem {
@@ -804,7 +823,7 @@ impl RoonHandler {
         };
         let about = BrowseItems {
             list,
-            offset: 0,
+            offset: about.level,
             items: vec![item],
         };
         self.event_tx.send(RoonEvent::About(about)).await.unwrap();

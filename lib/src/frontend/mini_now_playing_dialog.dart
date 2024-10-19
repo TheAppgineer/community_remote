@@ -3,7 +3,6 @@ import 'package:community_remote/src/frontend/home_page.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
 class MiniNowPlayingDialog extends StatefulWidget {
@@ -139,7 +138,6 @@ class _MiniNowPlayingDialogState extends State<MiniNowPlayingDialog> {
                 child: Column(
                   children: [
                     Expanded(child: SizedBox(child: _image)),
-                    Html(data: appState.wikiExtract ?? ''),
                     metadata,
                     Row(
                       children: [

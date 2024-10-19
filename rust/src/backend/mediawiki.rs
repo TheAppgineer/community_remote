@@ -273,13 +273,19 @@ impl MediaWiki {
 }
 
 fn simplified(input: &str) -> String {
-    any_ascii(input)
+    let simplified = any_ascii(input)
         .to_lowercase()
         .replace(" + ", "and")
         .replace(" & ", "and")
         .replace(' ', "")
         .replace(':', "")
-        .replace('-', "")
+        .replace('-', "");
+
+    if simplified.starts_with("the") {
+        simplified.replace("the", "")
+    } else {
+        simplified
+    }
 }
 
 fn has_artist_or_album_suffix(title: &str, hint: &MediaHint) -> (bool, bool) {
@@ -296,7 +302,9 @@ fn has_artist_or_album_suffix(title: &str, hint: &MediaHint) -> (bool, bool) {
             (true, false)
         }
         MediaHint::Album(artist)
-            if (suffix.contains(&simplified(artist)) || suffix.ends_with("album"))
+            if (suffix.contains(&simplified(artist))
+                || suffix.ends_with("album")
+                || suffix.ends_with("soundtrack"))
                 && !suffix.ends_with("song")
                 && *title != simplified(artist) =>
         {
@@ -370,12 +378,22 @@ mod tests {
                 "Paul Young",
                 "From Time to Time – The Singles Collection",
             ),
+            (
+                "Great Subconscious Club",
+                "K's Choice",
+                "The Great Subconscious Club",
+            ),
             ("Hotel California", "Eagles", "Hotel California (album)"),
             ("Stop!", "Sam Brown", "Stop! (album)"),
             (
                 "The Common Linnets",
                 "The Common Linnets",
                 "The Common Linnets (album)",
+            ),
+            (
+                "The Bodyguard [Original Soundtrack Album]",
+                "Various Artists",
+                "The Bodyguard (soundtrack)",
             ),
             ("Tracy Chapman", "Tracy Chapman", "Tracy Chapman (album)"),
         ];

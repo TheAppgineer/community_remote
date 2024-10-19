@@ -429,6 +429,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
                   if (title.contains("About ")) {
                     _navigator.pushNamed("About");
                     Future.delayed(const Duration(milliseconds: 20), () {
+                      selectBrowseItem(item: browseList[index]);
                       getAbout();
                     });
                     return;
@@ -497,6 +498,10 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       } else {
         browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
       }
+
+      if (_browseItems!.list.title.contains("About")) {
+        actions.add(ActionMenuAnchor(appState: appState));
+      }
     }
 
     return PopScope(
@@ -537,16 +542,17 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
 class ActionMenuAnchor extends StatelessWidget {
   const ActionMenuAnchor({
     super.key,
-    required this.browseItem,
+    this.browseItem,
     required this.appState,
   });
 
-  final BrowseItem browseItem;
+  final BrowseItem? browseItem;
   final MyAppState appState;
 
   @override
   Widget build(BuildContext context) {
     return MenuAnchor(
+      consumeOutsideTap: true,
       builder: (context, controller, child) {
         return IconButton(
           onPressed: () {
@@ -554,7 +560,10 @@ class ActionMenuAnchor extends StatelessWidget {
               controller.close();
             } else {
               controller.open();
-              selectBrowseItem(item: browseItem);
+
+              if (browseItem != null) {
+                selectBrowseItem(item: browseItem!);
+              }
             }
           },
           icon: const Icon(Icons.more_vert),
