@@ -19,6 +19,7 @@ flutter_rust_bridge = "=2.5.0"
 log = "0.4"
 mediawiki = "0.3"
 once_cell = "1.19"
+openssl = { version = "0.10", features = ["vendored"] }
 rand = "0.8.5"
 regex = "1.10"
 roon-api = { git = "https://github.com/TheAppgineer/rust-roon-api.git", tag = "0.3.1", features = ["browse", "image", "transport", "settings", "status"] }
