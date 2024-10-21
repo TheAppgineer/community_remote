@@ -78,6 +78,7 @@ impl RoonHandler {
         config_path: Arc<String>,
         country_code: &str,
         cache: Value,
+        fallback: Value,
     ) -> Self {
         Self {
             event_tx,
@@ -97,7 +98,7 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
-            mediawiki: MediaWiki::new(country_code, cache),
+            mediawiki: MediaWiki::new(country_code, cache, fallback),
             mute_list: VecDeque::new(),
             status: None,
             access: None,

@@ -63,7 +63,12 @@ impl Roon {
         let server = Arc::new(Mutex::new(
             serde_json::from_value::<ServerProps>(server).unwrap_or_default(),
         ));
-        let handler = RoonHandler::new(tx, config_path.clone(), COUNTRY_CODE, cache);
+        let fallback = if COUNTRY_CODE != "en" {
+            RoonApi::load_config(&wikipedia, "en")
+        } else {
+            Value::Null
+        };
+        let handler = RoonHandler::new(tx, config_path.clone(), COUNTRY_CODE, cache, fallback);
         let handler = Arc::new(Mutex::new(handler));
 
         log::info!("Loading config from: {config_path}");
