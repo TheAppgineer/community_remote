@@ -73,6 +73,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
     String? tooltipNext;
     String? tooltipPrev;
     String progress = '';
+    bool smallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
 
     if (appState.zone != null) {
       Zone zone = appState.zone!;
@@ -98,7 +99,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
         );
 
         if (_length > 0) {
-          if (appState.pauseOnTrackEnd) {
+          if (appState.pauseOnTrackEnd || smallWidth) {
             progress = appState.getDuration(_length - _elapsed);
           } else {
             progress = '${appState.getDuration(_elapsed)} / ${appState.getDuration(_length)}';
@@ -130,6 +131,91 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
       }
     }
 
+    List<Widget> controls;
+    List<Widget> nowPlaying;
+
+    if (smallWidth) {
+      controls = [
+        Expanded(child: LinearProgressIndicator(value: _progress)),
+        const Padding(padding: EdgeInsets.only(left: 10)),
+        Text(progress),
+        IconButton(
+          icon: const Icon(Icons.skip_previous, size: 32),
+          tooltip: tooltipPrev,
+          onPressed: onPrevPressed,
+        ),
+        IconButton(
+          icon: const Icon(Icons.skip_next, size: 32),
+          tooltip: tooltipNext,
+          onPressed: onNextPressed,
+        ),
+      ];
+      nowPlaying = [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: SingleChildScrollView(child: Column(
+              children: [
+                Padding(padding: const EdgeInsets.all(40), child: _image),
+                Html(data: appState.wikiExtract ?? ''),
+              ],
+            )),
+          ),
+        ),
+        metadata,
+        Row(
+          children: controls,
+        ),
+        QuickAccessButton(appState: appState, smallWidth: true),
+      ];
+    } else {
+      controls = [
+        Expanded(child: LinearProgressIndicator(value: _progress)),
+        const Padding(padding: EdgeInsets.only(left: 10)),
+        Text(progress),
+        const Padding(padding: EdgeInsets.only(left: 20)),
+        IconButton(
+          icon: const Icon(Icons.skip_previous, size: 32),
+          tooltip: tooltipPrev,
+          onPressed: onPrevPressed,
+        ),
+        const Padding(padding: EdgeInsets.only(left: 10)),
+        IconButton(
+          icon: const Icon(Icons.skip_next, size: 32),
+          tooltip: tooltipNext,
+          onPressed: onNextPressed,
+        ),
+        const Padding(padding: EdgeInsets.only(left: 10)),
+        QuickAccessButton(appState: appState, smallWidth: false),
+      ];
+
+      nowPlaying = [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 1, child: SizedBox(child: _image)),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SingleChildScrollView(child: Html(data: appState.wikiExtract ?? '')),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Padding(padding: EdgeInsets.only(top: 20)),
+        metadata,
+        Row(
+          children: controls,
+        ),
+      ];
+    }
+
     return Card(
       margin: const EdgeInsets.all(10),
       child: Padding(
@@ -138,49 +224,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
           padding: const EdgeInsets.only(left: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 1, child: SizedBox(child: _image)),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: SingleChildScrollView(child: Html(data: appState.wikiExtract ?? '')),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.only(top: 20)),
-              metadata,
-              Row(
-                children: [
-                  Expanded(child: LinearProgressIndicator(value: _progress)),
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                  Text(progress),
-                  const Padding(padding: EdgeInsets.only(left: 20)),
-                  IconButton(
-                    icon: const Icon(Icons.skip_previous, size: 32),
-                    tooltip: tooltipPrev,
-                    onPressed: onPrevPressed,
-                  ),
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                  IconButton(
-                    icon: const Icon(Icons.skip_next, size: 32),
-                    tooltip: tooltipNext,
-                    onPressed: onNextPressed,
-                  ),
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                  QuickAccessButton(appState: appState, smallWidth: true),
-                ],
-              ),
-            ],
+            children: nowPlaying,
           ),
         ),
       ),
