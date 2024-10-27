@@ -19,6 +19,8 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
   double _progress = 0;
   String? _imageKey;
   Image? _image;
+  int _extractHash = 0;
+  late final ScrollController _controller;
 
   _setProgress(int length, int? elapsed) {
     if (mounted) {
@@ -54,6 +56,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
   void initState() {
     super.initState();
 
+    _controller = ScrollController();
     MyAppState.addProgressCallback(_setProgress);
   }
 
@@ -133,6 +136,15 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
 
     List<Widget> controls;
     List<Widget> nowPlaying;
+    String extract = appState.wikiExtract ?? '';
+
+    if (extract.hashCode != _extractHash) {
+      _extractHash = extract.hashCode;
+
+      if (_controller.positions.isNotEmpty) {
+        _controller.jumpTo(0);
+      }
+    }
 
     if (smallWidth) {
       controls = [
@@ -154,12 +166,15 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: SingleChildScrollView(child: Column(
-              children: [
-                Padding(padding: const EdgeInsets.all(40), child: _image),
-                Html(data: appState.wikiExtract ?? ''),
-              ],
-            )),
+            child: SingleChildScrollView(
+              controller: _controller,
+              child: Column(
+                children: [
+                  Padding(padding: const EdgeInsets.all(40), child: _image),
+                  Html(data: extract),
+                ],
+              ),
+            ),
           ),
         ),
         metadata,
@@ -201,7 +216,10 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
                   flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(10),
-                    child: SingleChildScrollView(child: Html(data: appState.wikiExtract ?? '')),
+                    child: SingleChildScrollView(
+                      controller: _controller,
+                      child: Html(data: extract),
+                    ),
                   ),
                 ),
               ],

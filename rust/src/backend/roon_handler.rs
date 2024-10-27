@@ -1091,7 +1091,11 @@ impl RoonHandler {
 
     async fn update_wikipedia_extract(&mut self, prev: &Zone, curr: &Zone) -> Option<()> {
         let now_playing = curr.now_playing.as_ref()?;
-        let prev = prev.now_playing.as_ref()?.three_line.line3.as_str();
+        let prev = if let Some(prev) = prev.now_playing.as_ref() {
+            prev.three_line.line3.as_str()
+        } else {
+            ""
+        };
         let curr = now_playing.three_line.line3.as_str();
         let artist = now_playing.three_line.line2.to_owned();
 
