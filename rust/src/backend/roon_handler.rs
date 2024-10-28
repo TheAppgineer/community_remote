@@ -258,6 +258,11 @@ impl RoonHandler {
                     self.send_zone_list().await;
 
                     if let Some(zone) = curr_zone.as_ref() {
+                        self.event_tx
+                            .send(RoonEvent::ZoneChanged(curr_zone.clone()))
+                            .await
+                            .unwrap();
+
                         if let Some(prev_zone_state) = prev_zone_state {
                             if self.pause_on_track_end
                                 && prev_zone_state.state == State::Playing
@@ -286,11 +291,6 @@ impl RoonHandler {
                                 RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
                             }
                         }
-
-                        self.event_tx
-                            .send(RoonEvent::ZoneChanged(curr_zone))
-                            .await
-                            .unwrap();
                     }
                 }
                 Parsed::ZonesRemoved(zone_ids) => {
@@ -463,15 +463,24 @@ impl RoonHandler {
                 let now_playing = zone?.now_playing.as_ref()?;
 
                 if now_playing.length.is_some() {
-                    let title = now_playing.three_line.line3.as_str();
+                    let album = now_playing.three_line.line3.as_str();
                     let artist = now_playing.three_line.line2.to_owned();
-                    let extract = self
+                    let artist_extract = self
                         .mediawiki
-                        .get_extract(title, &MediaHint::Album(artist))
-                        .await?;
+                        .get_extract(&artist, &MediaHint::Artist)
+                        .await;
+                    let album_extract = self
+                        .mediawiki
+                        .get_extract(album, &MediaHint::Album(artist))
+                        .await;
 
                     self.event_tx
-                        .send(RoonEvent::WikiExtract(extract))
+                        .send(RoonEvent::WikiExtract(artist_extract, album_extract))
+                        .await
+                        .unwrap();
+                } else {
+                    self.event_tx
+                        .send(RoonEvent::WikiExtract(None, None))
                         .await
                         .unwrap();
                 }
@@ -1091,22 +1100,33 @@ impl RoonHandler {
 
     async fn update_wikipedia_extract(&mut self, prev: &Zone, curr: &Zone) -> Option<()> {
         let now_playing = curr.now_playing.as_ref()?;
-        let prev = if let Some(prev) = prev.now_playing.as_ref() {
+        let prev_album = if let Some(prev) = prev.now_playing.as_ref() {
             prev.three_line.line3.as_str()
         } else {
             ""
         };
-        let curr = now_playing.three_line.line3.as_str();
-        let artist = now_playing.three_line.line2.to_owned();
+        let album = now_playing.three_line.line3.as_str();
 
-        if now_playing.length.is_some() && curr != prev {
-            let extract = self
-                .mediawiki
-                .get_extract(&curr, &MediaHint::Album(artist))
-                .await?;
+        if now_playing.length.is_some() {
+            if album != prev_album {
+                let artist = now_playing.three_line.line2.to_owned();
+                let artist_extract = self
+                    .mediawiki
+                    .get_extract(&artist, &MediaHint::Artist)
+                    .await;
+                let album_extract = self
+                    .mediawiki
+                    .get_extract(album, &MediaHint::Album(artist))
+                    .await;
 
+                self.event_tx
+                    .send(RoonEvent::WikiExtract(artist_extract, album_extract))
+                    .await
+                    .unwrap();
+            }
+        } else {
             self.event_tx
-                .send(RoonEvent::WikiExtract(extract))
+                .send(RoonEvent::WikiExtract(None, None))
                 .await
                 .unwrap();
         }

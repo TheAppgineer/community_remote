@@ -35,7 +35,7 @@ mixin _$RoonEvent {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) =>
       throw _privateConstructorUsedError;
@@ -58,7 +58,7 @@ mixin _$RoonEvent {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) =>
       throw _privateConstructorUsedError;
@@ -81,7 +81,7 @@ mixin _$RoonEvent {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) =>
@@ -274,7 +274,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return coreDiscovered(field0, field1);
@@ -300,7 +300,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return coreDiscovered?.call(field0, field1);
@@ -326,7 +326,7 @@ class _$RoonEvent_CoreDiscoveredImpl extends RoonEvent_CoreDiscovered {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -530,7 +530,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return coreRegistered(field0, field1);
@@ -556,7 +556,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return coreRegistered?.call(field0, field1);
@@ -582,7 +582,7 @@ class _$RoonEvent_CoreRegisteredImpl extends RoonEvent_CoreRegistered {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -787,7 +787,7 @@ class _$RoonEvent_CorePermittedImpl extends RoonEvent_CorePermitted {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return corePermitted(field0, field1);
@@ -813,7 +813,7 @@ class _$RoonEvent_CorePermittedImpl extends RoonEvent_CorePermitted {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return corePermitted?.call(field0, field1);
@@ -839,7 +839,7 @@ class _$RoonEvent_CorePermittedImpl extends RoonEvent_CorePermitted {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -1033,7 +1033,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return coreLost(field0);
@@ -1059,7 +1059,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return coreLost?.call(field0);
@@ -1085,7 +1085,7 @@ class _$RoonEvent_CoreLostImpl extends RoonEvent_CoreLost {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -1288,7 +1288,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return zonesChanged(field0);
@@ -1314,7 +1314,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return zonesChanged?.call(field0);
@@ -1340,7 +1340,7 @@ class _$RoonEvent_ZonesChangedImpl extends RoonEvent_ZonesChanged {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -1534,7 +1534,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return zoneChanged(field0);
@@ -1560,7 +1560,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return zoneChanged?.call(field0);
@@ -1586,7 +1586,7 @@ class _$RoonEvent_ZoneChangedImpl extends RoonEvent_ZoneChanged {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -1779,7 +1779,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return zoneSeek(field0);
@@ -1805,7 +1805,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return zoneSeek?.call(field0);
@@ -1831,7 +1831,7 @@ class _$RoonEvent_ZoneSeekImpl extends RoonEvent_ZoneSeek {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -2034,7 +2034,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return outputsChanged(field0);
@@ -2060,7 +2060,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return outputsChanged?.call(field0);
@@ -2086,7 +2086,7 @@ class _$RoonEvent_OutputsChangedImpl extends RoonEvent_OutputsChanged {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -2280,7 +2280,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return browseItems(field0);
@@ -2306,7 +2306,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return browseItems?.call(field0);
@@ -2332,7 +2332,7 @@ class _$RoonEvent_BrowseItemsImpl extends RoonEvent_BrowseItems {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -2535,7 +2535,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return browseActions(field0);
@@ -2561,7 +2561,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return browseActions?.call(field0);
@@ -2587,7 +2587,7 @@ class _$RoonEvent_BrowseActionsImpl extends RoonEvent_BrowseActions {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -2754,7 +2754,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return browseReset();
@@ -2780,7 +2780,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return browseReset?.call();
@@ -2806,7 +2806,7 @@ class _$RoonEvent_BrowseResetImpl extends RoonEvent_BrowseReset {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -2990,7 +2990,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return profile(field0);
@@ -3016,7 +3016,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return profile?.call(field0);
@@ -3042,7 +3042,7 @@ class _$RoonEvent_ProfileImpl extends RoonEvent_Profile {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -3244,7 +3244,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return queueItems(field0);
@@ -3270,7 +3270,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return queueItems?.call(field0);
@@ -3296,7 +3296,7 @@ class _$RoonEvent_QueueItemsImpl extends RoonEvent_QueueItems {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -3491,7 +3491,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return pauseOnTrackEnd(field0);
@@ -3517,7 +3517,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return pauseOnTrackEnd?.call(field0);
@@ -3543,7 +3543,7 @@ class _$RoonEvent_PauseOnTrackEndImpl extends RoonEvent_PauseOnTrackEnd {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -3736,7 +3736,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return image(field0);
@@ -3762,7 +3762,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return image?.call(field0);
@@ -3788,7 +3788,7 @@ class _$RoonEvent_ImageImpl extends RoonEvent_Image {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -3956,7 +3956,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return settingsSaved();
@@ -3982,7 +3982,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return settingsSaved?.call();
@@ -4008,7 +4008,7 @@ class _$RoonEvent_SettingsSavedImpl extends RoonEvent_SettingsSaved {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -4200,7 +4200,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return services(field0);
@@ -4226,7 +4226,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return services?.call(field0);
@@ -4252,7 +4252,7 @@ class _$RoonEvent_ServicesImpl extends RoonEvent_Services {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
@@ -4366,7 +4366,7 @@ abstract class _$$RoonEvent_WikiExtractImplCopyWith<$Res> {
           $Res Function(_$RoonEvent_WikiExtractImpl) then) =
       __$$RoonEvent_WikiExtractImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String field0});
+  $Res call({String? field0, String? field1});
 }
 
 /// @nodoc
@@ -4382,13 +4382,18 @@ class __$$RoonEvent_WikiExtractImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? field0 = null,
+    Object? field0 = freezed,
+    Object? field1 = freezed,
   }) {
     return _then(_$RoonEvent_WikiExtractImpl(
-      null == field0
+      freezed == field0
           ? _value.field0
           : field0 // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      freezed == field1
+          ? _value.field1
+          : field1 // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -4396,14 +4401,16 @@ class __$$RoonEvent_WikiExtractImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RoonEvent_WikiExtractImpl extends RoonEvent_WikiExtract {
-  const _$RoonEvent_WikiExtractImpl(this.field0) : super._();
+  const _$RoonEvent_WikiExtractImpl([this.field0, this.field1]) : super._();
 
   @override
-  final String field0;
+  final String? field0;
+  @override
+  final String? field1;
 
   @override
   String toString() {
-    return 'RoonEvent.wikiExtract(field0: $field0)';
+    return 'RoonEvent.wikiExtract(field0: $field0, field1: $field1)';
   }
 
   @override
@@ -4411,11 +4418,12 @@ class _$RoonEvent_WikiExtractImpl extends RoonEvent_WikiExtract {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RoonEvent_WikiExtractImpl &&
-            (identical(other.field0, field0) || other.field0 == field0));
+            (identical(other.field0, field0) || other.field0 == field0) &&
+            (identical(other.field1, field1) || other.field1 == field1));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, field0);
+  int get hashCode => Object.hash(runtimeType, field0, field1);
 
   /// Create a copy of RoonEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -4446,10 +4454,10 @@ class _$RoonEvent_WikiExtractImpl extends RoonEvent_WikiExtract {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
-    return wikiExtract(field0);
+    return wikiExtract(field0, field1);
   }
 
   @override
@@ -4472,10 +4480,10 @@ class _$RoonEvent_WikiExtractImpl extends RoonEvent_WikiExtract {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
-    return wikiExtract?.call(field0);
+    return wikiExtract?.call(field0, field1);
   }
 
   @override
@@ -4498,12 +4506,12 @@ class _$RoonEvent_WikiExtractImpl extends RoonEvent_WikiExtract {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {
     if (wikiExtract != null) {
-      return wikiExtract(field0);
+      return wikiExtract(field0, field1);
     }
     return orElse();
   }
@@ -4592,11 +4600,13 @@ class _$RoonEvent_WikiExtractImpl extends RoonEvent_WikiExtract {
 }
 
 abstract class RoonEvent_WikiExtract extends RoonEvent {
-  const factory RoonEvent_WikiExtract(final String field0) =
-      _$RoonEvent_WikiExtractImpl;
+  const factory RoonEvent_WikiExtract(
+      [final String? field0,
+      final String? field1]) = _$RoonEvent_WikiExtractImpl;
   const RoonEvent_WikiExtract._() : super._();
 
-  String get field0;
+  String? get field0;
+  String? get field1;
 
   /// Create a copy of RoonEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -4691,7 +4701,7 @@ class _$RoonEvent_AboutImpl extends RoonEvent_About {
     required TResult Function(ImageKeyValue field0) image,
     required TResult Function() settingsSaved,
     required TResult Function(List<String> field0) services,
-    required TResult Function(String field0) wikiExtract,
+    required TResult Function(String? field0, String? field1) wikiExtract,
     required TResult Function(BrowseItems field0) about,
   }) {
     return about(field0);
@@ -4717,7 +4727,7 @@ class _$RoonEvent_AboutImpl extends RoonEvent_About {
     TResult? Function(ImageKeyValue field0)? image,
     TResult? Function()? settingsSaved,
     TResult? Function(List<String> field0)? services,
-    TResult? Function(String field0)? wikiExtract,
+    TResult? Function(String? field0, String? field1)? wikiExtract,
     TResult? Function(BrowseItems field0)? about,
   }) {
     return about?.call(field0);
@@ -4743,7 +4753,7 @@ class _$RoonEvent_AboutImpl extends RoonEvent_About {
     TResult Function(ImageKeyValue field0)? image,
     TResult Function()? settingsSaved,
     TResult Function(List<String> field0)? services,
-    TResult Function(String field0)? wikiExtract,
+    TResult Function(String? field0, String? field1)? wikiExtract,
     TResult Function(BrowseItems field0)? about,
     required TResult orElse(),
   }) {

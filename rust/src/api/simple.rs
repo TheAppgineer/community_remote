@@ -39,7 +39,7 @@ pub enum RoonEvent {
     Image(ImageKeyValue),
     SettingsSaved,
     Services(Vec<String>),
-    WikiExtract(String),
+    WikiExtract(Option<String>, Option<String>),
     About(BrowseItems),
 }
 

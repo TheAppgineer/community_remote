@@ -68,6 +68,14 @@ impl MediaWiki {
     }
 
     async fn get_page_title(&self, title: &str, hint: &MediaHint) -> Option<String> {
+        let (title, hint) = match hint {
+            MediaHint::Artist if title.contains(" / ") => (title.split(" / ").next()?, hint),
+            MediaHint::Album(artist) if artist.contains(" / ") => (
+                title,
+                &MediaHint::Album(artist.split(" / ").next()?.to_owned()),
+            ),
+            _ => (title, hint),
+        };
         let results = self.search(title, hint).await?;
 
         self.disambiguate(results, hint).await
@@ -75,7 +83,7 @@ impl MediaWiki {
 
     async fn search(&self, search: &str, hint: &MediaHint) -> Option<Vec<String>> {
         const SUFFIX_SPLITTER: &'static str = r"^([(]*[^\[(]+)[(\[]+([^)]+)";
-        let api = mediawiki::api::Api::new(&self.api_url).await.unwrap();
+        let api = mediawiki::api::Api::new(&self.api_url).await.ok()?;
         let regex = Regex::new(SUFFIX_SPLITTER).unwrap();
         let (search, search_str) = match regex.captures(search).map(|c| c.extract::<2>()) {
             Some((_, captures)) if captures[1].ends_with(']') => {
@@ -303,7 +311,7 @@ impl MediaWiki {
 
     async fn get_html_extract(&self, country_code: &str, title: &str) -> Option<String> {
         let api_url = format!("https://{}.wikipedia.org/w/api.php", country_code);
-        let api = mediawiki::api::Api::new(&api_url).await.unwrap();
+        let api = mediawiki::api::Api::new(&api_url).await.ok()?;
         let params = api.params_into(&[
             ("action", "query"),
             ("prop", "extracts"),
@@ -321,7 +329,7 @@ impl MediaWiki {
     }
 
     async fn get_wikitext(&self, title: &str) -> Option<String> {
-        let api = mediawiki::api::Api::new(&self.api_url).await.unwrap();
+        let api = mediawiki::api::Api::new(&self.api_url).await.ok()?;
         let rev_params = api.params_into(&[
             ("action", "parse"),
             ("prop", "wikitext"),
@@ -477,6 +485,11 @@ mod tests {
                 "Duran Duran (The Wedding Album)",
                 "Duran Duran",
                 "Duran Duran (1993 album)",
+            ),
+            (
+                "Escapology",
+                "Robbie Williams / Gavyn Wright / London Session Orchestra",
+                "Escapology (album)",
             ),
             (
                 "From Time to Time: The Singles Collection",

@@ -4,7 +4,13 @@ import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+
+enum ExtractType {
+  album,
+  artist,
+}
 
 class NowPlayingDialog extends StatefulWidget {
   const NowPlayingDialog({super.key});
@@ -20,6 +26,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
   String? _imageKey;
   Image? _image;
   int _extractHash = 0;
+  ExtractType _extractType = ExtractType.album;
   late final ScrollController _controller;
 
   _setProgress(int length, int? elapsed) {
@@ -76,7 +83,20 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
     String? tooltipNext;
     String? tooltipPrev;
     String progress = '';
+    String headline = '';
     bool smallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
+
+    if (_extractType == ExtractType.album
+      && appState.wikiExtractAlbum == null
+      && appState.wikiExtractArtist != null)
+    {
+      _extractType = ExtractType.artist;
+    } else if (_extractType == ExtractType.artist
+      && appState.wikiExtractAlbum != null
+      && appState.wikiExtractArtist == null)
+    {
+      _extractType = ExtractType.album;
+    }
 
     if (appState.zone != null) {
       Zone zone = appState.zone!;
@@ -101,6 +121,9 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
           minTileHeight: 72,
         );
 
+        headline = _extractType == ExtractType.album
+          ? "About ${nowPlaying.threeLine.line3}"
+          : "About ${nowPlaying.threeLine.line2}";
         if (_length > 0) {
           if (appState.pauseOnTrackEnd || smallWidth) {
             progress = appState.getDuration(_length - _elapsed);
@@ -134,9 +157,14 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
       }
     }
 
+    String? extract = _extractType == ExtractType.album
+      ? appState.wikiExtractAlbum
+      : appState.wikiExtractArtist;
     List<Widget> controls;
     List<Widget> nowPlaying;
-    String extract = appState.wikiExtract ?? '';
+    List<Widget> toggle = [
+      Html(data: extract ?? ''),
+    ];
 
     if (extract.hashCode != _extractHash) {
       _extractHash = extract.hashCode;
@@ -146,7 +174,45 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
       }
     }
 
+    if (appState.wikiExtractAlbum != null && appState.wikiExtractArtist != null) {
+      IconButton switchType = _extractType == ExtractType.album
+        ? IconButton(
+          onPressed: () {
+            setState(() {
+              _extractType = ExtractType.artist;
+            });
+          },
+          icon: const Icon(Symbols.artist_rounded),
+          tooltip: "About Artist",
+        )
+        : IconButton(
+          onPressed: () {
+            setState(() {
+              _extractType = ExtractType.album;
+            });
+          },
+          icon: const Icon(Icons.album_outlined),
+          tooltip: "About Album",
+        );
+
+      toggle.insert(
+        0,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(flex: 1, child: Text(headline, style: Theme.of(context).textTheme.headlineSmall)),
+            switchType,
+            const Padding(padding: EdgeInsets.only(right: 10)),
+          ],
+        ),
+      );
+    }
+
     if (smallWidth) {
+      toggle.insert(
+        0,
+        Padding(padding: const EdgeInsets.all(40), child: _image),
+      );
       controls = [
         Expanded(child: LinearProgressIndicator(value: _progress)),
         const Padding(padding: EdgeInsets.only(left: 10)),
@@ -169,10 +235,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
             child: SingleChildScrollView(
               controller: _controller,
               child: Column(
-                children: [
-                  Padding(padding: const EdgeInsets.all(40), child: _image),
-                  Html(data: extract),
-                ],
+                children: toggle,
               ),
             ),
           ),
@@ -218,7 +281,9 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
                     padding: const EdgeInsets.all(10),
                     child: SingleChildScrollView(
                       controller: _controller,
-                      child: Html(data: extract),
+                      child: Column(
+                        children: toggle,
+                      ),
                     ),
                   ),
                 ),

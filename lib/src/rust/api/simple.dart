@@ -205,9 +205,10 @@ sealed class RoonEvent with _$RoonEvent {
   const factory RoonEvent.services(
     List<String> field0,
   ) = RoonEvent_Services;
-  const factory RoonEvent.wikiExtract(
-    String field0,
-  ) = RoonEvent_WikiExtract;
+  const factory RoonEvent.wikiExtract([
+    String? field0,
+    String? field1,
+  ]) = RoonEvent_WikiExtract;
   const factory RoonEvent.about(
     BrowseItems field0,
   ) = RoonEvent_About;

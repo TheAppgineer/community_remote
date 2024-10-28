@@ -2070,8 +2070,9 @@ impl SseDecode for crate::api::simple::RoonEvent {
                 return crate::api::simple::RoonEvent::Services(var_field0);
             }
             17 => {
-                let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::simple::RoonEvent::WikiExtract(var_field0);
+                let mut var_field0 = <Option<String>>::sse_decode(deserializer);
+                let mut var_field1 = <Option<String>>::sse_decode(deserializer);
+                return crate::api::simple::RoonEvent::WikiExtract(var_field0, var_field1);
             }
             18 => {
                 let mut var_field0 = <crate::api::simple::BrowseItems>::sse_decode(deserializer);
@@ -2789,9 +2790,12 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::RoonEvent {
             crate::api::simple::RoonEvent::Services(field0) => {
                 [16.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::simple::RoonEvent::WikiExtract(field0) => {
-                [17.into_dart(), field0.into_into_dart().into_dart()].into_dart()
-            }
+            crate::api::simple::RoonEvent::WikiExtract(field0, field1) => [
+                17.into_dart(),
+                field0.into_into_dart().into_dart(),
+                field1.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
             crate::api::simple::RoonEvent::About(field0) => {
                 [18.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
@@ -3665,9 +3669,10 @@ impl SseEncode for crate::api::simple::RoonEvent {
                 <i32>::sse_encode(16, serializer);
                 <Vec<String>>::sse_encode(field0, serializer);
             }
-            crate::api::simple::RoonEvent::WikiExtract(field0) => {
+            crate::api::simple::RoonEvent::WikiExtract(field0, field1) => {
                 <i32>::sse_encode(17, serializer);
-                <String>::sse_encode(field0, serializer);
+                <Option<String>>::sse_encode(field0, serializer);
+                <Option<String>>::sse_encode(field1, serializer);
             }
             crate::api::simple::RoonEvent::About(field0) => {
                 <i32>::sse_encode(18, serializer);

@@ -1505,7 +1505,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 17:
         return RoonEvent_WikiExtract(
-          dco_decode_String(raw[1]),
+          dco_decode_opt_String(raw[1]),
+          dco_decode_opt_String(raw[2]),
         );
       case 18:
         return RoonEvent_About(
@@ -2363,8 +2364,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_list_String(deserializer);
         return RoonEvent_Services(var_field0);
       case 17:
-        var var_field0 = sse_decode_String(deserializer);
-        return RoonEvent_WikiExtract(var_field0);
+        var var_field0 = sse_decode_opt_String(deserializer);
+        var var_field1 = sse_decode_opt_String(deserializer);
+        return RoonEvent_WikiExtract(var_field0, var_field1);
       case 18:
         var var_field0 = sse_decode_box_autoadd_browse_items(deserializer);
         return RoonEvent_About(var_field0);
@@ -3161,9 +3163,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case RoonEvent_Services(field0: final field0):
         sse_encode_i_32(16, serializer);
         sse_encode_list_String(field0, serializer);
-      case RoonEvent_WikiExtract(field0: final field0):
+      case RoonEvent_WikiExtract(field0: final field0, field1: final field1):
         sse_encode_i_32(17, serializer);
-        sse_encode_String(field0, serializer);
+        sse_encode_opt_String(field0, serializer);
+        sse_encode_opt_String(field1, serializer);
       case RoonEvent_About(field0: final field0):
         sse_encode_i_32(18, serializer);
         sse_encode_box_autoadd_browse_items(field0, serializer);

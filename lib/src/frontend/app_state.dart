@@ -29,7 +29,8 @@ class MyAppState extends ChangeNotifier {
   Function? _imageCallback;
   bool pauseOnTrackEnd = false;
   bool initialized = false;
-  String? wikiExtract;
+  String? wikiExtractAlbum;
+  String? wikiExtractArtist;
 
   setUserName(String userName) {
     settings["userName"] = userName;
@@ -263,7 +264,8 @@ class MyAppState extends ChangeNotifier {
     } else if (event is RoonEvent_Services) {
       services = event.field0;
     } else if (event is RoonEvent_WikiExtract) {
-      wikiExtract = event.field0;
+      wikiExtractArtist = event.field0;
+      wikiExtractAlbum = event.field1;
     } else if (event is RoonEvent_About) {
       Function(BrowseItems)? callback = _browseCallbacks["About"];
 
