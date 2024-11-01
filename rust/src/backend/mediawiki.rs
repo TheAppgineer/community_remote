@@ -366,7 +366,7 @@ fn has_artist_or_album_suffix(country_code: &str, title: &str, hint: &MediaHint)
     const SUFFIX_SPLITTER: &str = r"[^(]+\(([^)]+)";
     let title = &simplified(title);
     let artist_suffixes = HashMap::from([
-        ("en", vec!["band", "singer"]),
+        ("en", vec!["band", "musician", "singer"]),
         ("nl", vec!["band", "zanger"]),
     ]);
     let album_suffixes = HashMap::from([
@@ -449,6 +449,7 @@ mod tests {
             ("Kensington", "Kensington (band)"),
             ("Mike + the Mechanics", "Mike and the Mechanics"),
             ("Sam Brown", "Sam Brown (singer)"),
+            ("Seal", "Seal (musician)"),
             ("Simon & Garfunkel", "Simon & Garfunkel"),
             (
                 "Tom Petty & the Heartbreakers",
@@ -502,6 +503,7 @@ mod tests {
                 "The Great Subconscious Club",
             ),
             ("Hotel California", "Eagles", "Hotel California (album)"),
+            ("Seal [1991]", "Seal", "Seal (1991 album)"),
             ("Stop!", "Sam Brown", "Stop! (album)"),
             (
                 "The Common Linnets",

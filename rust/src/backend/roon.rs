@@ -39,7 +39,6 @@ const QUEUE: &str = "Queue";
 
 pub struct Roon {
     config_path: Arc<String>,
-    support_path: String,
     handler: Arc<Mutex<RoonHandler>>,
     server: Arc<Mutex<ServerProps>>,
 }
@@ -147,7 +146,6 @@ impl Roon {
 
         let roon = Self {
             config_path,
-            support_path,
             handler,
             server,
         };
@@ -202,18 +200,10 @@ impl Roon {
         Some(())
     }
 
-    pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
+    pub async fn select_zone(&self, zone_id: &str) {
         let mut handler = self.handler.lock().await;
 
-        let result = handler.select_zone(zone_id).await;
-
-        if let Some(value) = handler.mediawiki.get_changed_cache() {
-            let path = format!("{}/wikipedia.json", self.support_path);
-
-            RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
-        }
-
-        result
+        handler.select_zone(zone_id).await;
     }
 
     pub async fn transfer_from_zone(&self, zone_id: &str) -> Option<()> {
@@ -547,17 +537,10 @@ impl Roon {
         Some(())
     }
 
-    pub async fn get_about(&mut self) -> Option<()> {
+    pub async fn get_about(&mut self) {
         let mut handler = self.handler.lock().await;
-        let result = handler.get_about().await;
 
-        if let Some(value) = handler.mediawiki.get_changed_cache() {
-            let path = format!("{}/wikipedia.json", self.support_path);
-
-            RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
-        }
-
-        result
+        handler.get_about().await;
     }
 
     async fn handle_random_item(

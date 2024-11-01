@@ -27,6 +27,8 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
   Image? _image;
   int _extractHash = 0;
   ExtractType _extractType = ExtractType.album;
+  String _artist = '';
+  String _album = '';
   late final ScrollController _controller;
 
   _setProgress(int length, int? elapsed) {
@@ -83,7 +85,6 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
     String? tooltipNext;
     String? tooltipPrev;
     String progress = '';
-    String headline = '';
     bool smallWidth = MediaQuery.sizeOf(context).width < smallScreenMaxWidth;
 
     if (_extractType == ExtractType.album
@@ -121,9 +122,8 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
           minTileHeight: 72,
         );
 
-        headline = _extractType == ExtractType.album
-          ? "About ${nowPlaying.threeLine.line3}"
-          : "About ${nowPlaying.threeLine.line2}";
+        _album = nowPlaying.threeLine.line3;
+        _artist = nowPlaying.threeLine.line2;
         if (_length > 0) {
           if (appState.pauseOnTrackEnd || smallWidth) {
             progress = appState.getDuration(_length - _elapsed);
@@ -194,6 +194,9 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
           icon: const Icon(Icons.album_outlined),
           tooltip: "About Album",
         );
+      String headline = _extractType == ExtractType.album
+        ? _album
+        : _artist;
 
       toggle.insert(
         0,
