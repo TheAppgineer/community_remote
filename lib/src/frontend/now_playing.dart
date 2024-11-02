@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/now_playing_dialog.dart';
 import 'package:community_remote/src/frontend/volume.dart';
 import 'package:community_remote/src/frontend/zones.dart';
 import 'package:community_remote/src/rust/api/roon_transport_mirror.dart';
@@ -107,6 +108,12 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           title: Text(nowPlaying.threeLine.line1),
           subtitle: Text('${nowPlaying.threeLine.line2}\n${nowPlaying.threeLine.line3}'),
           isThreeLine: true,
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) => const Dialog.fullscreen(
+              child: NowPlayingDialog(),
+            ),
+          ),
         );
 
         if (_length > 0) {
@@ -203,7 +210,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
               padding: const EdgeInsets.fromLTRB(10, 0, 80, 0),
               child:  Row(
                 children: [
-                  Expanded(flex: 1, child: LinearProgressIndicator(value: _progress)),
+                  Expanded(child: LinearProgressIndicator(value: _progress)),
                   const Padding(padding: EdgeInsets.only(left: 10)),
                   Text(progress),
                   const Padding(padding: EdgeInsets.only(left: 20)),

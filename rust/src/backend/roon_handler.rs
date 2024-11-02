@@ -3,6 +3,7 @@ use regex::Regex;
 use roon_api::browse::Action as BrowseAction;
 use roon_api::browse::Item as BrowseItem;
 use roon_api::browse::ItemHint as BrowseItemHint;
+use roon_api::browse::List as BrowseList;
 use roon_api::browse::ListHint as BrowseListHint;
 use roon_api::browse::LoadResult;
 use roon_api::{
@@ -20,14 +21,25 @@ use std::{
     sync::{Arc, Mutex},
 };
 use tokio::sync::mpsc::Sender;
+use tokio::sync::Mutex as TokioMutex;
 
 use crate::api::simple::{BrowseItems, ImageKeyValue, RoonEvent, ZoneSummary};
 
 use super::browse_helper::BrowseHelper;
+use super::mediawiki::{MediaHint, MediaWiki};
 use super::roon_access::{RoonAccess, RoonAccessData};
 
 pub const BROWSE_PAGE_SIZE: usize = 100;
 pub const SESSION_ID: i32 = 0;
+pub const COUNTRY_CODE: &'static str = "en";
+
+#[derive(Clone)]
+struct About {
+    title: String,
+    hint: MediaHint,
+    actions: Option<Vec<BrowseItem>>,
+    level: u32,
+}
 
 pub struct RoonHandler {
     pub event_tx: Sender<RoonEvent>,
@@ -47,6 +59,7 @@ pub struct RoonHandler {
     pub pause_on_track_end: bool,
     pub pause_after_item_ids: Option<Vec<u32>>,
     pub services: Vec<String>,
+    mediawiki: Arc<TokioMutex<MediaWiki>>,
     mute_list: VecDeque<String>,
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
@@ -57,10 +70,23 @@ pub struct RoonHandler {
     outputs: HashMap<String, String>,
     pop_levels: Option<u32>,
     queue: Option<Vec<QueueItem>>,
+    about: Option<About>,
 }
 
 impl RoonHandler {
-    pub fn new(event_tx: Sender<RoonEvent>, config_path: Arc<String>) -> Self {
+    pub fn new(
+        event_tx: Sender<RoonEvent>,
+        config_path: Arc<String>,
+        country_code: &str,
+        cache: Value,
+        fallback: Value,
+    ) -> Self {
+        let mediawiki = Arc::new(TokioMutex::new(MediaWiki::new(
+            country_code,
+            cache,
+            fallback,
+        )));
+
         Self {
             event_tx,
             browse: None,
@@ -79,6 +105,7 @@ impl RoonHandler {
             pause_on_track_end: false,
             pause_after_item_ids: None,
             services: Vec::new(),
+            mediawiki,
             mute_list: VecDeque::new(),
             status: None,
             access: None,
@@ -89,6 +116,7 @@ impl RoonHandler {
             outputs: HashMap::new(),
             pop_levels: None,
             queue: None,
+            about: None,
         }
     }
 
@@ -237,6 +265,11 @@ impl RoonHandler {
                     self.send_zone_list().await;
 
                     if let Some(zone) = curr_zone.as_ref() {
+                        self.event_tx
+                            .send(RoonEvent::ZoneChanged(curr_zone.clone()))
+                            .await
+                            .unwrap();
+
                         if let Some(prev_zone_state) = prev_zone_state {
                             if self.pause_on_track_end
                                 && prev_zone_state.state == State::Playing
@@ -256,12 +289,9 @@ impl RoonHandler {
                                     .await
                                     .unwrap();
                             }
-                        }
 
-                        self.event_tx
-                            .send(RoonEvent::ZoneChanged(curr_zone))
-                            .await
-                            .unwrap();
+                            self.update_wikipedia_extract(&prev_zone_state, zone).await;
+                        }
                     }
                 }
                 Parsed::ZonesRemoved(zone_ids) => {
@@ -428,6 +458,39 @@ impl RoonHandler {
 
                 self.event_tx
                     .send(RoonEvent::ZoneChanged(self.restrict_grouping_list(zone?)))
+                    .await
+                    .unwrap();
+
+                let now_playing = zone?.now_playing.as_ref()?;
+
+                if now_playing.length.is_some() {
+                    let album = now_playing.three_line.line3.to_owned();
+                    let artist = now_playing.three_line.line2.to_owned();
+                    let mediawiki = self.mediawiki.clone();
+                    let event_tx = self.event_tx.clone();
+                    let path = self.config_path.replace("config", "wikipedia");
+
+                    tokio::spawn(async move {
+                        let mut mediawiki = mediawiki.lock().await;
+                        let artist_extract =
+                            mediawiki.get_extract(&artist, &MediaHint::Artist).await;
+                        let album_extract = mediawiki
+                            .get_extract(&album, &MediaHint::Album(artist))
+                            .await;
+
+                        event_tx
+                            .send(RoonEvent::WikiExtract(artist_extract, album_extract))
+                            .await
+                            .unwrap();
+
+                        if let Some(value) = mediawiki.get_changed_cache() {
+                            RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+                        }
+                    });
+                }
+
+                self.event_tx
+                    .send(RoonEvent::WikiExtract(None, None))
                     .await
                     .unwrap();
             }
@@ -639,6 +702,11 @@ impl RoonHandler {
             } else {
                 let event = if is_action_list {
                     self.track_down_actionlist = false;
+
+                    if let Some(about) = self.about.as_mut() {
+                        about.actions = Some(result.items.to_owned());
+                    }
+
                     RoonEvent::BrowseActions(result.items)
                 } else {
                     let new_offset = result.offset + result.items.len();
@@ -718,7 +786,26 @@ impl RoonHandler {
                                 }
                             }
                         }
-                        _ => {}
+                        _ => {
+                            let item = items.get_mut(0)?;
+
+                            if item.title == "Play Artist" || item.title == "Play Album" {
+                                let hint = if item.title == "Play Album" {
+                                    MediaHint::Album(list.subtitle.as_ref()?.to_owned())
+                                } else {
+                                    MediaHint::Artist
+                                };
+
+                                self.about = Some(About {
+                                    title: list.title.to_owned(),
+                                    hint,
+                                    actions: None,
+                                    level: list.level + 1,
+                                });
+
+                                item.title = format!("About {}", list.title);
+                            }
+                        }
                     }
 
                     let browse_items = BrowseItems {
@@ -733,6 +820,58 @@ impl RoonHandler {
                 self.event_tx.send(event).await.unwrap();
             }
         }
+
+        Some(())
+    }
+
+    pub async fn get_about(&mut self) -> Option<()> {
+        let about = self.about.to_owned()?;
+        let list = BrowseList {
+            title: format!("About {}", about.title),
+            level: about.level,
+            ..Default::default()
+        };
+        let item = BrowseItem {
+            title: "Searching Wikipedia the free encyclopedia...".to_owned(),
+            ..Default::default()
+        };
+
+        let mediawiki = self.mediawiki.clone();
+        let event_tx = self.event_tx.clone();
+        let path = self.config_path.replace("config", "wikipedia");
+        let list_clone = list.clone();
+
+        tokio::spawn(async move {
+            let mut mediawiki = mediawiki.lock().await;
+            let extract = match mediawiki.get_extract(&about.title, &about.hint).await {
+                Some(extract) => {
+                    if let Some(value) = mediawiki.get_changed_cache() {
+                        RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+                    }
+
+                    extract
+                }
+                None => "Not Found".to_owned(),
+            };
+            let item = BrowseItem {
+                title: extract,
+                ..Default::default()
+            };
+            let about = BrowseItems {
+                list: list_clone,
+                offset: 0,
+                items: vec![item],
+            };
+
+            event_tx.send(RoonEvent::About(about)).await.unwrap();
+        });
+
+        let about = BrowseItems {
+            list,
+            offset: 0,
+            items: vec![item],
+        };
+        self.event_tx.send(RoonEvent::About(about)).await.unwrap();
 
         Some(())
     }
@@ -992,5 +1131,49 @@ impl RoonHandler {
         };
 
         Some([&[item], items].concat())
+    }
+
+    async fn update_wikipedia_extract(&mut self, prev: &Zone, curr: &Zone) -> Option<()> {
+        let now_playing = curr.now_playing.as_ref()?;
+        let prev_album = if let Some(prev) = prev.now_playing.as_ref() {
+            prev.three_line.line3.as_str()
+        } else {
+            ""
+        };
+        let album = now_playing.three_line.line3.as_str();
+
+        if album != prev_album {
+            if now_playing.length.is_some() {
+                let artist = now_playing.three_line.line2.to_owned();
+                let album = album.to_owned();
+                let mediawiki = self.mediawiki.clone();
+                let event_tx = self.event_tx.clone();
+                let path = self.config_path.replace("config", "wikipedia");
+
+                tokio::spawn(async move {
+                    let mut mediawiki = mediawiki.lock().await;
+                    let artist_extract = mediawiki.get_extract(&artist, &MediaHint::Artist).await;
+                    let album_extract = mediawiki
+                        .get_extract(&album, &MediaHint::Album(artist))
+                        .await;
+
+                    event_tx
+                        .send(RoonEvent::WikiExtract(artist_extract, album_extract))
+                        .await
+                        .unwrap();
+
+                    if let Some(value) = mediawiki.get_changed_cache() {
+                        RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+                    }
+                });
+            }
+
+            self.event_tx
+                .send(RoonEvent::WikiExtract(None, None))
+                .await
+                .unwrap();
+        }
+
+        Some(())
     }
 }

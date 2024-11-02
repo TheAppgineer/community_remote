@@ -29,6 +29,8 @@ class MyAppState extends ChangeNotifier {
   Function? _imageCallback;
   bool pauseOnTrackEnd = false;
   bool initialized = false;
+  String? wikiExtractAlbum;
+  String? wikiExtractArtist;
 
   setUserName(String userName) {
     settings["userName"] = userName;
@@ -247,8 +249,10 @@ class MyAppState extends ChangeNotifier {
       actionItems = event.field0;
 
       if (actionItems != null && takeDefaultAction) {
-        // Take first as default action, at least for now
-        selectBrowseItem(item: actionItems![2]);
+        // Try Queue (2) as default action, at least for now
+        if (actionItems != null && actionItems!.length > 2) {
+          selectBrowseItem(item: actionItems![2]);
+        }
         takeDefaultAction = false;
       }
     } else if (event is RoonEvent_BrowseReset) {
@@ -259,6 +263,17 @@ class MyAppState extends ChangeNotifier {
       pauseOnTrackEnd = event.field0;
     } else if (event is RoonEvent_Services) {
       services = event.field0;
+    } else if (event is RoonEvent_WikiExtract) {
+      wikiExtractArtist = event.field0;
+      wikiExtractAlbum = event.field1;
+    } else if (event is RoonEvent_About) {
+      Function(BrowseItems)? callback = _browseCallbacks["About"];
+
+      if (callback != null) {
+        callback(event.field0);
+      }
+
+      return;
     }
 
     notifyListeners();

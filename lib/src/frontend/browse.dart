@@ -4,6 +4,7 @@ import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/rust/api/roon_browse_mirror.dart';
 import 'package:community_remote/src/rust/api/simple.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
@@ -314,12 +315,25 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       double dynPadding = smallWidth ? 0 : 10;
 
       if (_browseItems != null) {
+        if (_browseItems!.list.title.contains("About ")) {
+          String data = _browseItems!.items[0].title;
+
+          if (data.isEmpty) {
+            data = 'Not found';
+          }
+
+          return SizedBox.expand(child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(child: Html(data: data)),
+          ));
+        }
+
         var browseList = _browseItems!.items;
 
         ListTile itemBuilder(context, index) {
           Widget? leading;
           Widget? trailing;
-          String? imageKeyTitle = browseList[index].title.contains('Play ') ? _browseItems!.list.imageKey : null;
+          String? imageKeyTitle = browseList[index].title.contains('About ') ? _browseItems!.list.imageKey : null;
           String? imageKey = browseList[index].imageKey ?? (index == 0 ? imageKeyTitle : null);
           Image? image = _imageCache[imageKey];
           String title = browseList[index].title;
@@ -382,31 +396,7 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
           }
 
           if (browseList[index].hint == BrowseItemHint.actionList) {
-            trailing = MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                      selectBrowseItem(item: browseList[index]);
-                    }
-                  },
-                  icon: const Icon(Icons.more_vert),
-                );
-              },
-              menuChildren: List<MenuItemButton>.generate(
-                (appState.actionItems != null ? appState.actionItems!.length : 0),
-                (index) => MenuItemButton(
-                  child: Text(appState.actionItems![index].title),
-                  onPressed: () {
-                    selectBrowseItem(item: appState.actionItems![index]);
-                    appState.actionItems = null;
-                  },
-                ),
-              ),
-            );
+            trailing = ActionMenuAnchor(browseItem: browseList[index], appState: appState);
           }
 
           if (browseList[index].subtitle != null) {
@@ -435,7 +425,17 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
                 case BrowseItemHint.action:
                   break;
                 case BrowseItemHint.actionList:
-                  appState.takeDefaultAction = true;
+                  String title = browseList[index].title;
+                  if (title.contains("About ")) {
+                    _navigator.pushNamed("About");
+                    Future.delayed(const Duration(milliseconds: 20), () {
+                      selectBrowseItem(item: browseList[index]);
+                      getAbout();
+                    });
+                    return;
+                  } else {
+                    appState.takeDefaultAction = true;
+                  }
                   break;
                 default:
                   String name = Uri.encodeComponent(browseList[index].title);
@@ -498,6 +498,10 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
       } else {
         browseTitle = Text(_browseItems!.list.title.replaceFirst('My ', ''));
       }
+
+      if (_browseItems!.list.title.contains("About")) {
+        actions.add(ActionMenuAnchor(appState: appState));
+      }
     }
 
     return PopScope(
@@ -526,11 +530,55 @@ class BrowseLevelState extends State<BrowseLevel> with WidgetsBindingObserver {
             // Refresh selected category when leaving Search
             _viewChanged = true;
             browse(category: _category);
-          } else {
+          } else if (_browseItems != null && _browseItems!.list.level > 0) {
             browseBack();
           }
         }
       },
+    );
+  }
+}
+
+class ActionMenuAnchor extends StatelessWidget {
+  const ActionMenuAnchor({
+    super.key,
+    this.browseItem,
+    required this.appState,
+  });
+
+  final BrowseItem? browseItem;
+  final MyAppState appState;
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuAnchor(
+      consumeOutsideTap: true,
+      builder: (context, controller, child) {
+        return IconButton(
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+
+              if (browseItem != null) {
+                selectBrowseItem(item: browseItem!);
+              }
+            }
+          },
+          icon: const Icon(Icons.more_vert),
+        );
+      },
+      menuChildren: List<MenuItemButton>.generate(
+        (appState.actionItems != null ? appState.actionItems!.length : 0),
+        (index) => MenuItemButton(
+          child: Text(appState.actionItems![index].title),
+          onPressed: () {
+            selectBrowseItem(item: appState.actionItems![index]);
+            appState.actionItems = null;
+          },
+        ),
+      ),
     );
   }
 }

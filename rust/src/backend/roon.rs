@@ -30,7 +30,7 @@ use tokio::{
 use crate::api::simple::RoonEvent;
 use crate::backend::{
     roon_access::{RoonAccess, RoonAccessData},
-    roon_handler::{RoonHandler, BROWSE_PAGE_SIZE},
+    roon_handler::{RoonHandler, BROWSE_PAGE_SIZE, COUNTRY_CODE},
 };
 
 const PLAY_NOW: &str = "Play Now";
@@ -50,17 +50,25 @@ struct ServerProps {
 }
 
 impl Roon {
-    pub async fn start(config_path: String) -> (Roon, Receiver<RoonEvent>, String) {
+    pub async fn start(support_path: String) -> (Roon, Receiver<RoonEvent>, String) {
         let (tx, rx) = channel::<RoonEvent>(10);
         let info = info!("com.theappgineer", "Community Remote");
         let mut roon = RoonApi::new(info);
-        let config_path = Arc::new(config_path);
+        let wikipedia = format!("{}/wikipedia.json", support_path);
+        let cache = RoonApi::load_config(&wikipedia, COUNTRY_CODE);
+        let config_path = Arc::new(support_path.clone() + "/config.json");
         let value = RoonApi::load_config(&config_path, "settings");
         let server = RoonApi::load_config(&config_path, "server");
         let server = Arc::new(Mutex::new(
             serde_json::from_value::<ServerProps>(server).unwrap_or_default(),
         ));
-        let handler = Arc::new(Mutex::new(RoonHandler::new(tx, config_path.clone())));
+        let fallback = if COUNTRY_CODE != "en" {
+            RoonApi::load_config(&wikipedia, "en")
+        } else {
+            Value::Null
+        };
+        let handler = RoonHandler::new(tx, config_path.clone(), COUNTRY_CODE, cache, fallback);
+        let handler = Arc::new(Mutex::new(handler));
 
         log::info!("Loading config from: {config_path}");
 
@@ -192,10 +200,10 @@ impl Roon {
         Some(())
     }
 
-    pub async fn select_zone(&self, zone_id: &str) -> Option<()> {
+    pub async fn select_zone(&self, zone_id: &str) {
         let mut handler = self.handler.lock().await;
 
-        handler.select_zone(zone_id).await
+        handler.select_zone(zone_id).await;
     }
 
     pub async fn transfer_from_zone(&self, zone_id: &str) -> Option<()> {
@@ -527,6 +535,12 @@ impl Roon {
         }
 
         Some(())
+    }
+
+    pub async fn get_about(&mut self) {
+        let mut handler = self.handler.lock().await;
+
+        handler.get_about().await;
     }
 
     async fn handle_random_item(
