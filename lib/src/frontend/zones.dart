@@ -42,22 +42,22 @@ class _ZonesState extends State<Zones> {
         Widget? playState;
         Text? metaData;
         TextStyle? style = const TextStyle(fontWeight: FontWeight.normal);
-        Icon? pause;
 
         if (appState.zone != null && zones[index].zoneId == appState.zone!.zoneId) {
           style = TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary);
         }
 
         if (zones[index].state == PlayState.playing) {
-          pause = const Icon(Icons.pause_circle_outline);
+          playState = IconButton(
+            icon: const SizedBox(width: 48, child: Icon(Icons.pause_circle_outline, size: 24)),
+            onPressed: () {
+              controlByZoneId(zoneId: zones[index].zoneId, control: Control.pause);
+            },
+          );
+        } else {
+          playState = const SizedBox(width: 64);
         }
 
-        playState = IconButton(
-          icon: SizedBox(width: 48, child: pause),
-          onPressed: () {
-            controlByZoneId(zoneId: zones[index].zoneId, control: Control.pause);
-          },
-        );
 
         if (appState.zone != null) {
           List<MenuItemButton>? menuChildren;

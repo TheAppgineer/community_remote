@@ -123,7 +123,8 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
         );
 
         _album = nowPlaying.threeLine.line3;
-        _artist = nowPlaying.threeLine.line2;
+        _artist = nowPlaying.threeLine.line2.split(' / ').first;
+
         if (_length > 0) {
           if (appState.pauseOnTrackEnd || smallWidth) {
             progress = appState.getDuration(_length - _elapsed);
@@ -174,6 +175,10 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
       }
     }
 
+    String headline = _extractType == ExtractType.album
+      ? _album
+      : _artist;
+
     if (appState.wikiExtractAlbum != null && appState.wikiExtractArtist != null) {
       IconButton switchType = _extractType == ExtractType.album
         ? IconButton(
@@ -194,9 +199,6 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
           icon: const Icon(Icons.album_outlined),
           tooltip: "About Album",
         );
-      String headline = _extractType == ExtractType.album
-        ? _album
-        : _artist;
 
       toggle.insert(
         0,
@@ -209,6 +211,8 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
           ],
         ),
       );
+    } else if (appState.wikiExtractAlbum != null || appState.wikiExtractArtist != null) {
+      toggle.insert(0, Text(headline, style: Theme.of(context).textTheme.headlineSmall));
     }
 
     if (smallWidth) {
@@ -238,6 +242,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
             child: SingleChildScrollView(
               controller: _controller,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: toggle,
               ),
             ),
@@ -285,6 +290,7 @@ class _NowPlayingDialogState extends State<NowPlayingDialog> {
                     child: SingleChildScrollView(
                       controller: _controller,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: toggle,
                       ),
                     ),

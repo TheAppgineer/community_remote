@@ -487,12 +487,12 @@ impl RoonHandler {
                             RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
                         }
                     });
-                } else {
-                    self.event_tx
-                        .send(RoonEvent::WikiExtract(None, None))
-                        .await
-                        .unwrap();
                 }
+
+                self.event_tx
+                    .send(RoonEvent::WikiExtract(None, None))
+                    .await
+                    .unwrap();
             }
         }
 
@@ -843,24 +843,27 @@ impl RoonHandler {
 
         tokio::spawn(async move {
             let mut mediawiki = mediawiki.lock().await;
+            let extract = match mediawiki.get_extract(&about.title, &about.hint).await {
+                Some(extract) => {
+                    if let Some(value) = mediawiki.get_changed_cache() {
+                        RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+                    }
 
-            if let Some(extract) = mediawiki.get_extract(&about.title, &about.hint).await {
-                let item = BrowseItem {
-                    title: extract,
-                    ..Default::default()
-                };
-                let about = BrowseItems {
-                    list: list_clone,
-                    offset: 0,
-                    items: vec![item],
-                };
-
-                event_tx.send(RoonEvent::About(about)).await.unwrap();
-
-                if let Some(value) = mediawiki.get_changed_cache() {
-                    RoonApi::save_config(&path, COUNTRY_CODE, value).unwrap();
+                    extract
                 }
-            }
+                None => "Not Found".to_owned(),
+            };
+            let item = BrowseItem {
+                title: extract,
+                ..Default::default()
+            };
+            let about = BrowseItems {
+                list: list_clone,
+                offset: 0,
+                items: vec![item],
+            };
+
+            event_tx.send(RoonEvent::About(about)).await.unwrap();
         });
 
         let about = BrowseItems {
@@ -1139,8 +1142,8 @@ impl RoonHandler {
         };
         let album = now_playing.three_line.line3.as_str();
 
-        if now_playing.length.is_some() {
-            if album != prev_album {
+        if album != prev_album {
+            if now_playing.length.is_some() {
                 let artist = now_playing.three_line.line2.to_owned();
                 let album = album.to_owned();
                 let mediawiki = self.mediawiki.clone();
@@ -1164,7 +1167,7 @@ impl RoonHandler {
                     }
                 });
             }
-        } else {
+
             self.event_tx
                 .send(RoonEvent::WikiExtract(None, None))
                 .await
