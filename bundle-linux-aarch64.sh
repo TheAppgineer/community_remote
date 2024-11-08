@@ -1,6 +1,7 @@
 #!/bin/sh
 NAME=community_remote-linux-aarch64
 
+flutter_rust_bridge_codegen generate
 flutter clean
 flutter build linux --release
 mkdir -p build/$NAME/icons
