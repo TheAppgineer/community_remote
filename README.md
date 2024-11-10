@@ -54,6 +54,7 @@ Visit [rustup.rs](https://rustup.rs/) and follow the provided instructions.
 
 ### Build Flutter Rust Bridge
     cargo install 'flutter_rust_bridge_codegen@^2.0.0'
+    flutter_rust_bridge_codegen generate
 
 ### Build Community Remote
 A debug build can be built and run from Visual Studio Code.
