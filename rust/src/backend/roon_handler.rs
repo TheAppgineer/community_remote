@@ -33,6 +33,13 @@ pub const BROWSE_PAGE_SIZE: usize = 100;
 pub const SESSION_ID: i32 = 0;
 pub const COUNTRY_CODE: &'static str = "en";
 
+#[derive(PartialEq, Eq)]
+enum ProfileState {
+    Activating,
+    Qeuried,
+    Activated,
+}
+
 #[derive(Clone)]
 struct About {
     title: String,
@@ -64,7 +71,7 @@ pub struct RoonHandler {
     status: Option<Status>,
     access: Option<Arc<Mutex<RoonAccess>>>,
     track_down_actionlist: bool,
-    activate_profile: bool,
+    profile_state: ProfileState,
     api_token: Option<String>,
     config_path: Arc<String>,
     outputs: HashMap<String, String>,
@@ -110,7 +117,7 @@ impl RoonHandler {
             status: None,
             access: None,
             track_down_actionlist: false,
-            activate_profile: false,
+            profile_state: ProfileState::Activating,
             api_token: None,
             config_path,
             outputs: HashMap::new(),
@@ -652,28 +659,23 @@ impl RoonHandler {
             self.browse_path.remove(key);
 
             if result.list.title == "Profile" {
-                let (profile, item_key) = self.process_profiles(&result.items).await?;
-                let (access, profile_access) = {
+                let item_key = self.process_profiles(&result.items).await?;
+                let access = {
                     let access = self.access.as_ref()?.lock().unwrap();
 
-                    (access.has_data(), access.has_profile_access())
+                    access.has_data()
                 };
 
-                if access && self.activate_profile {
+                if access && self.profile_state == ProfileState::Activating {
                     let opts = BrowseOpts {
                         item_key,
                         multi_session_key,
                         ..Default::default()
                     };
 
-                    self.activate_profile = false;
-                    self.browse.as_mut()?.browse(opts).await;
+                    self.profile_state = ProfileState::Qeuried;
 
-                    log::info!("Selected profile: {}", profile);
-                    self.event_tx
-                        .send(RoonEvent::CorePermitted(profile, profile_access))
-                        .await
-                        .unwrap();
+                    self.browse.as_mut()?.browse(opts).await;
                 }
 
                 return Some(());
@@ -688,6 +690,27 @@ impl RoonHandler {
             self.browse_category = None;
             self.browse.as_mut()?.browse_clear();
             self.event_tx.send(RoonEvent::BrowseReset).await.unwrap();
+        } else if self.profile_state == ProfileState::Qeuried && result.list.title == "Settings" {
+            let profile_access = {
+                let access = self.access.as_ref()?.lock().unwrap();
+
+                access.has_profile_access()
+            };
+            let profile = result.items.iter().find_map(|item| {
+                if item.title == "Profile" {
+                    item.subtitle.as_ref()
+                } else {
+                    None
+                }
+            })?;
+
+            self.profile_state = ProfileState::Activated;
+
+            log::info!("Selected profile: {}", profile);
+            self.event_tx
+                .send(RoonEvent::CorePermitted(profile.to_owned(), profile_access))
+                .await
+                .unwrap();
         } else if self.browse_category.is_some() {
             let is_action_list = result.list.hint == Some(BrowseListHint::ActionList);
 
@@ -932,7 +955,10 @@ impl RoonHandler {
             ..Default::default()
         };
 
-        self.activate_profile = activate_profile;
+        if activate_profile {
+            self.profile_state = ProfileState::Activating;
+        }
+
         self.browse_offset = 0;
         self.browse_category = None;
         self.browse_total = 0;
@@ -941,7 +967,7 @@ impl RoonHandler {
         Some(())
     }
 
-    async fn process_profiles(&self, items: &[BrowseItem]) -> Option<(String, Option<String>)> {
+    async fn process_profiles(&self, items: &[BrowseItem]) -> Option<Option<String>> {
         let mut access = self.access.as_ref()?.lock().unwrap();
         let assigned = access.get_profile();
         let profiles = items
@@ -954,7 +980,7 @@ impl RoonHandler {
         for item in items.iter() {
             match assigned {
                 Some(assigned) if assigned == item.title => {
-                    return Some((item.title.to_owned(), item.item_key.to_owned()));
+                    return Some(item.item_key.to_owned());
                 }
                 Some(_) => continue,
                 _ => {}
@@ -962,7 +988,7 @@ impl RoonHandler {
 
             if let Some(subtitle) = item.subtitle.as_ref() {
                 if subtitle == "selected" {
-                    return Some((item.title.to_owned(), item.item_key.to_owned()));
+                    return Some(item.item_key.to_owned());
                 }
             }
         }
