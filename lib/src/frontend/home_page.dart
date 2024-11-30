@@ -12,15 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mdi/mdi.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const kkbox = "KKBOX";
 const qobuz = "Qobuz";
 const tidal = "TIDAL";
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  const HomePage({super.key, required this.version});
 
-  final String title;
+  final String version;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -172,6 +173,41 @@ class _HomePageState extends State<HomePage> {
         child: Browse(),
       ),
     ];
+    Widget overflow = MenuAnchor(
+      consumeOutsideTap: true,
+      builder: (context, controller, child) {
+        return IconButton(
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: const Icon(Icons.more_vert),
+        );
+      },
+      menuChildren: [
+        MenuItemButton(
+          child: const Text("User Manual"),
+          onPressed: () {
+            launchUrl(Uri.parse('https://theappgineer.com/community_remote/'));
+          },
+        ),
+        MenuItemButton(
+          child: const Text("About..."),
+          onPressed: () {
+            showDialog(context: context, builder: (context) {
+              if (smallWidth) {
+                return Dialog.fullscreen(child: About(version: widget.version));
+              } else {
+                return Dialog(child: About(version: widget.version));
+              }
+            });
+          },
+        ),
+      ],
+    );
 
     if (!smallWidth) {
       children.add(const Expanded(
@@ -186,11 +222,13 @@ class _HomePageState extends State<HomePage> {
         scrolledUnderElevation: 0,
         title: ListTile(
           leading: smallWidth ? null : stateIcon,
-          title: Text(widget.title),
-          subtitle: Text(subtitle),
+          title: const Text('Community Remote'),
+          subtitle: Text(subtitle, overflow: TextOverflow.ellipsis),
         ),
         actions: [
           themeModeButton,
+          overflow,
+          const Padding(padding: EdgeInsets.only(left: 5)),
         ],
       ),
       body: Center(
@@ -210,6 +248,72 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: QuickAccessButton(appState: appState, smallWidth: smallWidth,),
+    );
+  }
+}
+
+class About extends StatelessWidget {
+  const About({
+    super.key, required this.version
+  });
+
+  final String version;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 600,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Center(child: Text("Community Remote", style: TextStyle(fontSize: 18))),
+                subtitle: Center(child: Text("Version $version")),
+              ),
+              const Text("Copyright \u{00A9} 2024 The Appgineer"),
+              const Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text('Latest Release', style: TextStyle(fontSize: 16)),
+              ),
+              IconButton(
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                onPressed: () {
+                  launchUrl(Uri.parse(
+                    'https://github.com/TheAppgineer/community_remote/releases/latest/'
+                  ));
+                },
+                icon: const Image(width: 250, image: AssetImage('images/qr-community-remote-android.png')),
+              ),
+              const Text('Scan for Android, Click for Full List'),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: IconButton(
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  onPressed: () {
+                    launchUrl(Uri.parse('https://www.buymeacoffee.com/theappgineer'));
+                  },
+                  icon: Image.network(
+                    width: 250,
+                    'https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png',
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 20),
+                child: Text('Become a Supporter'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

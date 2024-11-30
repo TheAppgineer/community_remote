@@ -28,15 +28,23 @@ This feature is created with the family and friends use case in mind, preventing
 The official Roon app is the obvious point of access when using Roon, but having an alternative can help when running into issues, like accessing the Roon Server. Community Remote is the companion at hand when the need arises.
 
 # How to Get it?
-### When using Linux you can:
+### For Linux you can:
 
 <a href='https://flathub.org/apps/com.theappgineer.community_remote'>
     <img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
 </a>
 
-On linux both the x86_64 (PC) and aarch64 (Arm64) architecture are supported.
+Both the x86_64 (PC) and aarch64 (Arm64) architecture are supported.
 
-### Visit the project [Release Page](https://github.com/TheAppgineer/community_remote/releases/latest) for Android and Windows builds.
+### For Android you can:
+
+<a href='https://github.com/TheAppgineer/community_remote/releases/latest/download/community_remote-android.apk'>
+    <img width='240' alt="Get it for Android" src="images/qr-community-remote-android.png"/>
+</a>
+
+Click or scan the QR Code.
+
+### Visit the project [Release Page](https://github.com/TheAppgineer/community_remote/releases/latest) for all available releases.
 
 <br>
 

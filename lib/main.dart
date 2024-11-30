@@ -37,15 +37,15 @@ Future<void> main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => appState,
-      child: Main(title: 'Community Remote v${packageInfo.version}'),
+      child: Main(version: packageInfo.version),
     )
   );
 }
 
 class Main extends StatefulWidget {
-  const Main({super.key, required this.title});
+  const Main({super.key, required this.version});
 
-  final String title;
+  final String version;
 
   @override
   State<Main> createState() => _MainState();
@@ -97,7 +97,6 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     var appState = context.watch<MyAppState>();
 
     return MaterialApp(
-      title: widget.title,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -116,7 +115,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.values.byName(appState.settings['theme']),
-      home: HomePage(title: widget.title),
+      home: HomePage(version: widget.version),
     );
   }
 }
