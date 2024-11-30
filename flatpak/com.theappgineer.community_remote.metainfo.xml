@@ -28,25 +28,37 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.0.6/images/linux-dark.png</image>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.1.0/images/linux-dark.png</image>
       <caption>Collapsed navigation rail with Artists selected, playing from Queue, in dark theme</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.0.6/images/linux-light.png</image>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.1.0/images/linux-light.png</image>
       <caption>Expanded navigation rail with Albums selected, empty Queue, in light theme</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.0.6/images/linux-small.png</image>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.1.0/images/linux-nowplaying.png</image>
+      <caption>Dedicated Now Playing screen with Wikipedia album information</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.1.0/images/linux-small.png</image>
       <caption>Adaptive layout ensures usability in small window</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.0.6/images/linux-small-nowplaying.png</image>
+      <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.1.0/images/linux-small-nowplaying.png</image>
       <caption>Dedicated Now Playing screen in small window</caption>
     </screenshot>
   </screenshots>
 
   <launchable type="desktop-id">com.theappgineer.community_remote.desktop</launchable>
   <releases>
+    <release version="0.1.0" date="2024-11-30">
+      <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.1.0</url>
+      <description>
+        <p>
+          Six months in since first Alpha release, over 1500 installs, time to make the move to Beta.
+        </p>
+      </description>
+    </release>
     <release version="0.0.10" date="2024-11-02">
       <url type="details">https://github.com/TheAppgineer/community_remote/releases/tag/0.0.10</url>
       <description>
