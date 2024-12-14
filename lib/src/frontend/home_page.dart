@@ -175,6 +175,43 @@ class _HomePageState extends State<HomePage> {
         child: Browse(),
       ),
     ];
+    List<Widget> menuChildren = [
+      MenuItemButton(
+        child: const Text("User Manual"),
+        onPressed: () {
+          launchUrl(Uri.parse('https://theappgineer.com/community_remote/'));
+        },
+      ),
+      MenuItemButton(
+        child: const Text("About..."),
+        onPressed: () {
+          showDialog(context: context, builder: (context) {
+            if (smallWidth) {
+              return Dialog.fullscreen(child: About(version: widget.version));
+            } else {
+              return Dialog(child: About(version: widget.version));
+            }
+          });
+        },
+      ),
+    ];
+
+    if (!smallWidth) {
+      menuChildren.insert(0, MenuItemButton(
+        child: Row(
+          children: [
+            const Text("Hide Queue", style: TextStyle(fontSize: 14)),
+            const Padding(padding: EdgeInsets.only(left: 10)),
+            Icon(hideQueue ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined),
+          ],
+        ),
+        onPressed: () {
+          appState.settings['hideQueue'] = !hideQueue;
+          saveSettings(settings: jsonEncode(appState.settings));
+        },
+      ));
+    }
+
     Widget overflow = MenuAnchor(
       consumeOutsideTap: true,
       builder: (context, controller, child) {
@@ -189,39 +226,7 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(Icons.more_vert),
         );
       },
-      menuChildren: [
-        MenuItemButton(
-          child: Row(
-            children: [
-              const Text("Hide Queue", style: TextStyle(fontSize: 14)),
-              const Padding(padding: EdgeInsets.only(left: 10)),
-              Icon(hideQueue ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined),
-            ],
-          ),
-          onPressed: () {
-            appState.settings['hideQueue'] = !hideQueue;
-            saveSettings(settings: jsonEncode(appState.settings));
-          },
-        ),
-        MenuItemButton(
-          child: const Text("User Manual"),
-          onPressed: () {
-            launchUrl(Uri.parse('https://theappgineer.com/community_remote/'));
-          },
-        ),
-        MenuItemButton(
-          child: const Text("About..."),
-          onPressed: () {
-            showDialog(context: context, builder: (context) {
-              if (smallWidth) {
-                return Dialog.fullscreen(child: About(version: widget.version));
-              } else {
-                return Dialog(child: About(version: widget.version));
-              }
-            });
-          },
-        ),
-      ],
+      menuChildren: menuChildren,
     );
     IconButton? mode;
 
