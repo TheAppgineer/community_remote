@@ -166,6 +166,8 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    bool gridMode = appState.settings['gridMode'] ?? false;
+    bool hideQueue = appState.settings['hideQueue'] ?? false;
     List<Widget> children = [
       const HamburgerMenu(),
       const Expanded(
@@ -189,6 +191,19 @@ class _HomePageState extends State<HomePage> {
       },
       menuChildren: [
         MenuItemButton(
+          child: Row(
+            children: [
+              const Text("Hide Queue", style: TextStyle(fontSize: 14)),
+              const Padding(padding: EdgeInsets.only(left: 10)),
+              Icon(hideQueue ? Icons.check_box_outlined : Icons.check_box_outline_blank_outlined),
+            ],
+          ),
+          onPressed: () {
+            appState.settings['hideQueue'] = !hideQueue;
+            saveSettings(settings: jsonEncode(appState.settings));
+          },
+        ),
+        MenuItemButton(
           child: const Text("User Manual"),
           onPressed: () {
             launchUrl(Uri.parse('https://theappgineer.com/community_remote/'));
@@ -208,12 +223,33 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+    IconButton? mode;
 
-    if (!smallWidth) {
+    if (!smallWidth && !hideQueue) {
       children.add(const Expanded(
         flex: 1,
         child: Queue(),
       ));
+    }
+
+    if (gridMode) {
+      mode = IconButton(
+        onPressed: () {
+          appState.settings['gridMode'] = false;
+          saveSettings(settings: jsonEncode(appState.settings));
+        },
+        tooltip: 'List View',
+        icon: const Icon(Icons.list_outlined),
+      );
+    } else {
+      mode = IconButton(
+        onPressed: () {
+          appState.settings['gridMode'] = true;
+          saveSettings(settings: jsonEncode(appState.settings));
+        },
+        tooltip: 'Grid View',
+        icon: const Icon(Icons.grid_view_outlined),
+      );
     }
 
     return Scaffold(
@@ -226,6 +262,7 @@ class _HomePageState extends State<HomePage> {
           subtitle: Text(subtitle, overflow: TextOverflow.ellipsis),
         ),
         actions: [
+          mode,
           themeModeButton,
           overflow,
           const Padding(padding: EdgeInsets.only(left: 5)),
