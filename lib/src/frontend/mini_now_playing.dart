@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/full_screen_dialog.dart';
 import 'package:community_remote/src/frontend/now_playing_dialog.dart';
 import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/frontend/volume.dart';
@@ -69,8 +70,9 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
           minTileHeight: 56,
           onTap: () => showDialog(
             context: context,
-            builder: (context) => const Dialog.fullscreen(
-              child: NowPlayingDialog(),
+            builder: (context) => const FullScreenDialog(
+              title: 'Now Playing',
+              child: NowPlayingDialog()
             ),
           ),
         );
@@ -83,16 +85,15 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
         tooltip: 'Queue',
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => const Dialog.fullscreen(
-            child: Queue(),
-          ),
+          builder: (context) => const FullScreenDialog(title: 'Queue', child: Queue()),
         ),
       ));
 
       zoneControl.add(IconButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => const Dialog.fullscreen(
+          builder: (context) => const FullScreenDialog(
+            title: 'Zones',
             child: Card(
               margin: EdgeInsets.all(10),
               child: Zones(smallWidth: true),
@@ -124,7 +125,8 @@ class _MiniNowPlayingWidgetState extends State<MiniNowPlayingWidget> {
       zoneControl.add(IconButton(
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => const Dialog.fullscreen(
+          builder: (context) => const FullScreenDialog(
+            title: 'Volume',
             child: Card(
               margin: EdgeInsets.all(10),
               child: VolumeDialog(smallWidth: true),
