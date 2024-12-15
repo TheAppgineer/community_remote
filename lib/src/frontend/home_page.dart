@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:community_remote/src/frontend/app_state.dart';
 import 'package:community_remote/src/frontend/browse.dart';
+import 'package:community_remote/src/frontend/full_screen_dialog.dart';
 import 'package:community_remote/src/frontend/mini_now_playing.dart';
 import 'package:community_remote/src/frontend/now_playing.dart';
 import 'package:community_remote/src/frontend/queue.dart';
@@ -187,9 +188,18 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           showDialog(context: context, builder: (context) {
             if (smallWidth) {
-              return Dialog.fullscreen(child: About(version: widget.version));
+              return FullScreenDialog(
+                title: 'About',
+                child: Card(
+                  margin: const EdgeInsets.all(10),
+                  child: SizedBox.expand(child: About(version: widget.version)),
+                ),
+              );
             } else {
-              return Dialog(child: About(version: widget.version));
+              return Dialog(child: SizedBox(
+                width: 600,
+                child: About(version: widget.version),
+              ));
             }
           });
         },
@@ -303,57 +313,54 @@ class About extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 600,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Center(child: Text("Community Remote", style: TextStyle(fontSize: 18))),
-                subtitle: Center(child: Text("Version $version")),
-              ),
-              const Text("Copyright \u{00A9} 2024 The Appgineer"),
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text('Latest Release', style: TextStyle(fontSize: 16)),
-              ),
-              IconButton(
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Center(child: Text("Community Remote", style: TextStyle(fontSize: 18))),
+              subtitle: Center(child: Text("Version $version")),
+            ),
+            const Text("Copyright \u{00A9} 2024 The Appgineer"),
+            const Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Text('Latest Release', style: TextStyle(fontSize: 16)),
+            ),
+            IconButton(
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              onPressed: () {
+                launchUrl(Uri.parse(
+                  'https://github.com/TheAppgineer/community_remote/releases/latest/'
+                ));
+              },
+              icon: const Image(width: 250, image: AssetImage('images/qr-community-remote-android.png')),
+            ),
+            const Text('Scan for Android, Click for Full List'),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: IconButton(
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 focusColor: Colors.transparent,
                 onPressed: () {
-                  launchUrl(Uri.parse(
-                    'https://github.com/TheAppgineer/community_remote/releases/latest/'
-                  ));
+                  launchUrl(Uri.parse('https://www.buymeacoffee.com/theappgineer'));
                 },
-                icon: const Image(width: 250, image: AssetImage('images/qr-community-remote-android.png')),
-              ),
-              const Text('Scan for Android, Click for Full List'),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: IconButton(
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  onPressed: () {
-                    launchUrl(Uri.parse('https://www.buymeacoffee.com/theappgineer'));
-                  },
-                  icon: Image.network(
-                    width: 250,
-                    'https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png',
-                  ),
+                icon: Image.network(
+                  width: 250,
+                  'https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png',
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Text('Become a Supporter'),
-              ),
-            ],
-          ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: Text('Become a Supporter'),
+            ),
+          ],
         ),
       ),
     );
@@ -607,8 +614,12 @@ class QuickAccessButton extends StatelessWidget {
         context: context,
         builder: (context) {
           if (smallWidth) {
-            return const Dialog.fullscreen(
-              child: Setup(),
+            return const FullScreenDialog(
+              title: 'Server Setup',
+              child: Card(
+                margin: EdgeInsets.all(10),
+                child: SizedBox.expand(child: Setup()),
+              ),
             );
           } else {
             return const Dialog(
@@ -622,8 +633,12 @@ class QuickAccessButton extends StatelessWidget {
         context: context,
         builder: (context) {
           if (smallWidth) {
-            return Dialog.fullscreen(
-              child: Request(appState: appState),
+            return FullScreenDialog(
+              title: 'Request Access',
+              child: Card(
+                margin: const EdgeInsets.all(10),
+                child: SizedBox.expand(child: Request(appState: appState)),
+              ),
             );
           } else {
             return Dialog(
@@ -637,7 +652,8 @@ class QuickAccessButton extends StatelessWidget {
         context: context,
         builder: (context) {
           if (smallWidth) {
-            return const Dialog.fullscreen(
+            return const FullScreenDialog(
+              title: 'Zones',
               child: Zones(smallWidth: true),
             );
           } else {

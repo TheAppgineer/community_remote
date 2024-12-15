@@ -162,9 +162,15 @@ class _ZonesState extends State<Zones> {
       );
     }
 
-    return SizedBox(
-      width: 600,
-      child: listView,
-    );
+    if (listView != null && widget.smallWidth) {
+      return SizedBox.expand(
+        child: listView,
+      );
+    } else {
+      return SizedBox(
+        width: 600,
+        child: listView,
+      );
+    }
   }
 }

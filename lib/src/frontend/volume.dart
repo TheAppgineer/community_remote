@@ -205,9 +205,15 @@ class _VolumeDialogState extends State<VolumeDialog> {
       );
     }
 
-    return SizedBox(
-      width: 600,
-      child: child,
-    );
+    if (widget.smallWidth) {
+      return SizedBox.expand(
+        child: child,
+      );
+    } else {
+      return SizedBox(
+        width: 600,
+        child: child,
+      );
+    }
   }
 }

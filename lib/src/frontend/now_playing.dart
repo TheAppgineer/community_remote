@@ -1,4 +1,5 @@
 import 'package:community_remote/src/frontend/app_state.dart';
+import 'package:community_remote/src/frontend/full_screen_dialog.dart';
 import 'package:community_remote/src/frontend/now_playing_dialog.dart';
 import 'package:community_remote/src/frontend/queue.dart';
 import 'package:community_remote/src/frontend/volume.dart';
@@ -111,9 +112,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           isThreeLine: true,
           onTap: () => showDialog(
             context: context,
-            builder: (context) => const Dialog.fullscreen(
-              child: NowPlayingDialog(),
-            ),
+            builder: (context) => const FullScreenDialog(title: 'Now Playing', child: NowPlayingDialog()),
           ),
         );
 
@@ -155,9 +154,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           label: const Text('Queue'),
           onPressed: () => showDialog(
             context: context,
-            builder: (context) => const Dialog.fullscreen(
-              child: Queue(),
-            ),
+            builder: (context) => const FullScreenDialog(title: 'Queue', child: Queue()),
           ),
         ));
       }
