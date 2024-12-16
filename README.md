@@ -27,7 +27,7 @@ The project is named Community Remote to emphasize that, in order to have maximu
 <img src="images/windows-dark.png" alt="Windows dark theme" width="800"/>
 
 ## Developers Helicopter View
-The Community Remote consists out of three main buidling blocks.
+The Community Remote consists out of three main building blocks.
 
 ### Rust Roon API
 The Rust Roon Api provides the backend that takes care of the communication with the Roon Server. It takes care of requesting the data that is made visible in the UI and provides control actions that can be triggered from the UI.
