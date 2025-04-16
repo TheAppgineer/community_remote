@@ -26,6 +26,15 @@
     </p>
   </description>
 
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </recommends>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/TheAppgineer/community_remote/0.2.0/images/linux-dark.png</image>
